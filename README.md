@@ -41,6 +41,8 @@ This project is part of the [Pyrustic Open Ecosystem](https://pyrustic.github.io
 It comes with a data validation mechanism as well as other cool stuff, and its eponymous reference library is a [Python](https://www.python.org/) package available on [PyPI](#installation).
 
 
+> Read the **backstory** in this [HN discussion](https://news.ycombinator.com/item?id=38684724) !
+
 ## A rich set of datatypes
 
 A Paradict dictionary can be populated with strings, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), comments, extension objects, and grids (matrices).
