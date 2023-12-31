@@ -29,103 +29,101 @@ GRID = b'\x09'
 GRID_DIV = b'\x0a'
 GRID_EMPTY = b'\x0b'
 
+# ----------- RESERVED TAGS -------------
+
+TX = b'\x0c'
+TY = b'\x0d'
+TZ = b'\x0e'
+
 # ----------- NULL AND BOOL -------------
 
 # Null
-NULL = b'\x0c'
+NULL = b'\x0f'
 
 # Bool
-BOOL_TRUE = b'\x0d'
-BOOL_FALSE = b'\x0e'
+BOOL_TRUE = b'\x10'
+BOOL_FALSE = b'\x11'
 
-# ----------- STRING FLAGS -------------
+# ----------- COMMAND STRING -------------
 
-# Raw string
-RAW_STR = b'\x0f'
+# Command string
+COMMAND = b'\x12'
+
+# ----------- COMMENT STRING -------------
 
 # Comment string
-COMMENT_STR = b'\x10'
+COMMENT = b'\x13'
 
 # ----------- COMPLEX NUMBER -------------
 
 # <tag, real, imaginary>
-COMPLEX = b'\x11'
-
-# ----------- BIN OCT HEX INTEGER NOTATION -------------
-
-# <tag, integer>
-RADIX_BIN = b'\x12'
-# <tag, leading_zeros, integer>
-RADIX_BIN_EXT = b'\x13'
-
-# <tag, integer>
-RADIX_OCT = b'\x14'
-# <tag, leading_zeros, integer>
-RADIX_OCT_EXT = b'\x15'
-
-# <tag, integer>
-RADIX_HEX = b'\x16'
-# <tag, leading_zeros, integer>
-RADIX_HEX_EXT = b'\x17'
+COMPLEX = b'\x14'
 
 # ----------- DATE -------------
 
 # <tag, year_delta, day_delta>
-DATE = b'\x18'
+DATE = b'\x15'
 
 # ----------- TIME -------------
 
 # <tag, nanoseconds_delta, trailing_zeros>
-TIME = b'\x19'
+TIME = b'\x16'
 # <tag, nanoseconds_delta, trailing_zeros, utc_offset_minutes>
-TIME_EXT = b'\x1a'
+TIME_EXT = b'\x17'
 
 # ----------- DATETIME -------------
 
 # <tag, year_delta, nanoseconds_delta, trailing_zeros>
-DATETIME = b'\x1b'
+DATETIME = b'\x18'
 # <tag, year_delta, nanoseconds_delta, trailing_zeros, utc_offset_minutes>
-DATETIME_EXT = b'\x1c'
+DATETIME_EXT = b'\x19'
+
+# ----------- BIN OCT HEX INTEGER NOTATION -------------
+
+# <tag, integer>
+RADIX_BIN = b'\x1a'
+# <tag, leading_zeros, integer>
+RADIX_BIN_EXT = b'\x1b'
+
+# <tag, integer>
+RADIX_OCT = b'\x1c'
+# <tag, leading_zeros, integer>
+RADIX_OCT_EXT = b'\x1d'
+
+# <tag, integer>
+RADIX_HEX = b'\x1e'
+# <tag, leading_zeros, integer>
+RADIX_HEX_EXT = b'\x1f'
+
+# ----------- FLOATING-POINT NUMBER-------------
+
+# <tag, char> where char is a letter (n, x, y, z) for NaN, +inf, -inf, and -0
+FLOAT_MISC = b'\x20'
+
+# <tag, left_significand>
+FLOAT_1 = b'\x21'
+# <tag, left_significand, exponent>
+FLOAT_1_EXT = b'\x22'
+
+# <tag, left_significand, right_significand>
+FLOAT_2 = b'\x23'
+# <tag, left_significand, right_significand, exponent>
+FLOAT_2_EXT = b'\x24'
+
+# <tag, left_significand, leading_zeros, right_significand>
+FLOAT_3 = b'\x25'
+# <tag, left_significand, leading_zeros, right_significand, exponent>
+FLOAT_3_EXT = b'\x26'
 
 # ----------- BINARY -------------
 
 # Bin
-BIN_EMPTY = b'\x1d'
-BIN_SHORT = b'\x1e'
-BIN_MEDIUM = b'\x1f'
-BIN_LONG = b'\x20'
-BIN_HEAVY = b'\x21'
-
-# ----------- FLOATING-POINT NUMBER-------------
-
-# <tag, left_significand>
-FLOAT_1 = b'\x22'
-# <tag, left_significand, exponent>
-FLOAT_1_EXT = b'\x23'
-
-# <tag, left_significand, right_significand>
-FLOAT_2 = b'\x24'
-# <tag, left_significand, right_significand, exponent>
-FLOAT_2_EXT = b'\x25'
-
-# <tag, left_significand, leading_zeros, right_significand>
-FLOAT_3 = b'\x26'
-# <tag, left_significand, leading_zeros, right_significand, exponent>
-FLOAT_3_EXT = b'\x27'
-
-# ----------- FLOAT MISC CONSTS -------------
-
-# Not a Number (NaN)
-FLOAT_NAN = b'\x28'
-# float zero
-FLOAT_ZERO_1 = b'\x29'
-# negative zero
-FLOAT_ZERO_2 = b'\x2a'
-# +infinity
-FLOAT_INF_1 = b'\x2b'
-# -infinity
-FLOAT_INF_2 = b'\x2c'
-
+BIN_EMPTY = b'\x27'
+BIN_SHORT = b'\x28'
+BIN_MEDIUM = b'\x29'
+BIN_LONG = b'\x2a'
+BIN_BIG = b'\x2b'
+BIN_HEAVY = b'\x2c'
 
 # ----------- INTEGER -------------
 
@@ -192,173 +190,170 @@ STR_EMPTY = b'\x61'
 STR_SHORT = b'\x62'
 STR_MEDIUM = b'\x63'
 STR_LONG = b'\x64'
-STR_HEAVY = b'\x65'
+STR_BIG = b'\x65'
+STR_HEAVY = b'\x66'
 
 # ----------- ALPHABET -------------
 
 # a to z
-CHAR_A = b'\x66'
-CHAR_B = b'\x67'
-CHAR_C = b'\x68'
-CHAR_D = b'\x69'
-CHAR_E = b'\x6a'
-CHAR_F = b'\x6b'
-CHAR_G = b'\x6c'
-CHAR_H = b'\x6d'
-CHAR_I = b'\x6e'
-CHAR_J = b'\x6f'
-CHAR_K = b'\x70'
-CHAR_L = b'\x71'
-CHAR_M = b'\x72'
-CHAR_N = b'\x73'
-CHAR_O = b'\x74'
-CHAR_P = b'\x75'
-CHAR_Q = b'\x76'
-CHAR_R = b'\x77'
-CHAR_S = b'\x78'
-CHAR_T = b'\x79'
-CHAR_U = b'\x7a'
-CHAR_V = b'\x7b'
-CHAR_W = b'\x7c'
-CHAR_X = b'\x7d'
-CHAR_Y = b'\x7e'
-CHAR_Z = b'\x7f'
+CHAR_A = b'\x67'
+CHAR_B = b'\x68'
+CHAR_C = b'\x69'
+CHAR_D = b'\x6a'
+CHAR_E = b'\x6b'
+CHAR_F = b'\x6c'
+CHAR_G = b'\x6d'
+CHAR_H = b'\x6e'
+CHAR_I = b'\x6f'
+CHAR_J = b'\x70'
+CHAR_K = b'\x71'
+CHAR_L = b'\x72'
+CHAR_M = b'\x73'
+CHAR_N = b'\x74'
+CHAR_O = b'\x75'
+CHAR_P = b'\x76'
+CHAR_Q = b'\x77'
+CHAR_R = b'\x78'
+CHAR_S = b'\x79'
+CHAR_T = b'\x7a'
+CHAR_U = b'\x7b'
+CHAR_V = b'\x7c'
+CHAR_W = b'\x7d'
+CHAR_X = b'\x7e'
+CHAR_Y = b'\x7f'
+CHAR_Z = b'\x80'
 
 # A to Z (uppercase)
-CHAR_UP_A = b'\x80'
-CHAR_UP_B = b'\x81'
-CHAR_UP_C = b'\x82'
-CHAR_UP_D = b'\x83'
-CHAR_UP_E = b'\x84'
-CHAR_UP_F = b'\x85'
-CHAR_UP_G = b'\x86'
-CHAR_UP_H = b'\x87'
-CHAR_UP_I = b'\x88'
-CHAR_UP_J = b'\x89'
-CHAR_UP_K = b'\x8a'
-CHAR_UP_L = b'\x8b'
-CHAR_UP_M = b'\x8c'
-CHAR_UP_N = b'\x8d'
-CHAR_UP_O = b'\x8e'
-CHAR_UP_P = b'\x8f'
-CHAR_UP_Q = b'\x90'
-CHAR_UP_R = b'\x91'
-CHAR_UP_S = b'\x92'
-CHAR_UP_T = b'\x93'
-CHAR_UP_U = b'\x94'
-CHAR_UP_V = b'\x95'
-CHAR_UP_W = b'\x96'
-CHAR_UP_X = b'\x97'
-CHAR_UP_Y = b'\x98'
-CHAR_UP_Z = b'\x99'
+CHAR_UP_A = b'\x81'
+CHAR_UP_B = b'\x82'
+CHAR_UP_C = b'\x83'
+CHAR_UP_D = b'\x84'
+CHAR_UP_E = b'\x85'
+CHAR_UP_F = b'\x86'
+CHAR_UP_G = b'\x87'
+CHAR_UP_H = b'\x88'
+CHAR_UP_I = b'\x89'
+CHAR_UP_J = b'\x8a'
+CHAR_UP_K = b'\x8b'
+CHAR_UP_L = b'\x8c'
+CHAR_UP_M = b'\x8d'
+CHAR_UP_N = b'\x8e'
+CHAR_UP_O = b'\x8f'
+CHAR_UP_P = b'\x90'
+CHAR_UP_Q = b'\x91'
+CHAR_UP_R = b'\x92'
+CHAR_UP_S = b'\x93'
+CHAR_UP_T = b'\x94'
+CHAR_UP_U = b'\x95'
+CHAR_UP_V = b'\x96'
+CHAR_UP_W = b'\x97'
+CHAR_UP_X = b'\x98'
+CHAR_UP_Y = b'\x99'
+CHAR_UP_Z = b'\x9a'
 
 # ----------- CONSTANTS INTEGERS -------------
 
 # Const 0 to 99
-CONST_0 = b'\x9a'
-CONST_1 = b'\x9b'
-CONST_2 = b'\x9c'
-CONST_3 = b'\x9d'
-CONST_4 = b'\x9e'
-CONST_5 = b'\x9f'
-CONST_6 = b'\xa0'
-CONST_7 = b'\xa1'
-CONST_8 = b'\xa2'
-CONST_9 = b'\xa3'
-CONST_10 = b'\xa4'
-CONST_11 = b'\xa5'
-CONST_12 = b'\xa6'
-CONST_13 = b'\xa7'
-CONST_14 = b'\xa8'
-CONST_15 = b'\xa9'
-CONST_16 = b'\xaa'
-CONST_17 = b'\xab'
-CONST_18 = b'\xac'
-CONST_19 = b'\xad'
-CONST_20 = b'\xae'
-CONST_21 = b'\xaf'
-CONST_22 = b'\xb0'
-CONST_23 = b'\xb1'
-CONST_24 = b'\xb2'
-CONST_25 = b'\xb3'
-CONST_26 = b'\xb4'
-CONST_27 = b'\xb5'
-CONST_28 = b'\xb6'
-CONST_29 = b'\xb7'
-CONST_30 = b'\xb8'
-CONST_31 = b'\xb9'
-CONST_32 = b'\xba'
-CONST_33 = b'\xbb'
-CONST_34 = b'\xbc'
-CONST_35 = b'\xbd'
-CONST_36 = b'\xbe'
-CONST_37 = b'\xbf'
-CONST_38 = b'\xc0'
-CONST_39 = b'\xc1'
-CONST_40 = b'\xc2'
-CONST_41 = b'\xc3'
-CONST_42 = b'\xc4'
-CONST_43 = b'\xc5'
-CONST_44 = b'\xc6'
-CONST_45 = b'\xc7'
-CONST_46 = b'\xc8'
-CONST_47 = b'\xc9'
-CONST_48 = b'\xca'
-CONST_49 = b'\xcb'
-CONST_50 = b'\xcc'
-CONST_51 = b'\xcd'
-CONST_52 = b'\xce'
-CONST_53 = b'\xcf'
-CONST_54 = b'\xd0'
-CONST_55 = b'\xd1'
-CONST_56 = b'\xd2'
-CONST_57 = b'\xd3'
-CONST_58 = b'\xd4'
-CONST_59 = b'\xd5'
-CONST_60 = b'\xd6'
-CONST_61 = b'\xd7'
-CONST_62 = b'\xd8'
-CONST_63 = b'\xd9'
-CONST_64 = b'\xda'
-CONST_65 = b'\xdb'
-CONST_66 = b'\xdc'
-CONST_67 = b'\xdd'
-CONST_68 = b'\xde'
-CONST_69 = b'\xdf'
-CONST_70 = b'\xe0'
-CONST_71 = b'\xe1'
-CONST_72 = b'\xe2'
-CONST_73 = b'\xe3'
-CONST_74 = b'\xe4'
-CONST_75 = b'\xe5'
-CONST_76 = b'\xe6'
-CONST_77 = b'\xe7'
-CONST_78 = b'\xe8'
-CONST_79 = b'\xe9'
-CONST_80 = b'\xea'
-CONST_81 = b'\xeb'
-CONST_82 = b'\xec'
-CONST_83 = b'\xed'
-CONST_84 = b'\xee'
-CONST_85 = b'\xef'
-CONST_86 = b'\xf0'
-CONST_87 = b'\xf1'
-CONST_88 = b'\xf2'
-CONST_89 = b'\xf3'
-CONST_90 = b'\xf4'
-CONST_91 = b'\xf5'
-CONST_92 = b'\xf6'
-CONST_93 = b'\xf7'
-CONST_94 = b'\xf8'
-CONST_95 = b'\xf9'
-CONST_96 = b'\xfa'
-CONST_97 = b'\xfb'
-CONST_98 = b'\xfc'
-CONST_99 = b'\xfd'
-
-# ----------- RESERVED TAG -------------
-
-XT = b'\xfe'
+CONST_0 = b'\x9b'
+CONST_1 = b'\x9c'
+CONST_2 = b'\x9d'
+CONST_3 = b'\x9e'
+CONST_4 = b'\x9f'
+CONST_5 = b'\xa0'
+CONST_6 = b'\xa1'
+CONST_7 = b'\xa2'
+CONST_8 = b'\xa3'
+CONST_9 = b'\xa4'
+CONST_10 = b'\xa5'
+CONST_11 = b'\xa6'
+CONST_12 = b'\xa7'
+CONST_13 = b'\xa8'
+CONST_14 = b'\xa9'
+CONST_15 = b'\xaa'
+CONST_16 = b'\xab'
+CONST_17 = b'\xac'
+CONST_18 = b'\xad'
+CONST_19 = b'\xae'
+CONST_20 = b'\xaf'
+CONST_21 = b'\xb0'
+CONST_22 = b'\xb1'
+CONST_23 = b'\xb2'
+CONST_24 = b'\xb3'
+CONST_25 = b'\xb4'
+CONST_26 = b'\xb5'
+CONST_27 = b'\xb6'
+CONST_28 = b'\xb7'
+CONST_29 = b'\xb8'
+CONST_30 = b'\xb9'
+CONST_31 = b'\xba'
+CONST_32 = b'\xbb'
+CONST_33 = b'\xbc'
+CONST_34 = b'\xbd'
+CONST_35 = b'\xbe'
+CONST_36 = b'\xbf'
+CONST_37 = b'\xc0'
+CONST_38 = b'\xc1'
+CONST_39 = b'\xc2'
+CONST_40 = b'\xc3'
+CONST_41 = b'\xc4'
+CONST_42 = b'\xc5'
+CONST_43 = b'\xc6'
+CONST_44 = b'\xc7'
+CONST_45 = b'\xc8'
+CONST_46 = b'\xc9'
+CONST_47 = b'\xca'
+CONST_48 = b'\xcb'
+CONST_49 = b'\xcc'
+CONST_50 = b'\xcd'
+CONST_51 = b'\xce'
+CONST_52 = b'\xcf'
+CONST_53 = b'\xd0'
+CONST_54 = b'\xd1'
+CONST_55 = b'\xd2'
+CONST_56 = b'\xd3'
+CONST_57 = b'\xd4'
+CONST_58 = b'\xd5'
+CONST_59 = b'\xd6'
+CONST_60 = b'\xd7'
+CONST_61 = b'\xd8'
+CONST_62 = b'\xd9'
+CONST_63 = b'\xda'
+CONST_64 = b'\xdb'
+CONST_65 = b'\xdc'
+CONST_66 = b'\xdd'
+CONST_67 = b'\xde'
+CONST_68 = b'\xdf'
+CONST_69 = b'\xe0'
+CONST_70 = b'\xe1'
+CONST_71 = b'\xe2'
+CONST_72 = b'\xe3'
+CONST_73 = b'\xe4'
+CONST_74 = b'\xe5'
+CONST_75 = b'\xe6'
+CONST_76 = b'\xe7'
+CONST_77 = b'\xe8'
+CONST_78 = b'\xe9'
+CONST_79 = b'\xea'
+CONST_80 = b'\xeb'
+CONST_81 = b'\xec'
+CONST_82 = b'\xed'
+CONST_83 = b'\xee'
+CONST_84 = b'\xef'
+CONST_85 = b'\xf0'
+CONST_86 = b'\xf1'
+CONST_87 = b'\xf2'
+CONST_88 = b'\xf3'
+CONST_89 = b'\xf4'
+CONST_90 = b'\xf5'
+CONST_91 = b'\xf6'
+CONST_92 = b'\xf7'
+CONST_93 = b'\xf8'
+CONST_94 = b'\xf9'
+CONST_95 = b'\xfa'
+CONST_96 = b'\xfb'
+CONST_97 = b'\xfc'
+CONST_98 = b'\xfd'
+CONST_99 = b'\xfe'
 
 # ----------- -------------
 

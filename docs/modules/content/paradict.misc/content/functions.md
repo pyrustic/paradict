@@ -8,12 +8,12 @@ Private miscellaneous functions and classes. Do not use them !
 
 > **Classes:** &nbsp; [FloatParts](https://github.com/pyrustic/paradict/blob/master/docs/modules/content/paradict.misc/content/classes/FloatParts.md#class-floatparts) &nbsp;&nbsp; [IntParts](https://github.com/pyrustic/paradict/blob/master/docs/modules/content/paradict.misc/content/classes/IntParts.md#class-intparts)
 >
-> **Functions:** &nbsp; [\_count\_leading\_zeros](#_count_leading_zeros) &nbsp;&nbsp; [\_parse\_significand](#_parse_significand) &nbsp;&nbsp; [\_prepare\_float](#_prepare_float) &nbsp;&nbsp; [\_tidy\_up\_right\_significand](#_tidy_up_right_significand) &nbsp;&nbsp; [add\_leading\_zeros](#add_leading_zeros) &nbsp;&nbsp; [calc\_uint\_bytes](#calc_uint_bytes) &nbsp;&nbsp; [construct\_date](#construct_date) &nbsp;&nbsp; [construct\_datetime](#construct_datetime) &nbsp;&nbsp; [construct\_time](#construct_time) &nbsp;&nbsp; [count\_indents](#count_indents) &nbsp;&nbsp; [count\_leading\_zeros](#count_leading_zeros) &nbsp;&nbsp; [decode\_unicode](#decode_unicode) &nbsp;&nbsp; [deconstruct\_date](#deconstruct_date) &nbsp;&nbsp; [deconstruct\_datetime](#deconstruct_datetime) &nbsp;&nbsp; [deconstruct\_time](#deconstruct_time) &nbsp;&nbsp; [dedent](#dedent) &nbsp;&nbsp; [encode\_unicode](#encode_unicode) &nbsp;&nbsp; [forge\_bin](#forge_bin) &nbsp;&nbsp; [get\_int\_base](#get_int_base) &nbsp;&nbsp; [is\_whole\_number](#is_whole_number) &nbsp;&nbsp; [left\_pad\_int](#left_pad_int) &nbsp;&nbsp; [make\_indent\_str](#make_indent_str) &nbsp;&nbsp; [prettify\_b16](#prettify_b16) &nbsp;&nbsp; [prettify\_grid](#prettify_grid) &nbsp;&nbsp; [split\_float](#split_float) &nbsp;&nbsp; [split\_int](#split_int) &nbsp;&nbsp; [stringify\_bin](#stringify_bin) &nbsp;&nbsp; [strip\_block\_extra\_space](#strip_block_extra_space) &nbsp;&nbsp; [tidy\_up\_float](#tidy_up_float) &nbsp;&nbsp; [tidy\_up\_int](#tidy_up_int)
+> **Functions:** &nbsp; [\_count\_leading\_zeros](#_count_leading_zeros) &nbsp;&nbsp; [\_parse\_significand](#_parse_significand) &nbsp;&nbsp; [\_prepare\_float](#_prepare_float) &nbsp;&nbsp; [\_tidy\_up\_right\_significand](#_tidy_up_right_significand) &nbsp;&nbsp; [add\_leading\_zeros](#add_leading_zeros) &nbsp;&nbsp; [calc\_uint\_bytes](#calc_uint_bytes) &nbsp;&nbsp; [construct\_date](#construct_date) &nbsp;&nbsp; [construct\_datetime](#construct_datetime) &nbsp;&nbsp; [construct\_time](#construct_time) &nbsp;&nbsp; [count\_indents](#count_indents) &nbsp;&nbsp; [count\_leading\_zeros](#count_leading_zeros) &nbsp;&nbsp; [decode\_unicode](#decode_unicode) &nbsp;&nbsp; [deconstruct\_date](#deconstruct_date) &nbsp;&nbsp; [deconstruct\_datetime](#deconstruct_datetime) &nbsp;&nbsp; [deconstruct\_time](#deconstruct_time) &nbsp;&nbsp; [dedent](#dedent) &nbsp;&nbsp; [encode\_unicode](#encode_unicode) &nbsp;&nbsp; [forge\_bin](#forge_bin) &nbsp;&nbsp; [get\_int\_base](#get_int_base) &nbsp;&nbsp; [is\_whole\_number](#is_whole_number) &nbsp;&nbsp; [left\_pad\_int](#left_pad_int) &nbsp;&nbsp; [make\_indent\_str](#make_indent_str) &nbsp;&nbsp; [make\_multiline](#make_multiline) &nbsp;&nbsp; [prettify\_base16](#prettify_base16) &nbsp;&nbsp; [prettify\_grid](#prettify_grid) &nbsp;&nbsp; [split\_float](#split_float) &nbsp;&nbsp; [split\_int](#split_int) &nbsp;&nbsp; [stringify\_bin](#stringify_bin) &nbsp;&nbsp; [strip\_block\_extra\_space](#strip_block_extra_space) &nbsp;&nbsp; [tidy\_up\_float](#tidy_up_float) &nbsp;&nbsp; [tidy\_up\_int](#tidy_up_int)
 >
 > **Constants:** &nbsp; None
 
 # All Functions
-[\_count\_leading\_zeros](#_count_leading_zeros) &nbsp;&nbsp; [\_parse\_significand](#_parse_significand) &nbsp;&nbsp; [\_prepare\_float](#_prepare_float) &nbsp;&nbsp; [\_tidy\_up\_right\_significand](#_tidy_up_right_significand) &nbsp;&nbsp; [add\_leading\_zeros](#add_leading_zeros) &nbsp;&nbsp; [calc\_uint\_bytes](#calc_uint_bytes) &nbsp;&nbsp; [construct\_date](#construct_date) &nbsp;&nbsp; [construct\_datetime](#construct_datetime) &nbsp;&nbsp; [construct\_time](#construct_time) &nbsp;&nbsp; [count\_indents](#count_indents) &nbsp;&nbsp; [count\_leading\_zeros](#count_leading_zeros) &nbsp;&nbsp; [decode\_unicode](#decode_unicode) &nbsp;&nbsp; [deconstruct\_date](#deconstruct_date) &nbsp;&nbsp; [deconstruct\_datetime](#deconstruct_datetime) &nbsp;&nbsp; [deconstruct\_time](#deconstruct_time) &nbsp;&nbsp; [dedent](#dedent) &nbsp;&nbsp; [encode\_unicode](#encode_unicode) &nbsp;&nbsp; [forge\_bin](#forge_bin) &nbsp;&nbsp; [get\_int\_base](#get_int_base) &nbsp;&nbsp; [is\_whole\_number](#is_whole_number) &nbsp;&nbsp; [left\_pad\_int](#left_pad_int) &nbsp;&nbsp; [make\_indent\_str](#make_indent_str) &nbsp;&nbsp; [prettify\_b16](#prettify_b16) &nbsp;&nbsp; [prettify\_grid](#prettify_grid) &nbsp;&nbsp; [split\_float](#split_float) &nbsp;&nbsp; [split\_int](#split_int) &nbsp;&nbsp; [stringify\_bin](#stringify_bin) &nbsp;&nbsp; [strip\_block\_extra\_space](#strip_block_extra_space) &nbsp;&nbsp; [tidy\_up\_float](#tidy_up_float) &nbsp;&nbsp; [tidy\_up\_int](#tidy_up_int)
+[\_count\_leading\_zeros](#_count_leading_zeros) &nbsp;&nbsp; [\_parse\_significand](#_parse_significand) &nbsp;&nbsp; [\_prepare\_float](#_prepare_float) &nbsp;&nbsp; [\_tidy\_up\_right\_significand](#_tidy_up_right_significand) &nbsp;&nbsp; [add\_leading\_zeros](#add_leading_zeros) &nbsp;&nbsp; [calc\_uint\_bytes](#calc_uint_bytes) &nbsp;&nbsp; [construct\_date](#construct_date) &nbsp;&nbsp; [construct\_datetime](#construct_datetime) &nbsp;&nbsp; [construct\_time](#construct_time) &nbsp;&nbsp; [count\_indents](#count_indents) &nbsp;&nbsp; [count\_leading\_zeros](#count_leading_zeros) &nbsp;&nbsp; [decode\_unicode](#decode_unicode) &nbsp;&nbsp; [deconstruct\_date](#deconstruct_date) &nbsp;&nbsp; [deconstruct\_datetime](#deconstruct_datetime) &nbsp;&nbsp; [deconstruct\_time](#deconstruct_time) &nbsp;&nbsp; [dedent](#dedent) &nbsp;&nbsp; [encode\_unicode](#encode_unicode) &nbsp;&nbsp; [forge\_bin](#forge_bin) &nbsp;&nbsp; [get\_int\_base](#get_int_base) &nbsp;&nbsp; [is\_whole\_number](#is_whole_number) &nbsp;&nbsp; [left\_pad\_int](#left_pad_int) &nbsp;&nbsp; [make\_indent\_str](#make_indent_str) &nbsp;&nbsp; [make\_multiline](#make_multiline) &nbsp;&nbsp; [prettify\_base16](#prettify_base16) &nbsp;&nbsp; [prettify\_grid](#prettify_grid) &nbsp;&nbsp; [split\_float](#split_float) &nbsp;&nbsp; [split\_int](#split_int) &nbsp;&nbsp; [stringify\_bin](#stringify_bin) &nbsp;&nbsp; [strip\_block\_extra\_space](#strip_block_extra_space) &nbsp;&nbsp; [tidy\_up\_float](#tidy_up_float) &nbsp;&nbsp; [tidy\_up\_int](#tidy_up_int)
 
 ## \_count\_leading\_zeros
 This function accepts a string representing an integer.
@@ -374,7 +374,23 @@ The type of 'indents' is int !
 [Back to Top](#module-overview)
 
 
-## prettify\_b16
+## make\_multiline
+No description
+
+
+
+**Signature:** (s, group\_size=0, row\_size=42)
+
+
+
+
+
+**Return Value:** None
+
+[Back to Top](#module-overview)
+
+
+## prettify\_base16
 Prettify base16 string. Returns a list of strings, each string representing
 a line of 16 bytes
 

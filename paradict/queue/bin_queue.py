@@ -52,12 +52,14 @@ class BinQueue:
         elif self._tag in (tags.STR_SHORT,
                            tags.STR_MEDIUM,
                            tags.STR_LONG,
+                           tags.STR_BIG,
                            tags.STR_HEAVY):
             return self._read_buffer(read_str)
         # BIN
         elif self._tag in (tags.BIN_SHORT,
                            tags.BIN_MEDIUM,
                            tags.BIN_LONG,
+                           tags.BIN_BIG,
                            tags.BIN_HEAVY):
             return self._read_buffer(read_bin)
         # PINTx
@@ -172,8 +174,10 @@ class BinQueue:
             self._expected_width = 4
         elif self._tag in (tags.STR_LONG, tags.BIN_LONG):
             self._expected_width = 5
-        elif self._tag in (tags.STR_HEAVY, tags.BIN_HEAVY):
+        elif self._tag in (tags.STR_BIG, tags.BIN_BIG):
             self._expected_width = 6
+        elif self._tag in (tags.STR_HEAVY, tags.BIN_HEAVY):
+            self._expected_width = 7
         else:
             self._expected_width = 1
 
@@ -193,8 +197,8 @@ def read_payload_size(buffer, nb=1, offset=1):
 
 def extract_datum(buffer, tag, nb=1):
     """
-    This function is used read STR_SHORT, STR_MEDIUM, STR_LONG,
-     STR_HEAVY, BIN_SHORT, BIN_MEDIUM, BIN_LONG and BIN_HEAVY datums.
+    This function is used read STR_SHORT, STR_MEDIUM, STR_LONG, STR_BIG,
+     STR_HEAVY, BIN_SHORT, BIN_MEDIUM, BIN_LONG, BIN_BIG, and BIN_HEAVY datums.
 
     nb is the number of bytes to encode the size of payload
 
@@ -225,7 +229,8 @@ def read_str(tag, buffer):
     containers = {tags.STR_SHORT: 1,
                   tags.STR_MEDIUM: 2,
                   tags.STR_LONG: 3,
-                  tags.STR_HEAVY: 4}
+                  tags.STR_BIG: 4,
+                  tags.STR_HEAVY: 5}
     # nb is the number of bytes to encode the size of payload
     nb = containers.get(tag)
     return extract_datum(buffer, tag, nb)
@@ -251,7 +256,8 @@ def read_bin(tag, buffer):
     containers = {tags.BIN_SHORT: 1,
                   tags.BIN_MEDIUM: 2,
                   tags.BIN_LONG: 3,
-                  tags.BIN_HEAVY: 4}
+                  tags.BIN_BIG: 4,
+                  tags.BIN_HEAVY: 5}
     # nb is the number of bytes to encode the size of payload
     nb = containers.get(tag)
     return extract_datum(buffer, tag, nb)

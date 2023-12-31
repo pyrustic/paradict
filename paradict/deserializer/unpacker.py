@@ -36,7 +36,7 @@ class Unpacker:
         self._block_on = False
         self._block_count = 0
         # flags
-        self._as_raw_str = False
+        self._as_command_str = False
         self._as_comment_str = False
         # byte count for exception message
         self._byte_count = 0
@@ -138,6 +138,7 @@ class Unpacker:
                      tags.GRID,
                      tags.OBJ,
                      tags.COMPLEX,
+                     tags.FLOAT_MISC,
                      tags.FLOAT_1, tags.FLOAT_2, tags.FLOAT_3,
                      tags.FLOAT_1_EXT, tags.FLOAT_2_EXT, tags.FLOAT_3_EXT,
                      tags.DATETIME, tags.DATETIME_EXT,
@@ -157,7 +158,7 @@ class Unpacker:
         elif tag == tags.OBJ_EMPTY:
             self._update_context(self._unpack_obj(tag))
         # flags
-        elif tag in (tags.RAW_STR, tags.COMMENT_STR):
+        elif tag in (tags.COMMAND, tags.COMMENT):
             self._update_flags(tag)
         # process payload
         else:
@@ -269,6 +270,8 @@ class Unpacker:
             data = self._unpack_bin_int(tag, container)
         elif tag == tags.RADIX_BIN_EXT and n == 2:
             data = self._unpack_bin_int(tag, container)
+        elif tag == tags.FLOAT_MISC and n == 1:
+            data = self._unpack_float(tag, container)
         elif tag == tags.FLOAT_1 and n == 1:
             data = self._unpack_float(tag, container)
         elif tag == tags.FLOAT_1_EXT and n == 2:
@@ -306,9 +309,9 @@ class Unpacker:
             self._block_on = False
 
     def _update_flags(self, tag):
-        if tag == tags.RAW_STR:
-            self._as_raw_str = True
-        elif tag == tags.COMMENT_STR:
+        if tag == tags.COMMAND:
+            self._as_command_str = True
+        elif tag == tags.COMMENT:
             self._as_comment_str = True
 
     def _cleanup_stack(self):
@@ -331,7 +334,7 @@ class Unpacker:
         if tag == tags.NULL:
             if self._as_comment_str:
                 self._as_comment_str = False
-                return self._unpack_comment_id(tags.COMMENT_STR, None)
+                return self._unpack_comment_id(tags.COMMENT, None)
             return self._unpack_null(tag, payload)
         # boolean
         elif tag in (tags.BOOL_TRUE, tags.BOOL_FALSE):
@@ -341,13 +344,13 @@ class Unpacker:
               or tags.CONST_0 <= tag <= tags.CONST_99):
             return self._unpack_int(tag, payload)
         # float misc
-        elif tags.FLOAT_NAN <= tag <= tags.FLOAT_INF_2:
-            return self._unpack_float_misc(tag, payload)
+        #elif tag == tags.FLOAT_MISC:
+        #    return self._unpack_float_misc(tag, payload)
         # unpack string
         elif (tags.STR_8 <= tag <= tags.STR_HEAVY
               or tags.CHAR_A <= tag <= tags.CHAR_UP_Z):
-            if self._as_raw_str:
-                return self._unpack_raw(tag, payload)
+            if self._as_command_str:
+                return self._unpack_command(tag, payload)
             elif self._as_comment_str:
                 if self._skip_comments:
                     raise errors.CommentSkip
@@ -424,7 +427,9 @@ class Unpacker:
         if payload_list is None:
             msg = "Payloads missing"
             raise errors.Error(msg)
-        if tag == tags.FLOAT_1:
+        if tag == tags.FLOAT_MISC:
+            return self._unpack_float_misc(tag, payload_list[0])
+        elif tag == tags.FLOAT_1:
             significand = payload_list[0]
             return self._type_ref.float_type(significand)
         elif tag == tags.FLOAT_1_EXT:
@@ -457,16 +462,17 @@ class Unpacker:
             raise errors.Error(msg)
 
     def _unpack_float_misc(self, tag, payload=None):
-        if tag == tags.FLOAT_NAN:
+        if payload == "n":
             return self._type_ref.float_type("NaN")
-        elif tag == tags.FLOAT_INF_1:
+        elif payload == "x":
             return self._type_ref.float_type("+inf")
-        elif tag == tags.FLOAT_INF_2:
+        elif payload == "y":
             return self._type_ref.float_type("-inf")
-        elif tag == tags.FLOAT_ZERO_1:
-            return self._type_ref.float_type("0.0")
-        elif tag == tags.FLOAT_ZERO_2:
+        elif payload == "z":
             return self._type_ref.float_type("-0.0")
+        else:
+            msg = "Malformed float misc datum"
+            raise errors.Error(msg)
 
     def _unpack_complex(self, tag, payload_list=None):
         if payload_list is None:
@@ -495,13 +501,13 @@ class Unpacker:
         r = r if self._type_ref.str_type is str else self._type_ref.str_type(r)
         return r
 
-    def _unpack_raw(self, tag, payload=None):
+    def _unpack_command(self, tag, payload=None):
         if payload is None:
             msg = "Payload missing"
             raise errors.Error(msg)
-        self._as_raw_str = False
+        self._as_command_str = False
         r = self._unpack_str(tag, payload)
-        return self._type_ref.raw_type(r)
+        return self._type_ref.command_type(r)
 
     def _unpack_comment_id(self, tag, payload=None):
         return self._type_ref.comment_id_type()

@@ -27,7 +27,7 @@ class Packer:
                             "grid": self._pack_grid,
                             "bool": self._pack_bool,
                             "str": self._pack_str,
-                            "raw": self._pack_raw,
+                            "command": self._pack_command,
                             "comment": self._pack_comment,
                             "comment_id": self._pack_comment_id,
                             "bin": self._pack_bin,
@@ -195,8 +195,8 @@ class Packer:
     def _pack_str(self, data):
         yield pack_str(data)
 
-    def _pack_raw(self, data):
-        yield pack_raw(data)
+    def _pack_command(self, data):
+        yield pack_command(data)
 
     def _pack_bin(self, data):
         yield pack_bin(data)
@@ -246,19 +246,19 @@ def pack_bool(val):
         return tags.BOOL_FALSE
 
 
-def pack_raw(val):
-    return misc.forge_bin(tags.RAW_STR, pack_str(val))
+def pack_command(val):
+    return misc.forge_bin(tags.COMMAND, pack_str(val))
 
 
 def pack_comment(val):
     val = val.strip()
     if val and not val.startswith("#"):
         val = "# " + val
-    return misc.forge_bin(tags.COMMENT_STR, pack_str(val))
+    return misc.forge_bin(tags.COMMENT, pack_str(val))
 
 
 def pack_comment_id(val):
-    return misc.forge_bin(tags.COMMENT_STR, tags.NULL)
+    return misc.forge_bin(tags.COMMENT, tags.NULL)
 
 
 def pack_str(val):
@@ -288,11 +288,14 @@ def pack_str(val):
     # long
     if size <= 2**(8*3):
         return misc.forge_bin(tags.STR_LONG, size-1, data)
-    # heavy
+    # big
     if size <= 2**(8*4):
+        return misc.forge_bin(tags.STR_BIG, size-1, data)
+    # heavy
+    if size <= 2**(8*5):
         return misc.forge_bin(tags.STR_HEAVY, size-1, data)
-    # tooooo heavy
-    msg = "The string to pack is too heavy !"
+    # oveeeer heavy
+    msg = "The string to pack is over heavy !"
     raise errors.Error(msg)
 
 
@@ -310,11 +313,14 @@ def pack_bin(val):
     # long
     if size <= 2**(8*3):
         return misc.forge_bin(tags.BIN_LONG, size-1, val)
-    # heavy
+    # big
     if size <= 2**(8*4):
+        return misc.forge_bin(tags.BIN_BIG, size-1, val)
+    # heavy
+    if size <= 2**(8*5):
         return misc.forge_bin(tags.BIN_HEAVY, size-1, val)
-    # tooooo heavy
-    msg = "The bin to pack is too heavy !"
+    # oveeeer heavy
+    msg = "The bin to pack is over heavy !"
     raise errors.Error(msg)
 
 
@@ -364,7 +370,7 @@ def pack_pint(val):
     if size <= 256:
         tag = tags.PINT_BIG
         return misc.forge_bin(tag, size-1, val)
-    if size <= 512:
+    if size <= 65536:
         tag = tags.PINT_HEAVY
         return misc.forge_bin(tag, size-1, val)
     msg = "Too large positive integer"
@@ -380,7 +386,7 @@ def pack_nint(val):
     if size <= 256:
         tag = tags.NINT_BIG
         return misc.forge_bin(tag, size-1, val)
-    if size <= 512:
+    if size <= 65536:
         tag = tags.NINT_HEAVY
         return misc.forge_bin(tag, size-1, val)
     msg = "Too large negative integer"
@@ -391,15 +397,15 @@ def pack_float(val):
     # process special float values
     if val == 0:
         if math.copysign(1, val) == -1:
-            return tags.FLOAT_ZERO_2
+            return misc.forge_bin(tags.FLOAT_MISC, tags.CHAR_Z)
         else:
-            return tags.FLOAT_ZERO_1
+            return _pack_regular_float(val)
     elif val == float("+inf"):
-        return tags.FLOAT_INF_1
+        return misc.forge_bin(tags.FLOAT_MISC, tags.CHAR_X)
     elif val == float("-inf"):
-        return tags.FLOAT_INF_2
+        return misc.forge_bin(tags.FLOAT_MISC, tags.CHAR_Y)
     elif val == float("NaN"):
-        return tags.FLOAT_NAN
+        return misc.forge_bin(tags.FLOAT_MISC, tags.CHAR_N)
     else:
         return _pack_regular_float(val)
 

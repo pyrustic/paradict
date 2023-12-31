@@ -63,7 +63,7 @@ KEY_PATTERN_2 = r"""^(?<!\\)('[^'](?:[^']*?(?:\\')*?)+(?<!\\)')\s*"""
 KEY_PATTERN_3 = r"""^(.+?)\s*"""
 
 # key pattern for config mode
-KEY_PATTERN_4 = r"""^([a-zA-Z_][a-zA-Z0-9_]*)\s*"""
+KEY_PATTERN_4 = r"""^([a-zA-Z0-9_-]*)\s*"""
 
 # value pattern (right side of colon or equal sign)
 VALUE_PATTERN = r"""(.*)$"""

@@ -78,23 +78,32 @@ def prettify_grid(grid):
     return list(zip(*r))
 
 
-def prettify_b16(s):
+def prettify_base16(s):
     """Prettify base16 string. Returns a list of strings, each string representing
-    a line of 16 bytes"""
+        a line of 16 bytes"""
+    return make_multiline(s, group_size=2, row_size=16)
+
+
+def make_multiline(s, group_size=0, row_size=42):
+    group_size = 0 if group_size <= 0 else group_size
+    row_size = 42 if row_size <= 0 else row_size
     result = list()
-    cache = list()
-    prev_char = ""
+    row = list()
+    group = list()
+    spacing = " " if group_size else ""
     for char in s:
-        if prev_char:
-            cache.append(prev_char+char)
-            prev_char = ""
+        if group_size:
+            group.append(char)
+            if len(group) == group_size:
+                row.append("".join(group))
+                group = list()
         else:
-            prev_char = char
-        if len(cache) == 16:
-            result.append(" ".join(cache))
-            cache = list()
-    if cache:
-        result.append(" ".join(cache))
+            row.append(char)
+        if len(row) == row_size:
+            result.append(spacing.join(row))
+            row = list()
+    if row:
+        result.append(spacing.join(row))
     return result
 
 

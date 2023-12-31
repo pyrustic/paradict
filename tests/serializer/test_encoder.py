@@ -39,7 +39,7 @@ class TestDictInConfigMode(unittest.TestCase):
 
     def test_malformed_dict_key(self):
         d1 = {"key_42=": None}
-        d2 = {"1_key_42": None}
+        d2 = {"1_key 42": None}
         for i, d in enumerate((d1, d2)):
             with self.subTest("Test {}".format(i+1)):
                 with self.assertRaises(errors.Error):
@@ -56,7 +56,7 @@ class TestDict(unittest.TestCase):
 
     def test_dict_with_valid_keys(self):
         # are valid keys: integer (int, box.HexInt, ...),
-        # float, complex and string (str, box.Raw)
+        # float, complex and string
         d = {0: None,
              "1": None,
              "": None,
@@ -384,16 +384,16 @@ class TestObj(unittest.TestCase):
 class TestGrid(unittest.TestCase):
 
     def test_valid_grid(self):
-        x = [(0, 1, 2.3, 4+5j, box.HexInt("0xff")),
-             (0, 1, 2.3, 4+5j, box.HexInt("0xff")),
-             (0, 1, 2.3, 4+5j, box.HexInt("0xff"))]
+        x = [(0, 1, 2.3, 4+5j, box.HexInt("0xffff_ffff")),
+             (0, 1, 2.3, 4+5j, box.BinInt("0b0000_1111")),
+             (0, 1, 2.3, 4+5j, box.OctInt("0o0_000_777"))]
         d = {0: box.Grid(x)}
         r = encode_data(d)
         expected = """\
         0: (grid)
-            0 1 2.3 4+5i 0xFF
-            0 1 2.3 4+5i 0xFF
-            0 1 2.3 4+5i 0xFF"""
+            0 1 2.3 4+5i 0xFFFF_FFFF
+            0 1 2.3 4+5i 0b0000_1111
+            0 1 2.3 4+5i 0o0_000_777"""
         self.assertEqual(dedent(expected), r)
 
     def test_inconsistent_grid(self):
@@ -641,6 +641,27 @@ class TestInteger(unittest.TestCase):
         self.assertEqual(expected, r)
 
 
+class TestIntWithLeadingZeros(unittest.TestCase):
+
+    def test_hex(self):
+        d = {0: box.HexInt("-0x0000_FFFF")}
+        r = encode_data(d)
+        expected = "0: -0x0000_FFFF"
+        self.assertEqual(expected, r)
+
+    def test_oct(self):
+        d = {0: box.OctInt("-0o000_777")}
+        r = encode_data(d)
+        expected = "0: -0o000_777"
+        self.assertEqual(expected, r)
+
+    def test_bin(self):
+        d = {0: box.BinInt("-0b0000_1111")}
+        r = encode_data(d)
+        expected = "0: -0b0000_1111"
+        self.assertEqual(expected, r)
+
+
 class TestFloat(unittest.TestCase):
 
     def test_positive_float(self):
@@ -671,28 +692,77 @@ class TestFloat(unittest.TestCase):
 class TestDecimalFloat(unittest.TestCase):
 
     def test_positive_float(self):
-        d = {0: Decimal("1.234_567_89")}
+        d = {0: Decimal("1.000_234_56")}
         r = encode_data(d)
-        expected = "0: 1.234_567_89"
+        expected = "0: 1.000_234_56"
         self.assertEqual(expected, r)
 
     def test_negative_float(self):
-        d = {0: Decimal("-1.234_567_89")}
+        d = {0: Decimal("-1.000_234_56")}
         r = encode_data(d)
-        expected = "0: -1.234_567_89"
+        expected = "0: -1.000_234_56"
         self.assertEqual(expected, r)
 
     def test_positive_float_with_scientific_notation(self):
-        d = {0: Decimal("1.234_567_89E10")}
+        d = {0: Decimal("1.000_234_56E10")}
         r = encode_data(d)
-        expected = "0: 1.234_567_89E10"
+        expected = "0: 1.000_234_56E10"
         self.assertEqual(expected, r)
 
     def test_negative_float_with_scientific_notation(self):
-        d = {0: Decimal("-1.234_567_89E-10")}
+        d = {0: Decimal("-1.000_234_56E-10")}
         r = encode_data(d)
-        expected = "0: -1.234_567_89E-10"
+        expected = "0: -1.000_234_56E-10"
         self.assertEqual(expected, r)
+
+
+class TestMultilineNumber(unittest.TestCase):
+
+    def test_int(self):
+        d = {0: -1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000}
+        r = encode_data(d)
+        expected = """\
+        0: (int)
+            -1_000_000_000_000_000_000_000_000_000_000
+            _000_000_000_000_000_000_000_000"""
+        self.assertEqual(dedent(expected), r)
+
+    def test_hex_int(self):
+        d = {0: box.HexInt("-0x100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")}
+        r = encode_data(d)
+        expected = """\
+        0: (int)
+            -0x100_0000_0000_0000_0000_0000_0000_0000_
+            0000_0000_0000_0000_0000_0000"""
+        self.assertEqual(dedent(expected), r)
+
+    def test_oct_int(self):
+        d = {0: box.OctInt("-0o1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000")}
+        r = encode_data(d)
+        expected = """\
+        0: (int)
+            -0o1_000_000_000_000_000_000_000_000_000_0
+            00_000_000_000_000_000_000_000_000"""
+        self.assertEqual(dedent(expected), r)
+
+    def test_bin_int(self):
+        d = {0: box.BinInt("-0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")}
+        r = encode_data(d)
+        expected = """\
+        0: (int)
+            -0b100_0000_0000_0000_0000_0000_0000_0000_
+            0000_0000_0000_0000_0000_0000"""
+        self.assertEqual(dedent(expected), r)
+
+
+    def test_float(self):
+        d = {0: Decimal("-1.000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_111E-10")}
+        r = encode_data(d)
+        expected = """\
+        0: (float)
+            -1.000_000_000_000_000_000_000_000_000_000
+            _000_000_000_000_000_000_000_111E-10"""
+        self.assertEqual(dedent(expected), r)
 
 
 class TestComplexNumber(unittest.TestCase):
@@ -730,53 +800,88 @@ class TestComplexNumber(unittest.TestCase):
 
 class TestString(unittest.TestCase):
 
-    def test_empty_string(self):
+    def test_empty_str(self):
         d = {0: ""}
         r = encode_data(d)
         expected = '0: ""'
         self.assertEqual(expected, r)
 
-    def test_string(self):
-        d = {0: "hello \u02eb world\\u02eb"}
+    def test_str(self):
+        d = {0: "hello \u02eb world"}
         r = encode_data(d)
-        expected = '0: "hello ˫ world\\\\u02eb"'
+        expected = '0: "hello ˫ world"'
         self.assertEqual(expected, r)
 
-    def test_multiline_text_string(self):
-        d = {0: "hello \u02eb world\nagain hello world\\u02eb"}
+    def test_str_with_backlash(self):
+        d = {0: "hello \u02eb \\ world"}
+        r = encode_data(d)
+        expected = r"0: 'hello ˫ \ world'"
+        self.assertEqual(expected, r)
+
+
+class TestMultilineString(unittest.TestCase):
+
+    def test_str(self):
+        d = {0: "this is \u02eb a\nmultiline string"}
         r = encode_data(d)
         expected = """\
         0: (text)
-            hello ˫ world
-            again hello world\\\\u02eb
+            this is ˫ a
+            multiline string
+            ---"""
+        self.assertEqual(dedent(expected), r)
+
+    def test_str_with_backlash(self):
+        d = {0: "this is \u02eb a\nmultiline \\string"}
+        r = encode_data(d)
+        expected = """\
+        0: (raw)
+            this is ˫ a
+            multiline \\string
             ---"""
         self.assertEqual(dedent(expected), r)
 
 
-class TestRawString(unittest.TestCase):
+class TestCommand(unittest.TestCase):
 
-    def test_empty_string(self):
-        x = ""
-        d = {0: box.Raw(x)}
+    def test_empty_cmd(self):
+        d = {0: box.Command("")}
         r = encode_data(d)
-        expected = "0: ''"
+        expected = '0: `'
         self.assertEqual(expected, r)
 
-    def test_string(self):
-        x = "hello \u02eb world\\u02eb"
-        d = {0: box.Raw(x)}
+    def test_cmd(self):
+        d = {0: box.Command("hello \u02eb world")}
         r = encode_data(d)
-        expected = "0: 'hello ˫ world\\u02eb'"
+        expected = "0: `hello ˫ world"
         self.assertEqual(expected, r)
 
-    def test_multiline_raw_string(self):
-        x = "hello \u02eb world\nagain hello world\\u02eb"
-        d = {0: box.Raw(x)}
+    def test_cmd_with_backlash(self):
+        d = {0: box.Command("hello \u02eb \\ world")}
+        r = encode_data(d)
+        expected = r"0: `hello ˫ \\ world"
+        self.assertEqual(expected, r)
+
+
+class TestMultilineCommand(unittest.TestCase):
+
+    def test_cmd(self):
+        d = {0: box.Command("this is \u02eb a\nmultiline cmd")}
         r = encode_data(d)
         expected = """\
-        0: (raw)
-            hello ˫ world
-            again hello world\\u02eb
+        0: (cmd)
+            this is ˫ a
+            multiline cmd
+            ---"""
+        self.assertEqual(dedent(expected), r)
+
+    def test_cmd_with_backlash(self):
+        d = {0: box.Command("this is \u02eb a\nmultiline \\cmd")}
+        r = encode_data(d)
+        expected = """\
+        0: (cmd)
+            this is ˫ a
+            multiline \\\\cmd
             ---"""
         self.assertEqual(dedent(expected), r)
 

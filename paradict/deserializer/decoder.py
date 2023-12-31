@@ -34,11 +34,12 @@ class Decoder:
         self._stack = list()
         self._lineno = 1
         self._active = False
-        self._converters = (self._decode_null, self._decode_bool,
-                            self._decode_str, self._decode_complex_number,
-                            self._decode_int, self._decode_float,
-                            self._decode_date, self._decode_time,
-                            self._decode_datetime)
+        self._ordered_converters = (self._decode_cmd, self._decode_null,
+                                    self._decode_bool, self._decode_str,
+                                    self._decode_complex_number,
+                                    self._decode_int, self._decode_float,
+                                    self._decode_date, self._decode_time,
+                                    self._decode_datetime)
 
     @property
     def data(self):
@@ -149,10 +150,10 @@ class Decoder:
         container = context.container
         if name in ("dict", "list", "set", "obj"):
             self._update_context(line)
-        elif name in ("bin", "raw", "text", "grid"):
+        elif name in ("bin", "raw", "text", "cmd", "float", "int", "grid"):
             container.append(line)
         else:
-            msg = "Unknown tag '{}'. Expected dict, list, set, obj, grid, bin, text, or raw."
+            msg = "Unknown tag '{}'. Expected dict, list, set, obj, grid, bin, str, cmd, float, int, or raw."
             msg = msg.format(name)
             raise errors.Error(msg)
 
@@ -191,7 +192,7 @@ class Decoder:
                 container[key] = value
                 context.cached_dict_key = None
                 self._update_stack(tag, value, indents + 1)
-            elif tag in ("grid", "obj", "bin", "raw", "text"):
+            elif tag in ("grid", "obj", "bin", "raw", "text", "cmd", "int", "float"):
                 context.cached_dict_key = key
                 self._update_stack(tag, value, indents + 1)
             else:
@@ -220,7 +221,7 @@ class Decoder:
             if tag in ("dict", "list", "set"):
                 container.append(value)
                 self._update_stack(tag, value, indents + 1)
-            elif tag in ("grid", "obj", "bin", "raw", "text"):
+            elif tag in ("grid", "obj", "bin", "raw", "text", "cmd", "int", "float"):
                 self._update_stack(tag, value, indents + 1)
             else:
                 container.append(value)
@@ -241,7 +242,7 @@ class Decoder:
         else:
             value = self._decode_value(line)
             tag = self._check_multiline_tag(line)
-            if tag in ("bin", "raw", "text"):
+            if tag in ("bin", "raw", "text", "cmd", "float", "int"):
                 self._update_stack(tag, value, indents + 1)
             elif tag in ("dict", "list", "set", "grid", "obj"):
                 msg = "Set can't contain any of: dict, list, set, grid, obj"
@@ -255,7 +256,7 @@ class Decoder:
         if not line:
             return line
         context = self._get_context()
-        strict = False if context.name in ("bin", "raw", "text") else True
+        strict = False if context.name in ("bin", "raw", "text", "cmd", "int", "float") else True
         indents = misc.count_indents(line, strict)
         # same indent
         if indents == context.indents:
@@ -275,27 +276,26 @@ class Decoder:
 
     def _check_key(self, key, mode):
         if mode == const.CONFIG_MODE:
-            pattern = r'^[a-zA-Z_][a-zA-Z0-9_]*$'
+            pattern = r'^[a-zA-Z0-9_-]*$'
             if not re.match(pattern, key):
-                msg = ("Keys in CONFIG_MODE must contain "
-                       "only strict alphanumeric characters"
-                       " (a-z, A-Z, 0-9) and underscore characters."
-                       " Also, they cannot start with a number.")
+                msg = ("Keys in CONFIG_MODE are strings made up of "
+                       "alphanumeric characters"
+                       " (a-z, A-Z, 0-9), hyphen, and underscore.")
                 raise errors.Error(msg)
             key = "'{}'".format(key)
         key = self._decode_value(key)
-        if self._type_ref.check(type(key)) in ("str", "raw",
-                                               "int", "hex_int",
-                                               "oct_int", "bin_int",
+        if self._type_ref.check(type(key)) in ("str", "int",
+                                               "hex_int", "oct_int", "bin_int",
                                                "float", "complex"):
             return key
         # exception
         if mode == const.DATA_MODE:
-            msg = ("In DATA_MODE, a key should be one of: str, raw, "
+            msg = ("In DATA_MODE, a key should be one of: str, "
                    "int, hex_int, oct_int, bin_int, float, complex.")
         else:
-            msg = ("In CONFIG_MODE, a key should be either str or raw"
-                   " without whitespace. ")
+            msg = ("Keys in CONFIG_MODE are strings made up of "
+                   "alphanumeric characters"
+                   " (a-z, A-Z, 0-9), hyphen, and underscore.")
         raise errors.Error(msg)
 
     def _check_multiline_tag(self, value):
@@ -303,7 +303,7 @@ class Decoder:
             return None
         value = value.strip("()")
         if value not in ("bin", "dict", "list", "set",
-                         "raw", "text", "obj", "grid"):
+                         "raw", "text", "cmd", "int", "float", "obj", "grid"):
             return None
         return value
 
@@ -328,9 +328,12 @@ class Decoder:
             # raw
             elif context.name == "raw":
                 self._consume_raw_block(parent_context, context)
-            # text
+            # multiline str
             elif context.name == "text":
-                self._consume_text_block(parent_context, context)
+                self._consume_str_block(parent_context, context)
+            # cmd
+            elif context.name == "cmd":
+                self._consume_cmd_block(parent_context, context)
             # obj
             elif context.name == "obj":
                 self._consume_obj_block(parent_context, context)
@@ -358,19 +361,24 @@ class Decoder:
         self._update_parent_context(parent_context, bin_data)
 
     def _consume_raw_block(self, parent_context, context):
-        # concatenate text lines
+        # concatenate str lines
         block = misc.strip_block_extra_space(context.container)
-        #text = self._decode_raw(raw_block)
         text = "'{}'".format(block)
         text = self._decode_str(text)
         self._update_parent_context(parent_context, text)
 
-    def _consume_text_block(self, parent_context, context):
+    def _consume_str_block(self, parent_context, context):
         # concatenate text lines
         block = misc.strip_block_extra_space(context.container)
-        #text = self._decode_text(text_block)
         text = '"{}"'.format(block)
         text = self._decode_str(text)
+        self._update_parent_context(parent_context, text)
+
+    def _consume_cmd_block(self, parent_context, context):
+        # concatenate str lines
+        block = misc.strip_block_extra_space(context.container)
+        text = "`" + block
+        text = self._decode_cmd(text)
         self._update_parent_context(parent_context, text)
 
     def _consume_obj_block(self, parent_context, context):
@@ -451,7 +459,7 @@ class Decoder:
         if container is not None:
             return container
         # scalars and co.  (note that the order of items matters here)
-        for p in self._converters:
+        for p in self._ordered_converters:
             try:
                 result = p(value)
             except Exception as e:
@@ -481,14 +489,23 @@ class Decoder:
         # raw
         if val == "(raw)":
             return list()
-        # text
+        # multiline string
         if val == "(text)":
+            return list()
+        # multiline cmd
+        if val == "(cmd)":
+            return list()
+        # multiline float
+        if val == "(float)":
+            return list()
+        # multiline int
+        if val == "(int)":
             return list()
         # grid
         if val == "(grid)":
             return list()
-        msg = ("Expected one of these containers: (bin), "
-               "(dict), (list), (set), (raw), (text), (obj), (grid)")
+        msg = ("Expected one of these tags: (bin), "
+               "(dict), (list), (set), (raw), (text), (cmd), (int), (float), (obj), (grid)")
         raise errors.Error(msg)
 
     def _decode_null(self, val):
@@ -506,6 +523,11 @@ class Decoder:
     def _decode_str(self, val):
         r = decode_str(val)
         r = r if self._type_ref.str_type is str else self._type_ref.str_type(r)
+        return r
+
+    def _decode_cmd(self, val):
+        r = decode_cmd(val)
+        r = r if self._type_ref.command_type is str else self._type_ref.command_type(r)
         return r
 
     def _decode_complex_number(self, val):
@@ -651,10 +673,14 @@ def decode_str(val):
     if val.startswith('"') and val.endswith('"'):
         return misc.decode_unicode(val[1:-1])
     if val.startswith("'") and val.endswith("'"):
-        return box.Raw(val[1:-1])
+        return val[1:-1]
     raise errors.Error("Conversion error")
-    #val = misc.replace_newlines(val)
-    #val = misc.replace_tabs(val)
+
+
+def decode_cmd(val):
+    if val.startswith("`"):
+        return misc.decode_unicode(val[1:]).strip()
+    raise errors.Error("Conversion error")
 
 
 def decode_time(val):

@@ -34,7 +34,7 @@ class Encoder:
                             "grid": self._encode_grid,
                             "bool": self._encode_bool,
                             "str": self._encode_str,
-                            "raw": self._encode_raw,
+                            "command": self._encode_command,
                             "comment": self._encode_comment,
                             "bin": self._encode_bin,
                             "int": self._encode_int,
@@ -104,7 +104,7 @@ class Encoder:
 
     def _check_key(self, key):
         type_name = self._type_ref.check(type(key))
-        if (type_name in ("str", "raw")
+        if (type_name == "str"
                 or (self._mode == const.DATA_MODE
                     and type_name in ("int", "hex_int", "oct_int",
                                       "bin_int", "float", "complex"))):
@@ -115,7 +115,7 @@ class Encoder:
                    "In DATA_MODE, a key should be one of: str, raw, "
                    "int, hex_int, oct_int, bin_int, float, complex.")
             raise errors.Error(msg)
-        if type_name in ("str", "raw"):  # TODO
+        if type_name == "str":  # TODO
             key = key.replace("\\", "\\\\")
             key = key.replace("\n", "\\n")
             r = '"{}"'.format(key)
@@ -125,12 +125,11 @@ class Encoder:
         # if CONFIG_MODE is on
         if self._mode == const.CONFIG_MODE:
             r = r.strip("'").strip('"')
-            pattern = r'^[a-zA-Z_][a-zA-Z0-9_]*$'
+            pattern = r'^[a-zA-Z0-9_-]*$'
             if not re.match(pattern, r):
                 msg = ("Keys in CONFIG_MODE must contain "
-                       "only strict alphanumeric characters"
-                       " (a-z, A-Z, 0-9) and underscore characters."
-                       " Also, they cannot start with a number.")
+                       "only alphanumeric characters"
+                       " (a-z, A-Z, 0-9), underscore and hyphen characters.")
                 raise errors.Error(msg)
         # replace newline with
         else:
@@ -168,7 +167,7 @@ class Encoder:
         for val in data:
             val = self._type_ref.adapt(val)
             valid_types = ("int", "hex_int", "oct_int", "bin_int",
-                           "float", "complex", "str", "raw", "bin",
+                           "float", "command", "complex", "str", "bin",
                            "datetime", "date", "time", "comment")
             if self._type_ref.check(type(val)) not in valid_types:
 
@@ -254,29 +253,18 @@ class Encoder:
         yield indent_str + encode_bool(data)
 
     def _encode_str(self, data, indents=0):
-        data = data.replace("\\", "\\\\")
+        #data = data.replace("\\", "\\\\")
         indent_str = misc.make_indent_str(indents)
         if "\n" in data:
-            yield indent_str + "(text)"
+            tag = "(raw)" if "\\" in data else "(text)"
+            yield indent_str + tag
             indent_str = misc.make_indent_str(indents+1)
-            for line in data.split("\n"):
+            for line in encode_multiline_str(data):
                 yield indent_str + line
             yield indent_str + "---"
         else:
-            #indent_str = misc.make_indent_str(0)
-            yield indent_str + '"{}"'.format(data)
-
-    def _encode_raw(self, data, indents=0):
-        indent_str = misc.make_indent_str(indents)
-        if "\n" in data:
-            yield indent_str + "(raw)"
-            indent_str = misc.make_indent_str(indents + 1)
-            for line in data.split("\n"):
-                yield indent_str + line
-            yield indent_str + "---"
-        else:
-            #indent_str = misc.make_indent_str(indents)
-            yield indent_str + "'{}'".format(data)
+            val = encode_str(data)
+            yield indent_str + val
 
     def _encode_bin(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
@@ -286,6 +274,20 @@ class Encoder:
         indent_str = misc.make_indent_str(indents + 1)
         for line in encode_bin(data):
             yield indent_str + line
+
+    def _encode_command(self, data, indents=0):
+        #data = data.replace("\\", "\\\\")
+        indent_str = misc.make_indent_str(indents)
+        if "\n" in data:
+            tag = "(cmd)"
+            yield indent_str + tag
+            indent_str = misc.make_indent_str(indents+1)
+            for line in encode_multiline_cmd(data):
+                yield indent_str + line
+            yield indent_str + "---"
+        else:
+            r = encode_cmd(data)
+            yield indent_str + r
 
     def _encode_comment(self, data, indents=0):
         if self._skip_comments:
@@ -300,23 +302,59 @@ class Encoder:
 
     def _encode_int(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
-        yield indent_str + encode_int(data)
+        r = encode_int(data)
+        if len(r) > 42:
+            yield indent_str + "(int)"
+            indent_str = misc.make_indent_str(indents + 1)
+            for line in misc.make_multiline(r):
+                yield indent_str + line
+        else:
+            yield indent_str + r
 
     def _encode_hex_int(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
-        yield indent_str + encode_hex_int(data)
+        r = encode_hex_int(data)
+        if len(r) > 42:
+            yield indent_str + "(int)"
+            indent_str = misc.make_indent_str(indents + 1)
+            for line in misc.make_multiline(r):
+                yield indent_str + line
+        else:
+            yield indent_str + r
 
     def _encode_oct_int(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
-        yield indent_str + encode_oct_int(data)
+        r = encode_oct_int(data)
+        if len(r) > 42:
+            yield indent_str + "(int)"
+            indent_str = misc.make_indent_str(indents + 1)
+            for line in misc.make_multiline(r):
+                yield indent_str + line
+        else:
+            yield indent_str + r
 
     def _encode_bin_int(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
-        yield indent_str + encode_bin_int(data)
+        r = encode_bin_int(data)
+        if len(r) > 42:
+            yield indent_str + "(int)"
+            indent_str = misc.make_indent_str(indents + 1)
+            for line in misc.make_multiline(r):
+                yield indent_str + line
+        else:
+            yield indent_str + r
 
     def _encode_float(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
-        yield indent_str + encode_float(data)
+        r = encode_float(data)
+
+        if len(r) > 42:
+            yield indent_str + "(float)"
+            indent_str = misc.make_indent_str(indents + 1)
+            for line in misc.make_multiline(r):
+                yield indent_str + line
+        else:
+            yield indent_str + r
 
     def _encode_complex(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
@@ -350,31 +388,26 @@ def encode_bin(val):
         return list()
     r = base64.b16encode(val)
     s = r.decode("utf-8")
-    return misc.prettify_b16(s)
+    return misc.prettify_base16(s)
 
 
-def encode_string(val):
-    t = type(val)
-    # raw string (literal)
-    if t is box.Raw:
-        val = val.replace("\n", "\\n")
-        return "'{}'".format(val)
-    # processed string
-    val = val.replace("\\", "\\\\")
-    val = val.replace("\n", "\\n")
-    return '"{}"'.format(val)
+def encode_str(val):
+    quote = "'" if "\\" in val else '"'
+    # indent_str = misc.make_indent_str(0)
+    return "{quote}{data}{quote}".format(data=val, quote=quote)
 
 
-def encode_text(val):
-    if not val:
-        return list()
-    val = val.replace("\\", "\\\\")
+def encode_multiline_str(val):
     return val.split("\n")
 
 
-def encode_raw(val):
-    if not val:
-        return list()
+def encode_cmd(val):
+    val = val.replace("\\", "\\\\")
+    return "`{}".format(val)
+
+
+def encode_multiline_cmd(val):
+    val = val.replace("\\", "\\\\")
     return val.split("\n")
 
 
@@ -383,15 +416,15 @@ def encode_int(val):
 
 
 def encode_hex_int(val):
-    return misc.tidy_up_int(hex(val), width=4)
+    return misc.tidy_up_int(val, width=4)
 
 
 def encode_oct_int(val):
-    return misc.tidy_up_int(oct(val), width=3)
+    return misc.tidy_up_int(val, width=3)
 
 
 def encode_bin_int(val):
-    return misc.tidy_up_int(bin(val), width=4)
+    return misc.tidy_up_int(val, width=4)
 
 
 def encode_float(val):

@@ -25,14 +25,6 @@ class Obj(dict):
     pass
 
 
-class Raw(str):
-    """
-    A string defined as Raw doesn't recognize the '\' anti-slash as
-    special character (that might be used for unicode codepoint etc)
-    """
-    pass
-
-
 class HexInt(int):
     """Box to hold hexadecimal integer"""
 
@@ -88,6 +80,14 @@ class BinInt(int):
 
     def __str__(self):
         return self.__x
+
+
+class Command(str):
+    """
+    A string defined as Command is meant to be run (given that the programmer
+    knows what he/she is doing)
+    """
+    pass
 
 
 class CommentID(str):

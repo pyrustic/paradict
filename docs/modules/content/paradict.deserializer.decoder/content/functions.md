@@ -8,12 +8,12 @@ No description
 
 > **Classes:** &nbsp; [Context](https://github.com/pyrustic/paradict/blob/master/docs/modules/content/paradict.deserializer.decoder/content/classes/Context.md#class-context) &nbsp;&nbsp; [Decoder](https://github.com/pyrustic/paradict/blob/master/docs/modules/content/paradict.deserializer.decoder/content/classes/Decoder.md#class-decoder)
 >
-> **Functions:** &nbsp; [decode\_bin](#decode_bin) &nbsp;&nbsp; [decode\_bool](#decode_bool) &nbsp;&nbsp; [decode\_complex](#decode_complex) &nbsp;&nbsp; [decode\_date](#decode_date) &nbsp;&nbsp; [decode\_datetime](#decode_datetime) &nbsp;&nbsp; [decode\_float](#decode_float) &nbsp;&nbsp; [decode\_int](#decode_int) &nbsp;&nbsp; [decode\_null](#decode_null) &nbsp;&nbsp; [decode\_str](#decode_str) &nbsp;&nbsp; [decode\_time](#decode_time)
+> **Functions:** &nbsp; [decode\_bin](#decode_bin) &nbsp;&nbsp; [decode\_bool](#decode_bool) &nbsp;&nbsp; [decode\_cmd](#decode_cmd) &nbsp;&nbsp; [decode\_complex](#decode_complex) &nbsp;&nbsp; [decode\_date](#decode_date) &nbsp;&nbsp; [decode\_datetime](#decode_datetime) &nbsp;&nbsp; [decode\_float](#decode_float) &nbsp;&nbsp; [decode\_int](#decode_int) &nbsp;&nbsp; [decode\_null](#decode_null) &nbsp;&nbsp; [decode\_str](#decode_str) &nbsp;&nbsp; [decode\_time](#decode_time)
 >
 > **Constants:** &nbsp; None
 
 # All Functions
-[decode\_bin](#decode_bin) &nbsp;&nbsp; [decode\_bool](#decode_bool) &nbsp;&nbsp; [decode\_complex](#decode_complex) &nbsp;&nbsp; [decode\_date](#decode_date) &nbsp;&nbsp; [decode\_datetime](#decode_datetime) &nbsp;&nbsp; [decode\_float](#decode_float) &nbsp;&nbsp; [decode\_int](#decode_int) &nbsp;&nbsp; [decode\_null](#decode_null) &nbsp;&nbsp; [decode\_str](#decode_str) &nbsp;&nbsp; [decode\_time](#decode_time)
+[decode\_bin](#decode_bin) &nbsp;&nbsp; [decode\_bool](#decode_bool) &nbsp;&nbsp; [decode\_cmd](#decode_cmd) &nbsp;&nbsp; [decode\_complex](#decode_complex) &nbsp;&nbsp; [decode\_date](#decode_date) &nbsp;&nbsp; [decode\_datetime](#decode_datetime) &nbsp;&nbsp; [decode\_float](#decode_float) &nbsp;&nbsp; [decode\_int](#decode_int) &nbsp;&nbsp; [decode\_null](#decode_null) &nbsp;&nbsp; [decode\_str](#decode_str) &nbsp;&nbsp; [decode\_time](#decode_time)
 
 ## decode\_bin
 No description
@@ -32,6 +32,22 @@ No description
 
 
 ## decode\_bool
+No description
+
+
+
+**Signature:** (val)
+
+
+
+
+
+**Return Value:** None
+
+[Back to Top](#module-overview)
+
+
+## decode\_cmd
 No description
 
 

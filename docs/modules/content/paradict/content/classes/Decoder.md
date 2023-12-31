@@ -41,7 +41,7 @@ No class attributes.
 
 
 # All Methods
-[\_\_init\_\_](#__init__) &nbsp;&nbsp; [feed](#feed) &nbsp;&nbsp; [\_add\_whitespace\_to\_parent\_context](#_add_whitespace_to_parent_context) &nbsp;&nbsp; [\_check\_key](#_check_key) &nbsp;&nbsp; [\_check\_line](#_check_line) &nbsp;&nbsp; [\_check\_multiline\_tag](#_check_multiline_tag) &nbsp;&nbsp; [\_cleanup\_stack](#_cleanup_stack) &nbsp;&nbsp; [\_consume\_bin\_block](#_consume_bin_block) &nbsp;&nbsp; [\_consume\_grid\_block](#_consume_grid_block) &nbsp;&nbsp; [\_consume\_obj\_block](#_consume_obj_block) &nbsp;&nbsp; [\_consume\_raw\_block](#_consume_raw_block) &nbsp;&nbsp; [\_consume\_text\_block](#_consume_text_block) &nbsp;&nbsp; [\_decode\_bin](#_decode_bin) &nbsp;&nbsp; [\_decode\_bool](#_decode_bool) &nbsp;&nbsp; [\_decode\_complex\_number](#_decode_complex_number) &nbsp;&nbsp; [\_decode\_container](#_decode_container) &nbsp;&nbsp; [\_decode\_date](#_decode_date) &nbsp;&nbsp; [\_decode\_datetime](#_decode_datetime) &nbsp;&nbsp; [\_decode\_float](#_decode_float) &nbsp;&nbsp; [\_decode\_int](#_decode_int) &nbsp;&nbsp; [\_decode\_null](#_decode_null) &nbsp;&nbsp; [\_decode\_str](#_decode_str) &nbsp;&nbsp; [\_decode\_time](#_decode_time) &nbsp;&nbsp; [\_decode\_value](#_decode_value) &nbsp;&nbsp; [\_get\_context](#_get_context) &nbsp;&nbsp; [\_get\_parent\_context](#_get_parent_context) &nbsp;&nbsp; [\_interpret](#_interpret) &nbsp;&nbsp; [\_process](#_process) &nbsp;&nbsp; [\_update\_context](#_update_context) &nbsp;&nbsp; [\_update\_dict\_container](#_update_dict_container) &nbsp;&nbsp; [\_update\_list\_container](#_update_list_container) &nbsp;&nbsp; [\_update\_obj\_container](#_update_obj_container) &nbsp;&nbsp; [\_update\_parent\_context](#_update_parent_context) &nbsp;&nbsp; [\_update\_set\_container](#_update_set_container) &nbsp;&nbsp; [\_update\_stack](#_update_stack)
+[\_\_init\_\_](#__init__) &nbsp;&nbsp; [feed](#feed) &nbsp;&nbsp; [\_add\_whitespace\_to\_parent\_context](#_add_whitespace_to_parent_context) &nbsp;&nbsp; [\_check\_key](#_check_key) &nbsp;&nbsp; [\_check\_line](#_check_line) &nbsp;&nbsp; [\_check\_multiline\_tag](#_check_multiline_tag) &nbsp;&nbsp; [\_cleanup\_stack](#_cleanup_stack) &nbsp;&nbsp; [\_consume\_bin\_block](#_consume_bin_block) &nbsp;&nbsp; [\_consume\_cmd\_block](#_consume_cmd_block) &nbsp;&nbsp; [\_consume\_grid\_block](#_consume_grid_block) &nbsp;&nbsp; [\_consume\_obj\_block](#_consume_obj_block) &nbsp;&nbsp; [\_consume\_raw\_block](#_consume_raw_block) &nbsp;&nbsp; [\_consume\_str\_block](#_consume_str_block) &nbsp;&nbsp; [\_decode\_bin](#_decode_bin) &nbsp;&nbsp; [\_decode\_bool](#_decode_bool) &nbsp;&nbsp; [\_decode\_cmd](#_decode_cmd) &nbsp;&nbsp; [\_decode\_complex\_number](#_decode_complex_number) &nbsp;&nbsp; [\_decode\_container](#_decode_container) &nbsp;&nbsp; [\_decode\_date](#_decode_date) &nbsp;&nbsp; [\_decode\_datetime](#_decode_datetime) &nbsp;&nbsp; [\_decode\_float](#_decode_float) &nbsp;&nbsp; [\_decode\_int](#_decode_int) &nbsp;&nbsp; [\_decode\_null](#_decode_null) &nbsp;&nbsp; [\_decode\_str](#_decode_str) &nbsp;&nbsp; [\_decode\_time](#_decode_time) &nbsp;&nbsp; [\_decode\_value](#_decode_value) &nbsp;&nbsp; [\_get\_context](#_get_context) &nbsp;&nbsp; [\_get\_parent\_context](#_get_parent_context) &nbsp;&nbsp; [\_interpret](#_interpret) &nbsp;&nbsp; [\_process](#_process) &nbsp;&nbsp; [\_update\_context](#_update_context) &nbsp;&nbsp; [\_update\_dict\_container](#_update_dict_container) &nbsp;&nbsp; [\_update\_list\_container](#_update_list_container) &nbsp;&nbsp; [\_update\_obj\_container](#_update_obj_container) &nbsp;&nbsp; [\_update\_parent\_context](#_update_parent_context) &nbsp;&nbsp; [\_update\_set\_container](#_update_set_container) &nbsp;&nbsp; [\_update\_stack](#_update_stack)
 
 ## \_\_init\_\_
 Init
@@ -188,6 +188,22 @@ No description
 [Back to Top](#module-overview)
 
 
+## \_consume\_cmd\_block
+No description
+
+
+
+**Signature:** (self, parent\_context, context)
+
+
+
+
+
+**Return Value:** None
+
+[Back to Top](#module-overview)
+
+
 ## \_consume\_grid\_block
 No description
 
@@ -236,7 +252,7 @@ No description
 [Back to Top](#module-overview)
 
 
-## \_consume\_text\_block
+## \_consume\_str\_block
 No description
 
 
@@ -269,6 +285,22 @@ No description
 
 
 ## \_decode\_bool
+No description
+
+
+
+**Signature:** (self, val)
+
+
+
+
+
+**Return Value:** None
+
+[Back to Top](#module-overview)
+
+
+## \_decode\_cmd
 No description
 
 

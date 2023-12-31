@@ -117,7 +117,8 @@ class TestGrid(unittest.TestCase):
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
                                   tags.GRID,
-                                  tags.FLOAT_ZERO_1,
+                                  tags.FLOAT_1,
+                                  tags.CONST_0,
                                   tags.FLOAT_2,
                                   tags.CONST_1,
                                   tags.CONST_1,
@@ -873,106 +874,118 @@ class TestString(unittest.TestCase):
                                   tags.END)
         self.assertEqual(expected, r)
 
+    def test_big_str(self):
+        # toooooo big to test ;)
+        self.assertTrue(True)
+
     def test_heavy_str(self):
         # toooooo heavy to test ;)
         self.assertTrue(True)
 
 
-class TestRawString(unittest.TestCase):
+class TestCommandString(unittest.TestCase):
 
-    def test_empty_raw_str(self):
-        data = {0: box.Raw()}
+    def test_empty_command_str(self):
+        data = {0: box.Command()}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_EMPTY,
                                   tags.END)
         self.assertEqual(expected, r)
 
-    def test_raw_str_8(self):
+    def test_command_str_8(self):
         x = ";"
         bin_x = x.encode("utf-8")
-        data = {0: box.Raw(x)}
+        data = {0: box.Command(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_8, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
 
-    def test_raw_str_64(self):
+    def test_command_str_64(self):
         x = ";"*8
         bin_x = x.encode("utf-8")
-        data = {0: box.Raw(x)}
+        data = {0: box.Command(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_64, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
 
-    def test_raw_str_128(self):
+    def test_command_str_128(self):
         x = ";"*16
         bin_x = x.encode("utf-8")
-        data = {0: box.Raw(x)}
+        data = {0: box.Command(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_128, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
 
-    def test_raw_str_256(self):
+    def test_command_str_256(self):
         x = ";"*32
         bin_x = x.encode("utf-8")
-        data = {0: box.Raw(x)}
+        data = {0: box.Command(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_256, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
 
-    def test_short_raw_str(self):
+    def test_short_command_str(self):
         x = ";"*(2**8)
         bin_x = x.encode("utf-8")
-        data = {0: box.Raw(x)}
+        data = {0: box.Command(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_SHORT, len(bin_x) - 1, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
 
-    def test_medium_raw_str(self):
+    def test_medium_command_str(self):
         x = ";" * (2**16)
         bin_x = x.encode("utf-8")
-        data = {0: box.Raw(x)}
+        data = {0: box.Command(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_MEDIUM, len(bin_x) - 1, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
 
-    def test_long_raw_str(self):
+    def test_long_command_str(self):
         x = ";" * (2 ** 24)
         bin_x = x.encode("utf-8")
-        data = {0: box.Raw(x)}
+        data = {0: box.Command(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.RAW_STR,
+                                  tags.COMMAND,
                                   tags.STR_LONG, len(bin_x) - 1, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
+
+    def test_big_command_str(self):
+        # toooooo big to test ;)
+        self.assertTrue(True)
+
+    def test_heavy_command_str(self):
+        # toooooo heavy to test ;)
+        self.assertTrue(True)
 
 
 class TestComment(unittest.TestCase):
@@ -981,9 +994,9 @@ class TestComment(unittest.TestCase):
         data = {box.CommentID(): box.Comment()}
         r = pack_data(data, skip_comments=False)
         expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.NULL,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.STR_EMPTY,
                                   tags.END)
         self.assertEqual(expected, r)
@@ -1001,9 +1014,9 @@ class TestComment(unittest.TestCase):
         data = {box.CommentID(): x}
         r = pack_data(data, skip_comments=False)
         expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.NULL,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.STR_8, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
@@ -1014,9 +1027,9 @@ class TestComment(unittest.TestCase):
         data = {box.CommentID(): x}
         r = pack_data(data, skip_comments=False)
         expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.NULL,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.STR_16, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
@@ -1027,9 +1040,9 @@ class TestComment(unittest.TestCase):
         data = {box.CommentID(): x}
         r = pack_data(data, skip_comments=False)
         expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.NULL,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.STR_SHORT, len(bin_x) - 1, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
@@ -1040,9 +1053,9 @@ class TestComment(unittest.TestCase):
         data = {box.CommentID(): x}
         r = pack_data(data, skip_comments=False)
         expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.NULL,
-                                  tags.COMMENT_STR,
+                                  tags.COMMENT,
                                   tags.STR_LONG, len(bin_x) - 1, bin_x,
                                   tags.END)
         self.assertEqual(expected, r)
@@ -1118,6 +1131,10 @@ class TestBin(unittest.TestCase):
                                   tags.BIN_LONG, len(x) - 1, x,
                                   tags.END)
         self.assertEqual(expected, r)
+
+    def test_big_bin(self):
+        # toooooo big to test ;)
+        self.assertTrue(True)
 
     def test_heavy_bin(self):
         # toooooo heavy to test ;)
@@ -1350,9 +1367,9 @@ class TestPositiveInt(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_pint_heavy_upper(self):
-        x = 2**4096 - 1
+        x = 2**524288 - 1
         data = {0: x}
-        size = misc.calc_uint_bytes(x)  # 512 bytes !
+        size = misc.calc_uint_bytes(x)
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
@@ -1361,7 +1378,7 @@ class TestPositiveInt(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_too_large_number(self):
-        x = 2**4096  # 513 bytes consumed by this integer !
+        x = 2**524289
         data = {0: x}
         packer = Packer(data)
         with self.assertRaises(errors.Error):
@@ -1564,9 +1581,9 @@ class TestNegativeInt(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_nint_heavy_upper(self):
-        x = 2**4096 - 1
+        x = 2**524288 - 1
         data = {0: -x}
-        size = misc.calc_uint_bytes(x)  # 512 bytes !
+        size = misc.calc_uint_bytes(x)
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
@@ -1575,7 +1592,7 @@ class TestNegativeInt(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_too_large_number(self):
-        x = 2**4096  # 513 bytes consumed by this integer !
+        x = 2**524289
         data = {0: -x}
         packer = Packer(data)
         with self.assertRaises(errors.Error):
@@ -1813,7 +1830,8 @@ class TestFloatNumber(unittest.TestCase):
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.FLOAT_ZERO_1,
+                                  tags.FLOAT_1,
+                                  tags.CONST_0,
                                   tags.END)
         self.assertEqual(expected, r)
 
@@ -1823,7 +1841,8 @@ class TestFloatNumber(unittest.TestCase):
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.FLOAT_ZERO_2,
+                                  tags.FLOAT_MISC,
+                                  tags.CHAR_Z,
                                   tags.END)
         self.assertEqual(expected, r)
 
@@ -1833,7 +1852,8 @@ class TestFloatNumber(unittest.TestCase):
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.FLOAT_INF_1,
+                                  tags.FLOAT_MISC,
+                                  tags.CHAR_X,
                                   tags.END)
         self.assertEqual(expected, r)
 
@@ -1843,7 +1863,8 @@ class TestFloatNumber(unittest.TestCase):
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
-                                  tags.FLOAT_INF_2,
+                                  tags.FLOAT_MISC,
+                                  tags.CHAR_Y,
                                   tags.END)
         self.assertEqual(expected, r)
 

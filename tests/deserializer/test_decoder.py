@@ -2,7 +2,6 @@ import unittest
 import datetime
 from textwrap import dedent
 from paradict import box, errors, deserializer
-from paradict.deserializer.decoder import Decoder
 from paradict.serializer.encoder import Encoder
 
 
@@ -31,18 +30,17 @@ class TestDictInConfigMode(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_invalid_dict(self):
-        d1 = """42 = null"""
+        d1 = """4 2 = null"""
         d2 = """4.2 = null"""
         d3 = """1+2i = null"""
-        d4 = """2020-12-31 = null"""
-        for i, d in enumerate((d1, d2, d3, d4)):
+        for i, d in enumerate((d1, d2, d3)):
             with self.subTest("Test {}".format(i + 1)):
                 with self.assertRaises(errors.Error):
                     decode_data(dedent(d))
 
     def test_malformed_dict_key(self):
         d1 = """key_42= = null"""
-        d2 = """1_key_42 = null"""
+        d2 = """1 key_42 = null"""
         for i, d in enumerate((d1, d2)):
             with self.subTest("Test {}".format(i + 1)):
                 with self.assertRaises(errors.Error):
@@ -842,7 +840,7 @@ class TestComplex(unittest.TestCase):
 
 class TestString(unittest.TestCase):
 
-    def test_string(self):
+    def test_ordinary_str(self):
         d = """\
         0: (list)
             "hello˫ world\\u02eb"
@@ -854,7 +852,22 @@ class TestString(unittest.TestCase):
                         "hello \\ world\\u02eb"]}
         self.assertEqual(expected, r)
 
-    def test_multiline_string(self):
+    def test_raw_str(self):
+        d = """\
+        0: (list)
+            'hello˫ world\\u02eb'
+            'hello \\n world'
+            'hello \\\\ world\\\\u02eb'
+        """
+        r = decode_data(dedent(d))
+        expected = {0: ["hello˫ world\\u02eb", "hello \\n world",
+                        "hello \\\\ world\\\\u02eb"]}
+        self.assertEqual(expected, r)
+
+
+class TestMultilineString(unittest.TestCase):
+
+    def test_ordinary_str(self):
         d = """\
         0: (text)
             Hello˫ world
@@ -870,6 +883,24 @@ class TestString(unittest.TestCase):
         r = decode_data(dedent(d))
         expected = {0: "Hello˫ world\n   ***\n    ***\n"
                        "This\u02eb is a \n multiline\nstring\\\n.\n\n"}
+        self.assertEqual(expected, r)
+
+    def test_raw_str(self):
+        d = """\
+        0: (raw)
+            Hello˫ world
+               ***
+                ***
+            This\\u02eb is a \\n multiline
+            string\\\\
+            .
+
+
+            ---
+        """
+        r = decode_data(dedent(d))
+        expected = {0: "Hello˫ world\n   ***\n    ***\n"
+                       "This\\u02eb is a \\n multiline\nstring\\\\\n.\n\n"}
         self.assertEqual(expected, r)
 
 
@@ -888,7 +919,7 @@ class TestRaw(unittest.TestCase):
         self.assertEqual(expected, r)
         for i, item in enumerate(r[0]):
             with self.subTest("subtest index: {}".format(i)):
-                self.assertEqual(box.Raw, type(item))
+                self.assertEqual(str, type(item))
 
     def test_multiline_raw_string(self):
         d = """\
@@ -907,6 +938,48 @@ class TestRaw(unittest.TestCase):
         expected = {0: "Hello˫ world\n   ***\n    ***\n"
                        "This\\u02eb is a \\n multiline\nstring\\\n.\n\n"}
         self.assertEqual(expected, r)
+
+
+class TestCommand(unittest.TestCase):
+
+    def test_cmd(self):
+        d = """\
+        0: (list)
+            `my --command 
+            `hello˫ world\\u02eb
+            `hello \\n world
+            `hello \\\\ world\\\\u02eb
+        """
+        r = decode_data(dedent(d))
+        expected = {0: ["my --command",
+                        "hello˫ world\u02eb",
+                        "hello \n world",
+                        "hello \\ world\\u02eb"]}
+        self.assertEqual(expected, r)
+        for item in r[0]:
+            with self.subTest():
+                self.assertIsInstance(item, box.Command)
+
+
+class TestMultilineCommand(unittest.TestCase):
+
+    def test_cmd(self):
+        d = """\
+        0: (cmd)
+            Hello˫ world
+               ***
+                ***
+            This\\u02eb is a \\n multiline
+            command\\\\
+            .
+
+
+        """
+        r = decode_data(dedent(d))
+        expected = {0: "Hello˫ world\n   ***\n    ***\n"
+                       "This\u02eb is a \n multiline\ncommand\\\n."}
+        self.assertEqual(expected, r)
+        self.assertIsInstance(r[0], box.Command)
 
 
 def decode_data(s, **kwargs):

@@ -21,8 +21,7 @@
 - [Grid type](#grid-type)
 - [Booleans](#booleans)
 - [Strings](#strings)
-    - [Ordinary string](#ordinary-string)
-    - [Raw string](#raw-string)
+- [Commands](#commands)
 - [Comments](#comments)
 - [Date and time](#date-and-time)
     - [Date](#date)
@@ -67,7 +66,7 @@ Here are the data types that can be represented with Paradict:
 - **grid**: grid data structure for storing matrix-like data.
 - **bool**: boolean type (true and false).
 - **str**: ordinary string with escape sequences.
-- **raw**: raw string without escape sequences.
+- **command**: command datatype.
 - **comment**: comment datatype.
 - **bin**: binary datatype.
 - **int**: integer datatype.
@@ -90,22 +89,26 @@ There are four types of tags with different roles: **Primitive**, **Composite**,
 ## Primitive
 A **Primitive** tag enables the creation of datum whose payload does not consist of other datum. 
 
-> Primitives are `BIN_x`, `STR_x`, `PINT_x`, `NINT_x`. 
+Primitives are:
+> `BIN_x` `STR_x` `PINT_x` `NINT_x`
 
 ## Composite
 A **Composite** tag enables the creation of datum whose payload consists of other datum.
 
-> Composites are `DICT`, `LIST`, `SET`, `OBJ`, `GRID`, `RAW_STR`, `COMMENT_STR`, `COMPLEX`, `RADIX_x`, `DATE`, `TIME`, `DATETIME`, `FLOAT_1`, `FLOAT_1_EXT`, `FLOAT_2`, `FLOAT_2_EXT`, `FLOAT_3`, and `FLOAT_3_EXT`.
+Composites are:
+> `DICT` `LIST` `SET` `OBJ` `GRID` `COMMAND` `COMMENT` `COMPLEX` `RADIX_x` `DATE` `TIME` `DATETIME` `FLOAT_MISC` `FLOAT_1` `FLOAT_1_EXT` `FLOAT_2` `FLOAT_2_EXT` `FLOAT_3` `FLOAT_3_EXT`
 
 ## Signal
 A **Signal** tag enables the creation of datum that doesn't contain a payload and only serves as a signal intended to be consumed by the deserializer.
 
-> Signals are `NOP`, `GRID_DIV`, and `END`.
+Signals are:
+> `NOP` `GRID_DIV` `END`
 
 ## Constant
 A **Constant** tag enables the creation of datum that doesn't contain a payload because it already serves as a placeholder for a predefined constant.
 
-> Constants are `DICT_EMPTY`, `LIST_EMPTY`, `SET_EMPTY`, `OBJ_EMPTY`, `GRID_EMPTY`, `NULL`, `BOOL_x`, `BIN_EMPTY`, `FLOAT_NAN`, `FLOAT_ZERO_x`, `FLOAT_INF_x`, `CHAR_x`, and `CONST_x`.
+Constants are:
+> `DICT_EMPTY` `LIST_EMPTY` `SET_EMPTY` `OBJ_EMPTY` `GRID_EMPTY` `NULL` `BOOL_x` `BIN_EMPTY` `CHAR_x` `CONST_x`
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
@@ -142,7 +145,7 @@ For compactness, positive integers are not supported by a specific tag but by a 
 |`PINT_56`|tag **+** 56-bit payload|2^48 to (2^56)-1|
 |`PINT_64`|tag **+** 64-bit payload|2^56 to (2^64)-1|
 |`PINT_BIG`|tag **+** 1-byte PL **+** payload|2^64 to (2^2048)-1|
-|`PINT_HEAVY`|tag **+** 2-byte PL **+** payload|2^2048 to (2^4096)-1|
+|`PINT_HEAVY`|tag **+** 2-byte PL **+** payload|2^2048 to (2^524288)-1|
 
 > **PL** stands for **payload length**. This is an unsigned integer to store the length of the payload in `PINT_BIG` and `PINT_HEAVY` datums. Note that it is the **payload length minus 1** that is actually stored.
 
@@ -160,7 +163,7 @@ For compactness, negative integers are not supported by a specific tag but by a 
 |`NINT_56`|tag **+** 56-bit payload|2^48 to (2^56)-1|
 |`NINT_64`|tag **+** 64-bit payload|2^56 to (2^64)-1|
 |`NINT_BIG`|tag **+** 1-byte PL **+** payload|2^64 to (2^2048)-1|
-|`NINT_HEAVY`|tag **+** 2-byte PL **+** payload|2^2048 to (2^4096)-1|
+|`NINT_HEAVY`|tag **+** 2-byte PL **+** payload|2^2048 to (2^524288)-1|
 
 > **PL** stands for **payload length**. This is an unsigned integer to store the length of the payload in `NINT_BIG` and `NINT_HEAVY` datums. Note that it is the **payload length minus 1** that is actually stored.
 
@@ -203,15 +206,14 @@ Assume the floating-point number `-3.014E-5`. It can be divided into four parts:
 > The tag family being of type Composite, the four parts listed above should be packed as integer datums.
 
 ### Constant values
-Floating-point numbers have their own miscellaneous tags:
+Floating-point numbers have four constant values that can be represented with the `FLOAT_MISC` tag, of type Composite, followed by an alphabetical tag:
 
-|Tag|Constant value|
+|Datum|Constant value|
 |---|---|
-|`FLOAT_NAN`|NaN|
-|`FLOAT_ZERO_1`|0.0|
-|`FLOAT_ZERO_2`|-0.0|
-|`FLOAT_INF_1`|+Infinity|
-|`FLOAT_INF_2`|-Infinity|
+|`FLOAT_MISC` **+** `CHAR_N`|NaN|
+|`FLOAT_MISC` **+** `CHAR_X`|+Infinity|
+|`FLOAT_MISC` **+** `CHAR_Y`|-Infinity|
+|`FLOAT_MISC` **+** `CHAR_Z`|-0.0|
 
 
 ## Complex numbers
@@ -238,10 +240,7 @@ The `BOOL_TRUE` and `BOOL_FALSE` tags, of type Constant, represent the two [Bool
 <p align="right"><a href="#readme">Back to top</a></p>
 
 # Strings
-A string is a sequence of zero or more [Unicode](https://en.wikipedia.org/wiki/Unicode) characters. This sequence can be labeled as **ordinary** or **raw**.
-
-## Ordinary string
-An ordinary string is a sequence of zero or more Unicode characters that supports escape sequences.
+A string is a sequence of zero or more [Unicode](https://en.wikipedia.org/wiki/Unicode) characters that supports escape sequences.
 
 For compactness, regular strings aren't covered by a specific tag but by a family of Primitive tags namely `STR_x` where `x` hints to the length of the string payload.
 
@@ -264,23 +263,28 @@ The following table shows for each tag the **Z** number of bytes (unsigned integ
 |`STR_SHORT`|1|33 to 2^8 bytes|
 |`STR_MEDIUM`|2|(2^8)+1 to 2^16 bytes|
 |`STR_LONG`|3|(2^16)+1 to 2^24 bytes|
-|`STR_HEAVY`|4|(2^24)+1 to 2^32 bytes|
+|`STR_BIG`|4|(2^24)+1 to 2^32 bytes|
+|`STR_HEAVY`|5|(2^32)+1 to 2^40 bytes|
 
 > Assuming the payload length is **n**, it is **n minus 1** that would actually be stored in the **Z** bytes.
 
 > **Format:** tag **+** Z **+** payload
 
-## Raw string
-Raw strings don't support escape sequences. They are packed as an ordinary string datum following the `RAW_STR` tag, of type Composite.
-
-> **Format:** `RAW_STR` **+** ordinary string datum
-
 <p align="right"><a href="#readme">Back to top</a></p>
-    
-# Comments
-A comment can be placed in a dictionary, a list, a set, or an extension object. It is packed as an ordinary string datum following the `COMMENT_STR` tag, of type Composite.
 
-> **Format:** `COMMENT_STR` **+** ordinary string datum
+# Commands
+A command is a special string intended to be executed like a shell command. It is packed as an ordinary string datum following the `COMMAND` tag, of type Composite.
+
+> **Format:** `COMMAND` **+** ordinary string datum
+
+> Note that a command can only be executed by a line of code deliberately written to execute it.
+ 
+<p align="right"><a href="#readme">Back to top</a></p>
+
+# Comments
+A comment can be placed in a dictionary, a list, a set, or an extension object. It is packed as an ordinary string datum following the `COMMENT` tag, of type Composite.
+
+> **Format:** `COMMENT` **+** ordinary string datum
 
 > Comments aren't allowed inside a grid.
 
@@ -334,10 +338,11 @@ An embedded binary data is a sequence of bytes that is packed with the Primitive
 
 |Tag|Z|Payload length|
 |---|---|---|
-|`BIN_SHORT`|1|1 to 2^8|
-|`BIN_MEDIUM`|2|(2^8)+1 to 2^16|
-|`BIN_LONG`|3|(2^16)+1 to 2^24|
-|`BIN_HEAVY`|4|(2^24)+1 to 2^32|
+|`BIN_SHORT`|1|1 to 2^8 bytes|
+|`BIN_MEDIUM`|2|(2^8)+1 to 2^16 bytes|
+|`BIN_LONG`|3|(2^16)+1 to 2^24 bytes|
+|`BIN_BIG`|4|(2^24)+1 to 2^32 bytes|
+|`BIN_HEAVY`|5|(2^32)+1 to 2^40 bytes|
 
 > Assuming the payload length is **n**, it is **n minus 1** that would actually be stored in the **Z** bytes.
 
@@ -404,51 +409,51 @@ Following is the tag-byte mapping:
 
 |Tag|Byte|Type|Note|
 |---|---|---|---|
-|`NOP`|0x00|signal|keep-alive byte|
+|`NOP`|0x00|signal| |
 |`DICT`|0x01|composite|container|
 |`DICT_EMPTY`|0x02|constant| |
 |`LIST`|0x03|composite|container|
 |`LIST_EMPTY`|0x04|constant| |
 |`SET`|0x05|composite|container|
 |`SET_EMPTY`|0x06|constant| |
-|`OBJ`|0x07|composite|container|
+|`OBJ`|0x07|composite| |
 |`OBJ_EMPTY`|0x08|constant| |
 |`GRID`|0x09|composite|math container|
 |`GRID_DIV`|0x0A|signal| |
 |`GRID_EMPTY`|0x0B|constant| |
-|`NULL`|0x0C|constant| |
-|`BOOL_TRUE`|0x0D|constant| |
-|`BOOL_FALSE`|0x0E|constant| |
-|`RAW_STR`|0x0F|composite|flag for strings|
-|`COMMENT_STR`|0x10|composite|flag for strings|
-|`COMPLEX`|0x11|composite|complex numbers|
-|`RADIX_2`|0x12|composite|binary notation for int|
-|`RADIX_2_EXT`|0x13|composite| |
-|`RADIX_8`|0x14|composite|octal notation for int|
-|`RADIX_8_EXT`|0x15|composite| |
-|`RADIX_16`|0x16|composite|hex notation for int|
-|`RADIX_16_EXT`|0x17|composite| |
-|`DATE`|0x18|composite| |
-|`TIME`|0x19|composite| |
-|`TIME_EXT`|0x1A|composite|time with UTC offsets|
-|`DATETIME`|0x1B|composite| |
-|`DATETIME_EXT`|0x1C|composite|datetime with UTC offsets|
-|`BIN_EMPTY`|0x1D|constant| |
-|`BIN_SHORT`|0x1E|primitive| |
-|`BIN_MEDIUM`|0x1F|primitive| |
-|`BIN_LONG`|0x20|primitive| |
-|`BIN_HEAVY`|0x21|primitive| |
-|`FLOAT_1`|0x22|composite| |
-|`FLOAT_1_EXT`|0x23|composite|float with exponent|
-|`FLOAT_2`|0x24|composite| |
-|`FLOAT_2_EXT`|0x25|composite|float with exponent|
-|`FLOAT_3`|0x26|composite| |
-|`FLOAT_3_EXT`|0x27|composite|float with exponent|
-|`FLOAT_NAN`|0x28|constant|Not a Number|
-|`FLOAT_ZERO_1`|0x29|constant|zero|
-|`FLOAT_ZERO_2`|0x2A|constant|negative zero|
-|`FLOAT_INF_1`|0x2B|constant|+infinity|
-|`FLOAT_INF_2`|0x2C|constant|-infinity|
+|`TX`|0x0C|?|reserved tag|
+|`TY`|0x0D|?|reserved tag|
+|`TZ`|0x0E|?|reserved tag|
+|`NULL`|0x0F|constant| |
+|`BOOL_TRUE`|0x10|constant| |
+|`BOOL_FALSE`|0x11|constant| |
+|`COMMAND`|0x12|composite|commands to run|
+|`COMMENT`|0x13|composite|comments|
+|`COMPLEX`|0x14|composite|complex numbers|
+|`DATE`|0x15|composite| |
+|`TIME`|0x16|composite| |
+|`TIME_EXT`|0x17|composite|time with UTC offsets|
+|`DATETIME`|0x18|composite| |
+|`DATETIME_EXT`|0x19|composite|datetime with UTC offsets|
+|`RADIX_BIN`|0x1A|composite|binary notation for int|
+|`RADIX_BIN_EXT`|0x1B|primitive| |
+|`RADIX_OCT`|0x1C|composite|octal notation for int|
+|`RADIX_OCT_EXT`|0x1D|composite| |
+|`RADIX_HEX`|0x1E|composite|hex notation for int|
+|`RADIX_HEX_EXT`|0x1F|composite| |
+|`FLOAT_MISC`|0x20|composite|for +/-inf, NaN, and -0|
+|`FLOAT_1`|0x21|composite| |
+|`FLOAT_1_EXT`|0x22|composite|float with exponent|
+|`FLOAT_2`|0x23|composite| |
+|`FLOAT_2_EXT`|0x24|composite|float with exponent|
+|`FLOAT_3`|0x25|composite| |
+|`FLOAT_3_EXT`|0x26|composite|float with exponent|
+|`BIN_EMPTY`|0x27|constant| |
+|`BIN_SHORT`|0x28|primitive| |
+|`BIN_MEDIUM`|0x29|primitive| |
+|`BIN_LONG`|0x2A|primitive| |
+|`BIN_BIG`|0x2B|primitive| |
+|`BIN_HEAVY`|0x2C|primitive| |
 |`PINT_8`|0x2D|primitive|positive integer|
 |`PINT_16`|0x2E|primitive| |
 |`PINT_24`|0x2F|primitive| |
@@ -505,164 +510,165 @@ Following is the tag-byte mapping:
 |`STR_SHORT`|0x62|primitive| |
 |`STR_MEDIUM`|0x63|primitive| |
 |`STR_LONG`|0x64|primitive| |
-|`STR_HEAVY`|0x65|primitive| |
-|`CHAR_A`|0x66|constant|lowercase character|
-|`CHAR_B`|0x67|constant| |
-|`CHAR_C`|0x68|constant| |
-|`CHAR_D`|0x69|constant| |
-|`CHAR_E`|0x6A|constant| |
-|`CHAR_F`|0x6B|constant| |
-|`CHAR_G`|0x6C|constant| |
-|`CHAR_H`|0x6D|constant| |
-|`CHAR_I`|0x6E|constant| |
-|`CHAR_J`|0x6F|constant| |
-|`CHAR_K`|0x70|constant| |
-|`CHAR_L`|0x71|constant| |
-|`CHAR_M`|0x72|constant| |
-|`CHAR_N`|0x73|constant| |
-|`CHAR_O`|0x74|constant| |
-|`CHAR_P`|0x75|constant| |
-|`CHAR_Q`|0x76|constant| |
-|`CHAR_R`|0x77|constant| |
-|`CHAR_S`|0x78|constant| |
-|`CHAR_T`|0x79|constant| |
-|`CHAR_U`|0x7A|constant| |
-|`CHAR_V`|0x7B|constant| |
-|`CHAR_W`|0x7C|constant| |
-|`CHAR_X`|0x7D|constant| |
-|`CHAR_Y`|0x7E|constant| |
-|`CHAR_Z`|0x7F|constant| |
-|`CHAR_UP_A`|0x80|constant|uppercase character|
-|`CHAR_UP_B`|0x81|constant| |
-|`CHAR_UP_C`|0x82|constant| |
-|`CHAR_UP_D`|0x83|constant| |
-|`CHAR_UP_E`|0x84|constant| |
-|`CHAR_UP_F`|0x85|constant| |
-|`CHAR_UP_G`|0x86|constant| |
-|`CHAR_UP_H`|0x87|constant| |
-|`CHAR_UP_I`|0x88|constant| |
-|`CHAR_UP_J`|0x89|constant| |
-|`CHAR_UP_K`|0x8A|constant| |
-|`CHAR_UP_L`|0x8B|constant| |
-|`CHAR_UP_M`|0x8C|constant| |
-|`CHAR_UP_N`|0x8D|constant| |
-|`CHAR_UP_O`|0x8E|constant| |
-|`CHAR_UP_P`|0x8F|constant| |
-|`CHAR_UP_Q`|0x90|constant| |
-|`CHAR_UP_R`|0x91|constant| |
-|`CHAR_UP_S`|0x92|constant| |
-|`CHAR_UP_T`|0x93|constant| |
-|`CHAR_UP_U`|0x94|constant| |
-|`CHAR_UP_V`|0x95|constant| |
-|`CHAR_UP_W`|0x96|constant| |
-|`CHAR_UP_X`|0x97|constant| |
-|`CHAR_UP_Y`|0x98|constant| |
-|`CHAR_UP_Z`|0x99|constant| |
-|`CONST_0`|0x9A|constant|constant number|
-|`CONST_1`|0x9B|constant| |
-|`CONST_2`|0x9C|constant| |
-|`CONST_3`|0x9D|constant| |
-|`CONST_4`|0x9E|constant| |
-|`CONST_5`|0x9F|constant| |
-|`CONST_6`|0xA0|constant| |
-|`CONST_7`|0xA1|constant| |
-|`CONST_8`|0xA2|constant| |
-|`CONST_9`|0xA3|constant| |
-|`CONST_10`|0xA4|constant| |
-|`CONST_11`|0xA5|constant| |
-|`CONST_12`|0xA6|constant| |
-|`CONST_13`|0xA7|constant| |
-|`CONST_14`|0xA8|constant| |
-|`CONST_15`|0xA9|constant| |
-|`CONST_16`|0xAA|constant| |
-|`CONST_17`|0xAB|constant| |
-|`CONST_18`|0xAC|constant| |
-|`CONST_19`|0xAD|constant| |
-|`CONST_20`|0xAE|constant| |
-|`CONST_21`|0xAF|constant| |
-|`CONST_22`|0xB0|constant| |
-|`CONST_23`|0xB1|constant| |
-|`CONST_24`|0xB2|constant| |
-|`CONST_25`|0xB3|constant| |
-|`CONST_26`|0xB4|constant| |
-|`CONST_27`|0xB5|constant| |
-|`CONST_28`|0xB6|constant| |
-|`CONST_29`|0xB7|constant| |
-|`CONST_30`|0xB8|constant| |
-|`CONST_31`|0xB9|constant| |
-|`CONST_32`|0xBA|constant| |
-|`CONST_33`|0xBB|constant| |
-|`CONST_34`|0xBC|constant| |
-|`CONST_35`|0xBD|constant| |
-|`CONST_36`|0xBE|constant| |
-|`CONST_37`|0xBF|constant| |
-|`CONST_38`|0xC0|constant| |
-|`CONST_39`|0xC1|constant| |
-|`CONST_40`|0xC2|constant| |
-|`CONST_41`|0xC3|constant| |
-|`CONST_42`|0xC4|constant| |
-|`CONST_43`|0xC5|constant| |
-|`CONST_44`|0xC6|constant| |
-|`CONST_45`|0xC7|constant| |
-|`CONST_46`|0xC8|constant| |
-|`CONST_47`|0xC9|constant| |
-|`CONST_48`|0xCA|constant| |
-|`CONST_49`|0xCB|constant| |
-|`CONST_50`|0xCC|constant| |
-|`CONST_51`|0xCD|constant| |
-|`CONST_52`|0xCE|constant| |
-|`CONST_53`|0xCF|constant| |
-|`CONST_54`|0xD0|constant| |
-|`CONST_55`|0xD1|constant| |
-|`CONST_56`|0xD2|constant| |
-|`CONST_57`|0xD3|constant| |
-|`CONST_58`|0xD4|constant| |
-|`CONST_59`|0xD5|constant| |
-|`CONST_60`|0xD6|constant| |
-|`CONST_61`|0xD7|constant| |
-|`CONST_62`|0xD8|constant| |
-|`CONST_63`|0xD9|constant| |
-|`CONST_64`|0xDA|constant| |
-|`CONST_65`|0xDB|constant| |
-|`CONST_66`|0xDC|constant| |
-|`CONST_67`|0xDD|constant| |
-|`CONST_68`|0xDE|constant| |
-|`CONST_69`|0xDF|constant| |
-|`CONST_70`|0xE0|constant| |
-|`CONST_71`|0xE1|constant| |
-|`CONST_72`|0xE2|constant| |
-|`CONST_73`|0xE3|constant| |
-|`CONST_74`|0xE4|constant| |
-|`CONST_75`|0xE5|constant| |
-|`CONST_76`|0xE6|constant| |
-|`CONST_77`|0xE7|constant| |
-|`CONST_78`|0xE8|constant| |
-|`CONST_79`|0xE9|constant| |
-|`CONST_80`|0xEA|constant| |
-|`CONST_81`|0xEB|constant| |
-|`CONST_82`|0xEC|constant| |
-|`CONST_83`|0xED|constant| |
-|`CONST_84`|0xEE|constant| |
-|`CONST_85`|0xEF|constant| |
-|`CONST_86`|0xF0|constant| |
-|`CONST_87`|0xF1|constant| |
-|`CONST_88`|0xF2|constant| |
-|`CONST_89`|0xF3|constant| |
-|`CONST_90`|0xF4|constant| |
-|`CONST_91`|0xF5|constant| |
-|`CONST_92`|0xF6|constant| |
-|`CONST_93`|0xF7|constant| |
-|`CONST_94`|0xF8|constant| |
-|`CONST_95`|0xF9|constant| |
-|`CONST_96`|0xFA|constant| |
-|`CONST_97`|0xFB|constant| |
-|`CONST_98`|0xFC|constant| |
-|`CONST_99`|0xFD|constant| |
-|`XT`|0xFE|?|reserved tag|
+|`STR_BIG`|0x65|primitive| |
+|`STR_HEAVY`|0x66|primitive| |
+|`CHAR_A`|0x67|constant|lowercase character|
+|`CHAR_B`|0x68|constant| |
+|`CHAR_C`|0x69|constant| |
+|`CHAR_D`|0x6A|constant| |
+|`CHAR_E`|0x6B|constant| |
+|`CHAR_F`|0x6C|constant| |
+|`CHAR_G`|0x6D|constant| |
+|`CHAR_H`|0x6E|constant| |
+|`CHAR_I`|0x6F|constant| |
+|`CHAR_J`|0x70|constant| |
+|`CHAR_K`|0x71|constant| |
+|`CHAR_L`|0x72|constant| |
+|`CHAR_M`|0x73|constant| |
+|`CHAR_N`|0x74|constant| |
+|`CHAR_O`|0x75|constant| |
+|`CHAR_P`|0x76|constant| |
+|`CHAR_Q`|0x77|constant| |
+|`CHAR_R`|0x78|constant| |
+|`CHAR_S`|0x79|constant| |
+|`CHAR_T`|0x7A|constant| |
+|`CHAR_U`|0x7B|constant| |
+|`CHAR_V`|0x7C|constant| |
+|`CHAR_W`|0x7D|constant| |
+|`CHAR_X`|0x7E|constant| |
+|`CHAR_Y`|0x7F|constant| |
+|`CHAR_Z`|0x80|constant| |
+|`CHAR_UP_A`|0x81|constant|uppercase character|
+|`CHAR_UP_B`|0x82|constant| |
+|`CHAR_UP_C`|0x83|constant| |
+|`CHAR_UP_D`|0x84|constant| |
+|`CHAR_UP_E`|0x85|constant| |
+|`CHAR_UP_F`|0x86|constant| |
+|`CHAR_UP_G`|0x87|constant| |
+|`CHAR_UP_H`|0x88|constant| |
+|`CHAR_UP_I`|0x89|constant| |
+|`CHAR_UP_J`|0x8A|constant| |
+|`CHAR_UP_K`|0x8B|constant| |
+|`CHAR_UP_L`|0x8C|constant| |
+|`CHAR_UP_M`|0x8D|constant| |
+|`CHAR_UP_N`|0x8E|constant| |
+|`CHAR_UP_O`|0x8F|constant| |
+|`CHAR_UP_P`|0x90|constant| |
+|`CHAR_UP_Q`|0x91|constant| |
+|`CHAR_UP_R`|0x92|constant| |
+|`CHAR_UP_S`|0x93|constant| |
+|`CHAR_UP_T`|0x94|constant| |
+|`CHAR_UP_U`|0x95|constant| |
+|`CHAR_UP_V`|0x96|constant| |
+|`CHAR_UP_W`|0x97|constant| |
+|`CHAR_UP_X`|0x98|constant| |
+|`CHAR_UP_Y`|0x99|constant| |
+|`CHAR_UP_Z`|0x9A|constant| |
+|`CONST_0`|0x9B|constant|constant number|
+|`CONST_1`|0x9C|constant| |
+|`CONST_2`|0x9D|constant| |
+|`CONST_3`|0x9E|constant| |
+|`CONST_4`|0x9F|constant| |
+|`CONST_5`|0xA0|constant| |
+|`CONST_6`|0xA1|constant| |
+|`CONST_7`|0xA2|constant| |
+|`CONST_8`|0xA3|constant| |
+|`CONST_9`|0xA4|constant| |
+|`CONST_10`|0xA5|constant| |
+|`CONST_11`|0xA6|constant| |
+|`CONST_12`|0xA7|constant| |
+|`CONST_13`|0xA8|constant| |
+|`CONST_14`|0xA9|constant| |
+|`CONST_15`|0xAA|constant| |
+|`CONST_16`|0xAB|constant| |
+|`CONST_17`|0xAC|constant| |
+|`CONST_18`|0xAD|constant| |
+|`CONST_19`|0xAE|constant| |
+|`CONST_20`|0xAF|constant| |
+|`CONST_21`|0xB0|constant| |
+|`CONST_22`|0xB1|constant| |
+|`CONST_23`|0xB2|constant| |
+|`CONST_24`|0xB3|constant| |
+|`CONST_25`|0xB4|constant| |
+|`CONST_26`|0xB5|constant| |
+|`CONST_27`|0xB6|constant| |
+|`CONST_28`|0xB7|constant| |
+|`CONST_29`|0xB8|constant| |
+|`CONST_30`|0xB9|constant| |
+|`CONST_31`|0xBA|constant| |
+|`CONST_32`|0xBB|constant| |
+|`CONST_33`|0xBC|constant| |
+|`CONST_34`|0xBD|constant| |
+|`CONST_35`|0xBE|constant| |
+|`CONST_36`|0xBF|constant| |
+|`CONST_37`|0xC0|constant| |
+|`CONST_38`|0xC1|constant| |
+|`CONST_39`|0xC2|constant| |
+|`CONST_40`|0xC3|constant| |
+|`CONST_41`|0xC4|constant| |
+|`CONST_42`|0xC5|constant| |
+|`CONST_43`|0xC6|constant| |
+|`CONST_44`|0xC7|constant| |
+|`CONST_45`|0xC8|constant| |
+|`CONST_46`|0xC9|constant| |
+|`CONST_47`|0xCA|constant| |
+|`CONST_48`|0xCB|constant| |
+|`CONST_49`|0xCC|constant| |
+|`CONST_50`|0xCD|constant| |
+|`CONST_51`|0xCE|constant| |
+|`CONST_52`|0xCF|constant| |
+|`CONST_53`|0xD0|constant| |
+|`CONST_54`|0xD1|constant| |
+|`CONST_55`|0xD2|constant| |
+|`CONST_56`|0xD3|constant| |
+|`CONST_57`|0xD4|constant| |
+|`CONST_58`|0xD5|constant| |
+|`CONST_59`|0xD6|constant| |
+|`CONST_60`|0xD7|constant| |
+|`CONST_61`|0xD8|constant| |
+|`CONST_62`|0xD9|constant| |
+|`CONST_63`|0xDA|constant| |
+|`CONST_64`|0xDB|constant| |
+|`CONST_65`|0xDC|constant| |
+|`CONST_66`|0xDD|constant| |
+|`CONST_67`|0xDE|constant| |
+|`CONST_68`|0xDF|constant| |
+|`CONST_69`|0xE0|constant| |
+|`CONST_70`|0xE1|constant| |
+|`CONST_71`|0xE2|constant| |
+|`CONST_72`|0xE3|constant| |
+|`CONST_73`|0xE4|constant| |
+|`CONST_74`|0xE5|constant| |
+|`CONST_75`|0xE6|constant| |
+|`CONST_76`|0xE7|constant| |
+|`CONST_77`|0xE8|constant| |
+|`CONST_78`|0xE9|constant| |
+|`CONST_79`|0xEA|constant| |
+|`CONST_80`|0xEB|constant| |
+|`CONST_81`|0xEC|constant| |
+|`CONST_82`|0xED|constant| |
+|`CONST_83`|0xEE|constant| |
+|`CONST_84`|0xEF|constant| |
+|`CONST_85`|0xF0|constant| |
+|`CONST_86`|0xF1|constant| |
+|`CONST_87`|0xF2|constant| |
+|`CONST_88`|0xF3|constant| |
+|`CONST_89`|0xF4|constant| |
+|`CONST_90`|0xF5|constant| |
+|`CONST_91`|0xF6|constant| |
+|`CONST_92`|0xF7|constant| |
+|`CONST_93`|0xF8|constant| |
+|`CONST_94`|0xF9|constant| |
+|`CONST_95`|0xFA|constant| |
+|`CONST_96`|0xFB|constant| |
+|`CONST_97`|0xFC|constant| |
+|`CONST_98`|0xFD|constant| |
+|`CONST_99`|0xFE|constant| |
 |`END`|0xFF|signal|used by containers|
 
 
-> `XT` is a reserved tag.
+
+> `TX`, `TY`, and `TZ` are reserved tags.
 
 <br>
 <br>

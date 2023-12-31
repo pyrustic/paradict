@@ -55,6 +55,10 @@ No class attributes.
 |bool_type|setter|None||
 |bool_types|getter|None||
 |bool_types|setter|None||
+|command_type|getter|None||
+|command_type|setter|None||
+|command_types|getter|None||
+|command_types|setter|None||
 |comment_id_type|getter|None||
 |comment_id_type|setter|None||
 |comment_id_types|getter|None||
@@ -107,10 +111,6 @@ No class attributes.
 |oct_int_type|setter|None||
 |oct_int_types|getter|None||
 |oct_int_types|setter|None||
-|raw_type|getter|None||
-|raw_type|setter|None||
-|raw_types|getter|None||
-|raw_types|setter|None||
 |set_type|getter|None||
 |set_type|setter|None||
 |set_types|getter|None||
@@ -134,7 +134,7 @@ Initialize self.  See help(type(self)) for accurate signature.
 
 
 
-**Signature:** (self, adapters=None, dict\_type=None, list\_type=None, set\_type=None, obj\_type=None, dict\_types=None, list\_types=None, set\_types=None, obj\_types=None, bin\_type=None, bin\_int\_type=None, bool\_type=None, complex\_type=None, date\_type=None, datetime\_type=None, comment\_type=None, comment\_id\_type=None, float\_type=None, grid\_type=None, hex\_int\_type=None, int\_type=None, oct\_int\_type=None, raw\_type=None, str\_type=None, time\_type=None, bin\_types=None, bin\_int\_types=None, bool\_types=None, complex\_types=None, date\_types=None, datetime\_types=None, comment\_types=None, comment\_id\_types=None, float\_types=None, grid\_types=None, hex\_int\_types=None, int\_types=None, oct\_int\_types=None, raw\_types=None, str\_types=None, time\_types=None)
+**Signature:** (self, adapters=None, dict\_type=None, list\_type=None, set\_type=None, obj\_type=None, dict\_types=None, list\_types=None, set\_types=None, obj\_types=None, bin\_type=None, bin\_int\_type=None, bool\_type=None, complex\_type=None, date\_type=None, datetime\_type=None, command\_type=None, comment\_type=None, comment\_id\_type=None, float\_type=None, grid\_type=None, hex\_int\_type=None, int\_type=None, oct\_int\_type=None, str\_type=None, time\_type=None, bin\_types=None, bin\_int\_types=None, bool\_types=None, complex\_types=None, date\_types=None, datetime\_types=None, command\_types=None, comment\_types=None, comment\_id\_types=None, float\_types=None, grid\_types=None, hex\_int\_types=None, int\_types=None, oct\_int\_types=None, str\_types=None, time\_types=None)
 
 
 

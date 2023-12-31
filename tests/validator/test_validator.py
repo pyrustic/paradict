@@ -14,18 +14,6 @@ class TestDataValidation(unittest.TestCase):
         r = validator.validate(data, schema)
         self.assertTrue(r)
         #
-        data = box.Raw("hello world")
-        r = validator.validate(data, schema)
-        self.assertTrue(r)
-        #
-        data = box.Raw("hello world")
-        r = validator.validate(data, schema)
-        self.assertTrue(r)
-        #
-        data = box.Raw("hello world")
-        r = validator.validate(data, schema)
-        self.assertTrue(r)
-        #
         data = ''
         r = validator.validate(data, schema)
         self.assertTrue(r)
@@ -105,7 +93,7 @@ class TestDataValidationWithSpec(unittest.TestCase):
         r = validator.validate(data, schema)
         self.assertTrue(r)
         #
-        data = box.Raw("hello")
+        data = "hello"
         schema = validator.Spec("str", lambda x: len(x) == 5)
         r = validator.validate(data, schema)
         self.assertTrue(r)
@@ -201,7 +189,7 @@ class TestDataInvalidationWithSpec(unittest.TestCase):
         r = validator.validate(data, schema)
         self.assertFalse(r)
         #
-        data = box.Raw("hello")
+        data = "hello"
         schema = validator.Spec("str", lambda x: len(x) != 5)
         r = validator.validate(data, schema)
         self.assertFalse(r)

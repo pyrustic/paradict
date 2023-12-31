@@ -19,6 +19,7 @@
 - [Strings](#strings)
     - [Ordinary string](#ordinary-string)
     - [Raw string](#raw-string)
+- [Commands](#commands)
 - [Comments](#comments)
 - [Date and time](#date-and-time)
     - [Date](#date)
@@ -81,7 +82,7 @@ books = (dict)
         "Book D"
 ```
 
-> **Valid tags**: `(dict)`, `(list)`, `(set)`, `(obj)`, `(grid)`, `(text)`, `(raw)`, `(bin)`.
+> **Valid tags**: `(dict)`, `(list)`, `(set)`, `(obj)`, `(grid)`, `(text)`, `(raw)`, `(cmd)`, `(int)`, `(float)`, `(bin)`.
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
@@ -144,6 +145,16 @@ oct_int = 0o37_777_777_777
 bin_int = 0b1111_1111_1111_1111_1111_1111_1111_1111
 ```
 
+### Multi-line integers
+A integer can span multiple lines.
+
+Example:
+```text
+number = (int)
+    -1_000_000_000_000_000_000_000_000_000_000
+    _000_000_000_000_000_000_000_000
+```
+
 ## Floating-point numbers
 Floating point numbers can be represented using regular or [scientific notation](https://en.wikipedia.org/wiki/Scientific_notation#E_notation). Whether these numbers are processed with binary (efficient) or decimal (precision) floating point representation depends on custom configurations defined for the deserializer.
 
@@ -151,6 +162,16 @@ Example:
 ```text
 float = 3.14
 sci_notation_float = 3.147_378E-10
+```
+
+### Multi-line floating-point numbers
+A floating-point number can span multiple lines.
+
+Example:
+```text
+number = (float)
+    -1.000_000_000_000_000_000_000_000_000_000
+    _000_000_000_000_000_000_000_111E-10
 ```
 
 ## Complex numbers
@@ -237,6 +258,30 @@ multiline_str = (raw)
 ```
 
 > The last three consecutive dashes starting an empty line indicate the end of a multi-line string.
+
+
+<p align="right"><a href="#readme">Back to top</a></p>
+    
+# Commands
+A command is a special string that supports escape sequences and is intended to be executed like a shell command. 
+
+> Note that a command can only be executed by a line of code deliberately written to execute it.
+
+## Single-line command
+A single-line command begins with a backtick ```.
+
+Example:
+```text
+my_command = `python -m script "Hello \nWorld"
+
+## Multi-line command
+A multi-line command spans multiple lines. Such a command is introduced with the `(cmd)` tag and therefore indented.
+
+Example:
+```text
+my_multiline_cmd = (cmd)
+    python -m script "this
+    is a multiline argument"
 
 
 <p align="right"><a href="#readme">Back to top</a></p>

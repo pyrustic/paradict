@@ -45,7 +45,7 @@ It comes with a data validation mechanism as well as other cool stuff, and its e
 
 ## A rich set of datatypes
 
-A Paradict dictionary can be populated with strings, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), comments, extension objects, and grids (matrices).
+A Paradict dictionary can be populated with strings, commands, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), comments, extension objects, and grids (matrices).
 
 Although Paradict's root data structure is a dictionary, lists, sets, and dictionaries can be nested within it at arbitrary depth.
  
@@ -134,7 +134,7 @@ data = load(path)
 # test
 assert user_card == data
 ```
-The code snippet above will serialize the user_card dictionary then dump it into the file "user_card.bin". The file would contain 43 bytes as following:
+The code snippet above will serialize the `user_card` dictionary then dump it into the `user_card.bin` file. The file would contain 43 bytes as following:
 ```python
 from paradict import stringify_bin
 
@@ -146,7 +146,7 @@ print(stringify_bin(data))
 
 Output:
 ```text
-\x01\x45\x6e\x61\x6d\x65\x45\x61\x6c\x65\x78\x43\x69\x64\xc5\x46\x67\x72\x6f\x75\x70\x46\x61\x64\x6d\x69\x6e\x49\x62\x69\x72\x74\x68\x64\x61\x79\x19\x9b\x2f\x2b\x3d\xa4\xff
+\x01\x44\x6e\x61\x6d\x65\x44\x61\x6c\x65\x78\x42\x69\x64\xc5\x45\x67\x72\x6f\x75\x70\x45\x61\x64\x6d\x69\x6e\x48\x62\x69\x72\x74\x68\x64\x61\x79\x18\x9b\x2e\x2b\x3d\xa4\xff
 ```
 
 ## Textual representation of data
@@ -219,6 +219,7 @@ Following are Paradict datatypes for both textual and binary formats:
 - **str**: string type with unicode escape sequences support
 - **raw**: raw string without unicode escape sequences support
 - **comment**: comment datatype
+- **cmd**: command datatype
 - **bin**: binary datatype
 - **int**: integer datatype
 - **float**: float datatype
@@ -229,9 +230,9 @@ Following are Paradict datatypes for both textual and binary formats:
 
 > Paradict supports **null** for representing the intentional absence of any value.
 
-For the dictionary data structure, Paradict allows keys to be either strings or numbers. However, in the config mode of the textual format, keys should only be strings.
+For the dictionary data structure, Paradict allows keys to be either strings or numbers. However, in the config mode of the textual format, keys should only be alphanumeric strings with underscores or hyphens.
 
-Also, a multiline string is tagged as `(text)` in the textual format, and it spans over multiple lines.
+Paradict allows ordinary strings, raw strings, commands, integers, and float numbers to span over multiple lines when they are tagged with `(text)`, `(raw)`, `(cmd)`, `(int)`, and `(float)`, respectively.
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
@@ -488,7 +489,7 @@ print(stringify_bin(buffer))
 ```
 Output:
 ```text
-\x01\x43\x69\x64\xc5\x45\x6e\x61\x6d\x65\x45\x61\x6c\x65\x78\xff
+\x01\x42\x69\x64\xc5\x44\x6e\x61\x6d\x65\x44\x61\x6c\x65\x78\xff
 ```
 
 ### Using the Unpacker class
@@ -520,7 +521,7 @@ print(stringify_bin(r))
 ```
 Output:
 ```text
-\x01\x43\x69\x64\xc5\x45\x6e\x61\x6d\x65\x45\x61\x6c\x65\x78\xff
+\x01\x42\x69\x64\xc5\x44\x6e\x61\x6d\x65\x44\x61\x6c\x65\x78\xff
 ```
 
 ### Using the unpack function
