@@ -21,7 +21,6 @@
 - [Grid type](#grid-type)
 - [Booleans](#booleans)
 - [Strings](#strings)
-- [Commands](#commands)
 - [Comments](#comments)
 - [Date and time](#date-and-time)
     - [Date](#date)
@@ -66,7 +65,6 @@ Here are the data types that can be represented with Paradict:
 - **grid**: grid data structure for storing matrix-like data.
 - **bool**: boolean type (true and false).
 - **str**: ordinary string with escape sequences.
-- **command**: command datatype.
 - **comment**: comment datatype.
 - **bin**: binary datatype.
 - **int**: integer datatype.
@@ -96,7 +94,7 @@ Primitives are:
 A **Composite** tag enables the creation of datum whose payload consists of other datum.
 
 Composites are:
-> `DICT` `LIST` `SET` `OBJ` `GRID` `COMMAND` `COMMENT` `COMPLEX` `RADIX_x` `DATE` `TIME` `DATETIME` `FLOAT_MISC` `FLOAT_1` `FLOAT_1_EXT` `FLOAT_2` `FLOAT_2_EXT` `FLOAT_3` `FLOAT_3_EXT`
+> `DICT` `LIST` `SET` `OBJ` `GRID` `COMMENT` `COMPLEX` `RADIX_x` `DATE` `TIME` `DATETIME` `FLOAT_MISC` `FLOAT_1` `FLOAT_1_EXT` `FLOAT_2` `FLOAT_2_EXT` `FLOAT_3` `FLOAT_3_EXT`
 
 ## Signal
 A **Signal** tag enables the creation of datum that doesn't contain a payload and only serves as a signal intended to be consumed by the deserializer.
@@ -272,15 +270,6 @@ The following table shows for each tag the **Z** number of bytes (unsigned integ
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
-# Commands
-A command is a special string intended to be executed like a shell command. It is packed as an ordinary string datum following the `COMMAND` tag, of type Composite.
-
-> **Format:** `COMMAND` **+** ordinary string datum
-
-> Note that a command can only be executed by a line of code deliberately written to execute it.
- 
-<p align="right"><a href="#readme">Back to top</a></p>
-
 # Comments
 A comment can be placed in a dictionary, a list, a set, or an extension object. It is packed as an ordinary string datum following the `COMMENT` tag, of type Composite.
 
@@ -421,13 +410,13 @@ Following is the tag-byte mapping:
 |`GRID`|0x09|composite|math container|
 |`GRID_DIV`|0x0A|signal| |
 |`GRID_EMPTY`|0x0B|constant| |
-|`TX`|0x0C|?|reserved tag|
-|`TY`|0x0D|?|reserved tag|
-|`TZ`|0x0E|?|reserved tag|
-|`NULL`|0x0F|constant| |
-|`BOOL_TRUE`|0x10|constant| |
-|`BOOL_FALSE`|0x11|constant| |
-|`COMMAND`|0x12|composite|commands to run|
+|`XA`|0x0C|?|reserved tag|
+|`XB`|0x0D|?|reserved tag|
+|`XC`|0x0E|?|reserved tag|
+|`XD`|0x0F|?|reserved tag|
+|`NULL`|0x10|constant| |
+|`BOOL_TRUE`|0x11|constant| |
+|`BOOL_FALSE`|0x12|constant| |
 |`COMMENT`|0x13|composite|comments|
 |`COMPLEX`|0x14|composite|complex numbers|
 |`DATE`|0x15|composite| |
@@ -436,7 +425,7 @@ Following is the tag-byte mapping:
 |`DATETIME`|0x18|composite| |
 |`DATETIME_EXT`|0x19|composite|datetime with UTC offsets|
 |`RADIX_BIN`|0x1A|composite|binary notation for int|
-|`RADIX_BIN_EXT`|0x1B|primitive| |
+|`RADIX_BIN_EXT`|0x1B|composite| |
 |`RADIX_OCT`|0x1C|composite|octal notation for int|
 |`RADIX_OCT_EXT`|0x1D|composite| |
 |`RADIX_HEX`|0x1E|composite|hex notation for int|
@@ -668,7 +657,7 @@ Following is the tag-byte mapping:
 
 
 
-> `TX`, `TY`, and `TZ` are reserved tags.
+> `XA`, `XB`, `XC`, and `XD` are reserved tags.
 
 <br>
 <br>

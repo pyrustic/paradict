@@ -19,7 +19,6 @@
 - [Strings](#strings)
     - [Ordinary string](#ordinary-string)
     - [Raw string](#raw-string)
-- [Commands](#commands)
 - [Comments](#comments)
 - [Date and time](#date-and-time)
     - [Date](#date)
@@ -82,7 +81,7 @@ books = (dict)
         "Book D"
 ```
 
-> **Valid tags**: `(dict)`, `(list)`, `(set)`, `(obj)`, `(grid)`, `(text)`, `(raw)`, `(cmd)`, `(int)`, `(float)`, `(bin)`.
+> **Valid tags**: `(dict)`, `(list)`, `(set)`, `(obj)`, `(grid)`, `(text)`, `(raw)`, `(int)`, `(float)`, `(bin)`.
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
@@ -258,31 +257,6 @@ multiline_str = (raw)
 ```
 
 > The last three consecutive dashes starting an empty line indicate the end of a multi-line string.
-
-
-<p align="right"><a href="#readme">Back to top</a></p>
-    
-# Commands
-A command is a special string that supports escape sequences and is intended to be executed like a shell command. 
-
-> Note that a command can only be executed by a line of code deliberately written to execute it.
-
-## Single-line command
-A single-line command begins with a backtick ```.
-
-Example:
-```text
-my_command = `python -m script "Hello \nWorld"
-
-## Multi-line command
-A multi-line command spans multiple lines. Such a command is introduced with the `(cmd)` tag and therefore indented.
-
-Example:
-```text
-my_multiline_cmd = (cmd)
-    python -m script "this
-    is a multiline argument"
-
 
 <p align="right"><a href="#readme">Back to top</a></p>
     

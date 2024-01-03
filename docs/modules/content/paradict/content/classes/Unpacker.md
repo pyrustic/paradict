@@ -41,7 +41,7 @@ No class attributes.
 
 
 # All Methods
-[\_\_init\_\_](#__init__) &nbsp;&nbsp; [feed](#feed) &nbsp;&nbsp; [\_cleanup\_stack](#_cleanup_stack) &nbsp;&nbsp; [\_consume\_block](#_consume_block) &nbsp;&nbsp; [\_create\_alpha\_context](#_create_alpha_context) &nbsp;&nbsp; [\_create\_beta\_context](#_create_beta_context) &nbsp;&nbsp; [\_create\_context](#_create_context) &nbsp;&nbsp; [\_get\_context](#_get_context) &nbsp;&nbsp; [\_interpret](#_interpret) &nbsp;&nbsp; [\_process](#_process) &nbsp;&nbsp; [\_remove\_block](#_remove_block) &nbsp;&nbsp; [\_remove\_context](#_remove_context) &nbsp;&nbsp; [\_unpack\_bin](#_unpack_bin) &nbsp;&nbsp; [\_unpack\_bin\_int](#_unpack_bin_int) &nbsp;&nbsp; [\_unpack\_bool](#_unpack_bool) &nbsp;&nbsp; [\_unpack\_command](#_unpack_command) &nbsp;&nbsp; [\_unpack\_comment](#_unpack_comment) &nbsp;&nbsp; [\_unpack\_comment\_id](#_unpack_comment_id) &nbsp;&nbsp; [\_unpack\_complex](#_unpack_complex) &nbsp;&nbsp; [\_unpack\_date](#_unpack_date) &nbsp;&nbsp; [\_unpack\_datetime](#_unpack_datetime) &nbsp;&nbsp; [\_unpack\_float](#_unpack_float) &nbsp;&nbsp; [\_unpack\_float\_misc](#_unpack_float_misc) &nbsp;&nbsp; [\_unpack\_grid](#_unpack_grid) &nbsp;&nbsp; [\_unpack\_hex\_int](#_unpack_hex_int) &nbsp;&nbsp; [\_unpack\_int](#_unpack_int) &nbsp;&nbsp; [\_unpack\_null](#_unpack_null) &nbsp;&nbsp; [\_unpack\_obj](#_unpack_obj) &nbsp;&nbsp; [\_unpack\_oct\_int](#_unpack_oct_int) &nbsp;&nbsp; [\_unpack\_payload](#_unpack_payload) &nbsp;&nbsp; [\_unpack\_str](#_unpack_str) &nbsp;&nbsp; [\_unpack\_time](#_unpack_time) &nbsp;&nbsp; [\_update\_context](#_update_context) &nbsp;&nbsp; [\_update\_flags](#_update_flags)
+[\_\_init\_\_](#__init__) &nbsp;&nbsp; [feed](#feed) &nbsp;&nbsp; [\_cleanup\_stack](#_cleanup_stack) &nbsp;&nbsp; [\_consume\_block](#_consume_block) &nbsp;&nbsp; [\_create\_alpha\_context](#_create_alpha_context) &nbsp;&nbsp; [\_create\_beta\_context](#_create_beta_context) &nbsp;&nbsp; [\_create\_context](#_create_context) &nbsp;&nbsp; [\_get\_context](#_get_context) &nbsp;&nbsp; [\_interpret](#_interpret) &nbsp;&nbsp; [\_process](#_process) &nbsp;&nbsp; [\_remove\_block](#_remove_block) &nbsp;&nbsp; [\_remove\_context](#_remove_context) &nbsp;&nbsp; [\_unpack\_bin](#_unpack_bin) &nbsp;&nbsp; [\_unpack\_bin\_int](#_unpack_bin_int) &nbsp;&nbsp; [\_unpack\_bool](#_unpack_bool) &nbsp;&nbsp; [\_unpack\_comment](#_unpack_comment) &nbsp;&nbsp; [\_unpack\_comment\_id](#_unpack_comment_id) &nbsp;&nbsp; [\_unpack\_complex](#_unpack_complex) &nbsp;&nbsp; [\_unpack\_date](#_unpack_date) &nbsp;&nbsp; [\_unpack\_datetime](#_unpack_datetime) &nbsp;&nbsp; [\_unpack\_float](#_unpack_float) &nbsp;&nbsp; [\_unpack\_float\_misc](#_unpack_float_misc) &nbsp;&nbsp; [\_unpack\_grid](#_unpack_grid) &nbsp;&nbsp; [\_unpack\_hex\_int](#_unpack_hex_int) &nbsp;&nbsp; [\_unpack\_int](#_unpack_int) &nbsp;&nbsp; [\_unpack\_null](#_unpack_null) &nbsp;&nbsp; [\_unpack\_obj](#_unpack_obj) &nbsp;&nbsp; [\_unpack\_oct\_int](#_unpack_oct_int) &nbsp;&nbsp; [\_unpack\_payload](#_unpack_payload) &nbsp;&nbsp; [\_unpack\_str](#_unpack_str) &nbsp;&nbsp; [\_unpack\_time](#_unpack_time) &nbsp;&nbsp; [\_update\_comment\_flag](#_update_comment_flag) &nbsp;&nbsp; [\_update\_context](#_update_context)
 
 ## \_\_init\_\_
 Init
@@ -275,22 +275,6 @@ No description
 
 
 ## \_unpack\_bool
-No description
-
-
-
-**Signature:** (self, tag, payload=None)
-
-
-
-
-
-**Return Value:** None
-
-[Back to Top](#module-overview)
-
-
-## \_unpack\_command
 No description
 
 
@@ -562,12 +546,12 @@ No description
 [Back to Top](#module-overview)
 
 
-## \_update\_context
+## \_update\_comment\_flag
 No description
 
 
 
-**Signature:** (self, data)
+**Signature:** (self, tag)
 
 
 
@@ -578,12 +562,12 @@ No description
 [Back to Top](#module-overview)
 
 
-## \_update\_flags
+## \_update\_context
 No description
 
 
 
-**Signature:** (self, tag)
+**Signature:** (self, data)
 
 
 

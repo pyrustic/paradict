@@ -82,14 +82,6 @@ class BinInt(int):
         return self.__x
 
 
-class Command(str):
-    """
-    A string defined as Command is meant to be run (given that the programmer
-    knows what he/she is doing)
-    """
-    pass
-
-
 class CommentID(str):
     """
     Box to hold a unique comment id.

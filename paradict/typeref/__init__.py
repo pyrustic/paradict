@@ -35,13 +35,13 @@ class TypeRef:
 
                  bin_type=None, bin_int_type=None, bool_type=None,
                  complex_type=None, date_type=None, datetime_type=None,
-                 command_type=None, comment_type=None, comment_id_type=None,
+                 comment_type=None, comment_id_type=None,
                  float_type=None, grid_type=None, hex_int_type=None,
                  int_type=None, oct_int_type=None, str_type=None, time_type=None,
 
                  bin_types=None, bin_int_types=None, bool_types=None,
                  complex_types=None, date_types=None, datetime_types=None,
-                 command_types=None, comment_types=None, comment_id_types=None,
+                 comment_types=None, comment_id_types=None,
                  float_types=None, grid_types=None, hex_int_types=None,
                  int_types=None, oct_int_types=None, str_types=None, time_types=None):
 
@@ -61,7 +61,6 @@ class TypeRef:
         self._complex_type = complex_type if complex_type else complex
         self._date_type = date_type if date_type else datetime.date
         self._datetime_type = datetime_type if datetime_type else datetime.datetime
-        self._command_type = command_type if command_type else box.Command
         self._comment_type = comment_type if comment_type else box.Comment
         self._comment_id_type = comment_id_type if comment_id_type else box.CommentID
         self._float_type = float_type if float_type else float
@@ -85,7 +84,6 @@ class TypeRef:
         self._complex_types = complex_types if complex_types else [complex]
         self._date_types = date_types if date_types else [datetime.date]
         self._datetime_types = datetime_types if datetime_types else [datetime.datetime]
-        self._command_types = command_types if command_types else [box.Command]
         self._comment_types = comment_types if comment_types \
             else [box.Comment]
         self._comment_id_types = comment_id_types if comment_id_types \
@@ -237,15 +235,6 @@ class TypeRef:
         self._update_types("datetime", val)
 
     @property
-    def command_type(self):
-        return self._command_type
-
-    @command_type.setter
-    def command_type(self, val):
-        self._command_type = val
-        self._update_types("command", val)
-
-    @property
     def comment_type(self):
         return self._comment_type
 
@@ -375,14 +364,6 @@ class TypeRef:
         self._datetime_types = val
 
     @property
-    def command_types(self):
-        return self._command_types
-
-    @command_types.setter
-    def command_types(self, val):
-        self._command_types = val
-
-    @property
     def comment_types(self):
         return self._comment_types
 
@@ -487,8 +468,7 @@ class TypeRef:
                       "bin": self._bin_types, "bin_int": self._bin_int_types,
                       "bool": self._bool_types, "complex": self._complex_types,
                       "date": self._date_types, "datetime": self._datetime_types,
-                      "command": self._command_types, "comment": self._comment_types,
-                      "comment_id": self._comment_id_types,
+                      "comment": self._comment_types, "comment_id": self._comment_id_types,
                       "float": self._float_types, "grid": self._grid_types,
                       "hex_int": self._hex_int_types, "int": self._int_types,
                       "oct_int": self._oct_int_types, "str": self._str_types,
@@ -520,8 +500,6 @@ class TypeRef:
             self._date_types.insert(0, datatype)
         elif name == "datetime" and datatype not in self._datetime_types:
             self._datetime_types.insert(0, datatype)
-        elif name == "command" and datatype not in self._command_types:
-            self._command_types.insert(0, datatype)
         elif name == "comment" and datatype not in self._comment_types:
             self._comment_types.insert(0, datatype)
         elif name == "comment_id" and datatype not in self._comment_id_types:

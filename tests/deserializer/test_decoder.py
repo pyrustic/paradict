@@ -940,48 +940,6 @@ class TestRaw(unittest.TestCase):
         self.assertEqual(expected, r)
 
 
-class TestCommand(unittest.TestCase):
-
-    def test_cmd(self):
-        d = """\
-        0: (list)
-            `my --command 
-            `hello˫ world\\u02eb
-            `hello \\n world
-            `hello \\\\ world\\\\u02eb
-        """
-        r = decode_data(dedent(d))
-        expected = {0: ["my --command",
-                        "hello˫ world\u02eb",
-                        "hello \n world",
-                        "hello \\ world\\u02eb"]}
-        self.assertEqual(expected, r)
-        for item in r[0]:
-            with self.subTest():
-                self.assertIsInstance(item, box.Command)
-
-
-class TestMultilineCommand(unittest.TestCase):
-
-    def test_cmd(self):
-        d = """\
-        0: (cmd)
-            Hello˫ world
-               ***
-                ***
-            This\\u02eb is a \\n multiline
-            command\\\\
-            .
-
-
-        """
-        r = decode_data(dedent(d))
-        expected = {0: "Hello˫ world\n   ***\n    ***\n"
-                       "This\u02eb is a \n multiline\ncommand\\\n."}
-        self.assertEqual(expected, r)
-        self.assertIsInstance(r[0], box.Command)
-
-
 def decode_data(s, **kwargs):
     return deserializer.decode(s, **kwargs)
 

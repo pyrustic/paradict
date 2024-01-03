@@ -35,8 +35,7 @@ class Unpacker:
         self._data = None
         self._block_on = False
         self._block_count = 0
-        # flags
-        self._as_command_str = False
+        # flag
         self._as_comment_str = False
         # byte count for exception message
         self._byte_count = 0
@@ -158,8 +157,8 @@ class Unpacker:
         elif tag == tags.OBJ_EMPTY:
             self._update_context(self._unpack_obj(tag))
         # flags
-        elif tag in (tags.COMMAND, tags.COMMENT):
-            self._update_flags(tag)
+        elif tag == tags.COMMENT:
+            self._update_comment_flag(tag)
         # process payload
         else:
             try:
@@ -308,10 +307,8 @@ class Unpacker:
         if self._block_count == 0:
             self._block_on = False
 
-    def _update_flags(self, tag):
-        if tag == tags.COMMAND:
-            self._as_command_str = True
-        elif tag == tags.COMMENT:
+    def _update_comment_flag(self, tag):
+        if tag == tags.COMMENT:
             self._as_comment_str = True
 
     def _cleanup_stack(self):
@@ -349,9 +346,7 @@ class Unpacker:
         # unpack string
         elif (tags.STR_8 <= tag <= tags.STR_HEAVY
               or tags.CHAR_A <= tag <= tags.CHAR_UP_Z):
-            if self._as_command_str:
-                return self._unpack_command(tag, payload)
-            elif self._as_comment_str:
+            if self._as_comment_str:
                 if self._skip_comments:
                     raise errors.CommentSkip
                 return self._unpack_comment(tag, payload)
@@ -500,14 +495,6 @@ class Unpacker:
         r = unpack_str(tag, payload)
         r = r if self._type_ref.str_type is str else self._type_ref.str_type(r)
         return r
-
-    def _unpack_command(self, tag, payload=None):
-        if payload is None:
-            msg = "Payload missing"
-            raise errors.Error(msg)
-        self._as_command_str = False
-        r = self._unpack_str(tag, payload)
-        return self._type_ref.command_type(r)
 
     def _unpack_comment_id(self, tag, payload=None):
         return self._type_ref.comment_id_type()

@@ -27,7 +27,6 @@ class Packer:
                             "grid": self._pack_grid,
                             "bool": self._pack_bool,
                             "str": self._pack_str,
-                            "command": self._pack_command,
                             "comment": self._pack_comment,
                             "comment_id": self._pack_comment_id,
                             "bin": self._pack_bin,
@@ -195,9 +194,6 @@ class Packer:
     def _pack_str(self, data):
         yield pack_str(data)
 
-    def _pack_command(self, data):
-        yield pack_command(data)
-
     def _pack_bin(self, data):
         yield pack_bin(data)
 
@@ -244,10 +240,6 @@ def pack_bool(val):
         return tags.BOOL_TRUE
     else:
         return tags.BOOL_FALSE
-
-
-def pack_command(val):
-    return misc.forge_bin(tags.COMMAND, pack_str(val))
 
 
 def pack_comment(val):

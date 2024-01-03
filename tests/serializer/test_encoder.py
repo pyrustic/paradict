@@ -842,50 +842,6 @@ class TestMultilineString(unittest.TestCase):
         self.assertEqual(dedent(expected), r)
 
 
-class TestCommand(unittest.TestCase):
-
-    def test_empty_cmd(self):
-        d = {0: box.Command("")}
-        r = encode_data(d)
-        expected = '0: `'
-        self.assertEqual(expected, r)
-
-    def test_cmd(self):
-        d = {0: box.Command("hello \u02eb world")}
-        r = encode_data(d)
-        expected = "0: `hello ˫ world"
-        self.assertEqual(expected, r)
-
-    def test_cmd_with_backlash(self):
-        d = {0: box.Command("hello \u02eb \\ world")}
-        r = encode_data(d)
-        expected = r"0: `hello ˫ \\ world"
-        self.assertEqual(expected, r)
-
-
-class TestMultilineCommand(unittest.TestCase):
-
-    def test_cmd(self):
-        d = {0: box.Command("this is \u02eb a\nmultiline cmd")}
-        r = encode_data(d)
-        expected = """\
-        0: (cmd)
-            this is ˫ a
-            multiline cmd
-            ---"""
-        self.assertEqual(dedent(expected), r)
-
-    def test_cmd_with_backlash(self):
-        d = {0: box.Command("this is \u02eb a\nmultiline \\cmd")}
-        r = encode_data(d)
-        expected = """\
-        0: (cmd)
-            this is ˫ a
-            multiline \\\\cmd
-            ---"""
-        self.assertEqual(dedent(expected), r)
-
-
 class TestComment(unittest.TestCase):
 
     def test_empty_comment(self):

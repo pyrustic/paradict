@@ -45,7 +45,7 @@ It comes with a data validation mechanism as well as other cool stuff, and its e
 
 ## A rich set of datatypes
 
-A Paradict dictionary can be populated with strings, commands, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), comments, extension objects, and grids (matrices).
+A Paradict dictionary can be populated with strings, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), comments, extension objects, and grids (matrices).
 
 Although Paradict's root data structure is a dictionary, lists, sets, and dictionaries can be nested within it at arbitrary depth.
  
@@ -219,7 +219,6 @@ Following are Paradict datatypes for both textual and binary formats:
 - **str**: string type with unicode escape sequences support
 - **raw**: raw string without unicode escape sequences support
 - **comment**: comment datatype
-- **cmd**: command datatype
 - **bin**: binary datatype
 - **int**: integer datatype
 - **float**: float datatype
@@ -232,7 +231,7 @@ Following are Paradict datatypes for both textual and binary formats:
 
 For the dictionary data structure, Paradict allows keys to be either strings or numbers. However, in the config mode of the textual format, keys should only be alphanumeric strings with underscores or hyphens.
 
-Paradict allows ordinary strings, raw strings, commands, integers, and float numbers to span over multiple lines when they are tagged with `(text)`, `(raw)`, `(cmd)`, `(int)`, and `(float)`, respectively.
+Paradict allows ordinary and raw strings, integers, and float numbers to span over multiple lines when they are tagged with `(text)`, `(raw)`, `(int)`, and `(float)`, respectively.
 
 <p align="right"><a href="#readme">Back to top</a></p>
 

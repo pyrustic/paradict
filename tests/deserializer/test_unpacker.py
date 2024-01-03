@@ -435,59 +435,6 @@ class TestString(unittest.TestCase):
         self.assertTrue(True)
 
 
-class TestCommandString(unittest.TestCase):
-
-    def test_empty_command_str(self):
-        x = str()
-        d = {0: box.Command(x)}
-        r = pack_unpack(d)
-        self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Command)
-
-    def test_command_str_8(self):
-        x = ";"
-        d = {0: box.Command(x)}
-        r = pack_unpack(d)
-        self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Command)
-
-    def test_command_str_64(self):
-        x = ";"*8
-        d = {0: box.Command(x)}
-        r = pack_unpack(d)
-        self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Command)
-
-    def test_short_command_str(self):
-        x = ";"*(2**8)
-        d = {0: box.Command(x)}
-        r = pack_unpack(d)
-        self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Command)
-
-    def test_medium_command_str(self):
-        x = ";" * (2**16)
-        d = {0: box.Command(x)}
-        r = pack_unpack(d)
-        self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Command)
-
-    def test_long_command_str(self):
-        x = ";" * (2**24)
-        d = {0: box.Command(x)}
-        r = pack_unpack(d)
-        self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Command)
-
-    def test_big_command_str(self):
-        # toooooo big to test ;)
-        self.assertTrue(True)
-
-    def test_heavy_command_str(self):
-        # toooooo heavy to test ;)
-        self.assertTrue(True)
-
-
 class TestCommentString(unittest.TestCase):
 
     def test_empty_comment_str(self):

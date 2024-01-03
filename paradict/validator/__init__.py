@@ -4,9 +4,8 @@ from paradict.errors import Error
 
 
 VALID_DATATYPES = ("dict", "list", "set", "obj", "bin",
-                   "bin", "bool", "command", "complex", "date",
-                   "datetime", "float", "grid", "int",
-                   "str", "time")
+                   "bool", "complex", "date", "datetime",
+                   "float", "grid", "int", "str", "time")
 
 
 def validate(data, schema, type_ref=None):
@@ -171,7 +170,6 @@ class Validator:
                            "obj": self._type_ref.obj_types,
                            "bin": self._type_ref.bin_types,
                            "bool": self._type_ref.bool_types,
-                           "command": self._type_ref.command_types,
                            "complex": self._type_ref.complex_types,
                            "date": self._type_ref.date_types,
                            "datetime": self._type_ref.datetime_types,

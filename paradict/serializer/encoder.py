@@ -34,7 +34,6 @@ class Encoder:
                             "grid": self._encode_grid,
                             "bool": self._encode_bool,
                             "str": self._encode_str,
-                            "command": self._encode_command,
                             "comment": self._encode_comment,
                             "bin": self._encode_bin,
                             "int": self._encode_int,
@@ -167,7 +166,7 @@ class Encoder:
         for val in data:
             val = self._type_ref.adapt(val)
             valid_types = ("int", "hex_int", "oct_int", "bin_int",
-                           "float", "command", "complex", "str", "bin",
+                           "float", "complex", "str", "bin",
                            "datetime", "date", "time", "comment")
             if self._type_ref.check(type(val)) not in valid_types:
 
@@ -274,20 +273,6 @@ class Encoder:
         indent_str = misc.make_indent_str(indents + 1)
         for line in encode_bin(data):
             yield indent_str + line
-
-    def _encode_command(self, data, indents=0):
-        #data = data.replace("\\", "\\\\")
-        indent_str = misc.make_indent_str(indents)
-        if "\n" in data:
-            tag = "(cmd)"
-            yield indent_str + tag
-            indent_str = misc.make_indent_str(indents+1)
-            for line in encode_multiline_cmd(data):
-                yield indent_str + line
-            yield indent_str + "---"
-        else:
-            r = encode_cmd(data)
-            yield indent_str + r
 
     def _encode_comment(self, data, indents=0):
         if self._skip_comments:
@@ -398,16 +383,6 @@ def encode_str(val):
 
 
 def encode_multiline_str(val):
-    return val.split("\n")
-
-
-def encode_cmd(val):
-    val = val.replace("\\", "\\\\")
-    return "`{}".format(val)
-
-
-def encode_multiline_cmd(val):
-    val = val.replace("\\", "\\\\")
     return val.split("\n")
 
 
