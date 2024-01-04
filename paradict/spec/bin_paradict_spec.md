@@ -405,27 +405,27 @@ Following is the tag-byte mapping:
 |`LIST_EMPTY`|0x04|constant| |
 |`SET`|0x05|composite|container|
 |`SET_EMPTY`|0x06|constant| |
-|`OBJ`|0x07|composite| |
+|`OBJ`|0x07|composite|extension container|
 |`OBJ_EMPTY`|0x08|constant| |
 |`GRID`|0x09|composite|math container|
 |`GRID_DIV`|0x0A|signal| |
 |`GRID_EMPTY`|0x0B|constant| |
-|`XA`|0x0C|?|reserved tag|
-|`XB`|0x0D|?|reserved tag|
-|`XC`|0x0E|?|reserved tag|
-|`XD`|0x0F|?|reserved tag|
-|`NULL`|0x10|constant| |
-|`BOOL_TRUE`|0x11|constant| |
-|`BOOL_FALSE`|0x12|constant| |
-|`COMMENT`|0x13|composite|comments|
-|`COMPLEX`|0x14|composite|complex numbers|
+|`NULL`|0x0C|composite| |
+|`BOOL_TRUE`|0x0D|composite| |
+|`BOOL_FALSE`|0x0E|composite| |
+|`COMMENT`|0x0F|composite|comments|
+|`COMPLEX`|0x10|composite|complex numbers|
+|`XA`|0x11|?|reserved tag|
+|`XB`|0x12|?|reserved tag|
+|`XC`|0x13|?|reserved tag|
+|`XD`|0x14|?|reserved tag|
 |`DATE`|0x15|composite| |
 |`TIME`|0x16|composite| |
 |`TIME_EXT`|0x17|composite|time with UTC offsets|
 |`DATETIME`|0x18|composite| |
 |`DATETIME_EXT`|0x19|composite|datetime with UTC offsets|
 |`RADIX_BIN`|0x1A|composite|binary notation for int|
-|`RADIX_BIN_EXT`|0x1B|composite| |
+|`RADIX_BIN_EXT`|0x1B|primitive| |
 |`RADIX_OCT`|0x1C|composite|octal notation for int|
 |`RADIX_OCT_EXT`|0x1D|composite| |
 |`RADIX_HEX`|0x1E|composite|hex notation for int|
@@ -654,7 +654,6 @@ Following is the tag-byte mapping:
 |`CONST_98`|0xFD|constant| |
 |`CONST_99`|0xFE|constant| |
 |`END`|0xFF|signal|used by containers|
-
 
 
 > `XA`, `XB`, `XC`, and `XD` are reserved tags.

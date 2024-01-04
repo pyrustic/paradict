@@ -1,7 +1,6 @@
 """binary Paradict: 256 tags from NOP (\x00) to END (\xff)"""
 
 
-
 # Nop
 NOP = b'\x00'
 
@@ -30,31 +29,31 @@ GRID = b'\x09'
 GRID_DIV = b'\x0a'
 GRID_EMPTY = b'\x0b'
 
-# ----------- RESERVED TAGS -------------
-
-XA = b'\x0c'
-XB = b'\x0d'
-XC = b'\x0e'
-XD = b'\x0f'
-
 # ----------- NULL AND BOOL -------------
 
 # Null
-NULL = b'\x10'
+NULL = b'\x0c'
 
 # Bool
-BOOL_TRUE = b'\x11'
-BOOL_FALSE = b'\x12'
+BOOL_TRUE = b'\x0d'
+BOOL_FALSE = b'\x0e'
 
 # ----------- COMMENT STRING -------------
 
 # Comment string
-COMMENT = b'\x13'
+COMMENT = b'\x0f'
 
 # ----------- COMPLEX NUMBER -------------
 
 # <tag, real, imaginary>
-COMPLEX = b'\x14'
+COMPLEX = b'\x10'
+
+# ----------- RESERVED TAGS -------------
+
+XA = b'\x11'
+XB = b'\x12'
+XC = b'\x13'
+XD = b'\x14'
 
 # ----------- DATE -------------
 
