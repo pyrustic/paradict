@@ -11,13 +11,13 @@ class TxtQueue:
     def buffer(self):
         return self._buffer
 
-    def put(self, s):
+    def enqueue(self, s):
         """Store textual data in the buffer. This data will then be iteratively
         extracted by the 'get' method, line by line.
         Note: make sure that each line is ended with a newline '\n' character"""
         self._buffer.append(s)
 
-    def get(self):
+    def dequeue(self):
         """Generator for iteratively getting each line composing the
         textual data stored in the buffer.
         Note that lines yielded won't end with a newline '\n' character"""

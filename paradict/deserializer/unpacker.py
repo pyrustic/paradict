@@ -99,8 +99,8 @@ class Unpacker:
         """Feed in arbitrary chunks of data"""
         if not self._feedable:
             return False
-        self._queue.put(raw)
-        for tag, payload in self._queue.get():
+        self._queue.enqueue(raw)
+        for tag, payload in self._queue.dequeue():
             if tag == tags.NOP:
                 continue
             self._process(tag, payload)

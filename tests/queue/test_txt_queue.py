@@ -20,9 +20,9 @@ class TestQueue(unittest.TestCase):
 
 
 def put_and_get(queue, s):
-    queue.put(s)
+    queue.enqueue(s)
     buffer = list()
-    for s in queue.get():
+    for s in queue.dequeue():
         buffer.append(s)
     return "".join(buffer)
 

@@ -6,7 +6,7 @@
 <div align="center">
     <img src="https://raw.githubusercontent.com/pyrustic/misc/master/assets/paradict/cover.png" alt="Cover image" width="650">
     <p align="center">
-    A Paradict config document
+    A Braq document with sections containing Paradict-encoded data
     </p>
 </div>
 
@@ -43,6 +43,11 @@ It comes with a data validation mechanism as well as other cool stuff, and its e
 
 > Read the **backstory** in this [HN discussion](https://news.ycombinator.com/item?id=38684724) !
 
+## Transparently used by Braq for config files, AI prompts, and more
+Paradict is used by the Braq data format for mixing structured data with prose in the same document
+
+> Discover [Braq](https://github.com/pyrustic/braq) !
+
 ## A rich set of datatypes
 
 A Paradict dictionary can be populated with strings, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), comments, extension objects, and grids (matrices).
@@ -70,7 +75,7 @@ The library [API](https://en.wikipedia.org/wiki/API) is designed to be simple to
 
 On top of these classes, four functions namely `encode`, `decode`, `pack`, and `unpack` do the same thing but in bulk.
 
-Then there are additional classes and functions to perform various tasks such as `TypeRef` class for customizing types, `ConfigFile` class for configuration files, `load`, and `dump` functions for reading and writing Paradict binary files, etc.
+Then there are additional classes and functions to perform various tasks such as `TypeRef` class for customizing types, `load`, and `dump` functions for reading and writing Paradict binary files, etc.
 
 ## And more...
 There's more to say about Paradict that can't fit in this Overview section.
@@ -162,47 +167,7 @@ assert my_dict == decode(txt_data)
 ```
 
 ## Working with config files
-**Create and interact with a configuration file:**
-```python
-from datetime import datetime
-from paradict import ConfigFile, box
-
-path = "/home/alex/test/app_settings.dict"
-# data for the 'user' section
-user_card = {"name": "alex", "id": 42, "group": "admin",
-             "birthday": datetime(2020, 1, 1, 4, 20, 59)}
-# data for the 'gui' section
-gui_config = {box.CommentID(): box.Comment("Exotic fonts are banned !"),
-              "font_family": "Arial", "background": "black",
-              "dimensions": {"width": 42.0, "height": 3.14}}
-
-confile = ConfigFile(path)
-confile.set("user", user_card)
-confile.set("gui", gui_config)
-
-# few hours later...
-
-confile = ConfigFile(path)
-# test
-assert user_card == confile.get("user")
-```
-
-The code snippet above will create a config file then fill it with:
-```text
-[user]
-name = "alex"
-id = 42
-group = "admin"
-birthday = 2020-01-01T04:20:59
-
-[gui]
-# Exotic fonts are banned !
-font_family = "Arial"
-background = "black"
-dimensions = (dict)
-    width = 42.0
-    height = 3.14
-```
+> Discover [Braq](https://github.com/pyrustic/braq) !
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
@@ -281,18 +246,15 @@ The API exposes four foundational classes, Encoder, Decoder, Packer, and Unpacke
 
 On top of these classes, four functions, encode, decode, pack, and unpack, do the same thing but in bulk. 
 
-Then there are additional classes and functions to do various stuff such as the TypeRef class for types customization, the ConfigFile class for configuration files, load and dump functions for reading and writing binary Paradict file, etc.
+Then there are additional classes and functions to do various stuff such as the TypeRef class for types customization, load and dump functions for reading and writing binary Paradict file, etc.
 
 Note that this section is just an overview of the API, thus it doesn't replace the module documentation.
 
-> Explore [module documentation]()
+> Please explore the source code ! The documentation generator isn't yet ready !
 
 ## Textual serialization
 Encoder and Decoder are the foundation classes for serializing and deserializing data. These classes process data iteratively. On top of these classes, two functions, encode and decode, do the same thing but in bulk.
 
-Three additional classes which are Document, FileDoc, and ConfigFile, offer a document abstraction for interacting with serialized data. A document can be divided into sections, each having a header and a dictionary body.
-
-> Under the hood, document abstraction uses [Braq](https://github.com/pyrustic/braq)
 
 ### Using the Encoder class
 The Encoder constructor accepts `mode`, type_ref, skip_comments and skip_bin_data as arguments. 
@@ -394,57 +356,6 @@ Output:
 {'id': 42, 'name': 'alex'}
 ```
 
-### Using the document abstraction 
-The ConfigFile class is based on the FileDoc class, itself inheriting from the Document class.
-
-#### Using the Document class
-The Document class offers a document abstraction made of sections. Thus, via `get` and `set` methods, one might read and write the body of a specific section by providing its header.
-
-The Document class has a built-in data validation mechanism as it accepts a schema as optional constructor argument. 
-
-Following are methods exposed by the Document class: `get`, `set`, `check`, `render`, `load_schema`, `validate`, `load_from`, `save_to`, `remove`, and `clear`.
-
-```python
-from paradict import Document
-
-init_text = """\
-id = 42
-name = "alex"
-[misc]
-project = "paradict"
-is_open_source = True
-"""
-doc = Document(init_text)
-# the default header argument is an empty string
-assert doc.get("") == {"id": 42, "name": "alex"}
-# get the misc section
-assert doc.get("misc") == {"project": "paradict", "is_open_source": True}
-# edit the body of the misc section
-doc.set("misc", {"pi": 3.14})
-assert doc.get("misc") == {"pi": 3.14}
-```
-
-#### Using the FileDoc class
-The FileDoc class works as the Document class, except that it is linked to an actual file. This class also has additional methods which are `update`, `load`, and `save`.
-
-```python
-from paradict import FileDoc
-
-path = "/home/alex/file_doc.dict"
-file_doc = FileDoc(path)
-file_doc.set("", {"key": "value"})
-```
-
-#### Using the ConfigFile class
-The ConfigFile class works like the FileDoc class, except that it is linked to an actual configuration file, so its encoding mode is implicitly set to `CONFIG_MODE`.
-
-```python
-from paradict import ConfigFile
-
-path = "/home/alex/app_config.dict"
-file_doc = ConfigFile(path)
-file_doc.get("section", skip_comments=False)  # by default, comments are skipped
-```
 
 ### Miscellaneous functions
 Under the hood, the `Deserializer` class uses a public function for splitting a key-value line into three parts:
@@ -705,7 +616,7 @@ schema = {"id": Spec("int", lambda x: 40 < x < 50),
           "name": "str",
           "books": ["str"]}
 
-assert validate(data, schema) is True
+assert validate(data, schema)
 ```
 
 <p align="right"><a href="#readme">Back to top</a></p>

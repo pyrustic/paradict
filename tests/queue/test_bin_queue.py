@@ -201,9 +201,9 @@ class TestQueueWithBIN(unittest.TestCase):
 
 
 def put_and_get(queue, raw):
-    queue.put(raw)
+    queue.enqueue(raw)
     buffer = bytearray()
-    for tag, payload in queue.get():
+    for tag, payload in queue.dequeue():
         buffer.extend(tag)
         buffer.extend(payload)
     return None if not buffer else buffer

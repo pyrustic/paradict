@@ -21,12 +21,12 @@ class BinQueue:
     def buffer(self):
         return self._buffer
 
-    def put(self, raw):
+    def enqueue(self, raw):
         """Store binary data in the buffer. This data will then be iteratively
         extracted by the 'get' method"""
         self._buffer.extend(raw)
 
-    def get(self):
+    def dequeue(self):
         """Generator for iteratively getting each tag-payload tuple composing the
         raw data stored in the buffer"""
         while True:

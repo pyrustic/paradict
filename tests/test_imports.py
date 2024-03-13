@@ -26,9 +26,6 @@ class TestImports(unittest.TestCase):
             from paradict import Decoder
             from paradict import Packer
             from paradict import Unpacker
-            from paradict import Document
-            from paradict import ConfigFile
-            from paradict import FileDoc
             from paradict import TypeRef
             from paradict import Validator
         except ImportError:

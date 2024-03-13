@@ -110,8 +110,8 @@ class Decoder:
         """
         if not self._feedable:
             return False
-        self._queue.put(s)
-        for line in self._queue.get():
+        self._queue.enqueue(s)
+        for line in self._queue.dequeue():
             line = line.rstrip("\n")
             if line.rstrip() == "===":  # END
                 self._cleanup_stack(0)
