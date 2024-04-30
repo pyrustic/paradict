@@ -1,4 +1,4 @@
-"""binary Paradict: 256 tags from NOP (\x00) to END (\xff)"""
+"""binary Paradict: 256 tags from NOP (`\\x00`) to END (`\\xff`)"""
 
 
 # Nop
