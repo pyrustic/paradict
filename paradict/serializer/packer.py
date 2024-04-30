@@ -6,6 +6,9 @@ from paradict.tags.misc import SIZE_TO_PINT, \
 from paradict import errors, misc
 
 
+__all__ = ["Packer"]
+
+
 class Packer:
     """
     Class to convert some binary Python dict into Paradict binary format
@@ -14,7 +17,7 @@ class Packer:
         """
         Init
 
-        [parameters]
+        [param]
         - type_ref: optional TypeRef object
         - skip_comments: boolean to tell whether comments should be ignored or not
         """

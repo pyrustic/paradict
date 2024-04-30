@@ -1,7 +1,14 @@
 import unittest
 import pathlib
 import tempfile
-from paradict import dump, pack
+from paradict import dump, pack, write, encode
+
+
+class TestPackFunc(unittest.TestCase):
+    """The 'pack' function is already heavily
+     used in the 'packer' test module"""
+    def test(self):
+        self.assertTrue(True)
 
 
 class TestDumpFunc(unittest.TestCase):
@@ -30,11 +37,23 @@ class TestEncodeFunc(unittest.TestCase):
         self.assertTrue(True)
 
 
-class TestPackFunc(unittest.TestCase):
-    """The 'pack' function is already heavily
-     used in the 'packer' test module"""
+class TestWriteFunc(unittest.TestCase):
+
+    def setUp(self):
+        file = tempfile.NamedTemporaryFile(delete=False)
+        file.close()
+        self._path = file.name
+
+    def tearDown(self):
+        pathlib.Path(self._path).unlink()
+
     def test(self):
-        self.assertTrue(True)
+        data = {0: "hello world", "pi": 3.14}
+        write(data, self._path)
+        with open(self._path, "r", encoding="utf-8") as file:
+            r = file.read()
+        expected = encode(data)
+        self.assertEqual(expected, r)
 
 
 if __name__ == '__main__':

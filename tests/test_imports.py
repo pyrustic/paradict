@@ -9,6 +9,8 @@ class TestImports(unittest.TestCase):
             from paradict import encode
             from paradict import decode
             from paradict import pack
+            from paradict import read
+            from paradict import write
             from paradict import unpack
             from paradict import load
             from paradict import dump

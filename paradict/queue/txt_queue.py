@@ -2,6 +2,9 @@
 from collections import namedtuple
 
 
+__all__ = ["TxtQueue"]
+
+
 class TxtQueue:
     """A FIFO queue for processing textual Paradict data"""
     def __init__(self):

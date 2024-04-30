@@ -4,6 +4,9 @@ from paradict import errors, const
 from collections import namedtuple
 
 
+__all__ = ["Info", "split"]
+
+
 Info = namedtuple("Info", ["key", "val", "sep", "mode"])
 
 
@@ -14,7 +17,7 @@ def split(val):
     - data_mode format: key: value
     - config_mode format: key = value
 
-    [parameters]
+    [param]
     - val: non-empty string
 
     [return]

@@ -7,6 +7,9 @@ from paradict.queue.bin_queue import BinQueue
 from paradict import misc, box
 
 
+__all__ = ["Unpacker"]
+
+
 class Unpacker:
     """Class to convert some binary Paradict data into a Python dict"""
 
@@ -15,7 +18,7 @@ class Unpacker:
         """
         Init
 
-        [parameters]
+        [param]
         - type_ref: optional TypeRef object
         - receiver: callback function that will be called at the end of conversion.
         This callback function accepts the Unpacker instance as argument

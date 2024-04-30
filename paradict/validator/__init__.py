@@ -3,6 +3,9 @@ from paradict.typeref import TypeRef
 from paradict.errors import Error
 
 
+__all__ = ["VALID_DATATYPES", "validate", "Spec", "Validator"]
+
+
 VALID_DATATYPES = ("dict", "list", "set", "obj", "bin",
                    "bool", "complex", "date", "datetime",
                    "float", "grid", "int", "str", "time")
@@ -12,7 +15,7 @@ def validate(data, schema, type_ref=None):
     """This function returns True if the given data
     successfully validates against the given schema
 
-    [parameters]
+    [param]
     - data: some Python object (like a dict, a list, ...) that is
     part or include datatypes defined in VALID_DATATYPES.
     - schema: a valid schema. It might be a collection containing
@@ -62,7 +65,9 @@ class Validator:
     """Class to validate data against a schema"""
     def __init__(self, schema, type_ref=None):
         """
-        [parameters]
+        Init
+
+        [param]
         - schema: the schema
         - type_ref: optional TypeRef instance
         """

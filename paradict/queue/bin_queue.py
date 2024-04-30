@@ -2,7 +2,10 @@
 from collections import namedtuple
 from paradict import tags, errors
 from paradict.tags.misc import SIZE_TO_STR
-from paradict import misc
+
+
+__all__ = ["BinQueue"]
+
 
 # a datum is made of a header and payload
 # The header is made of a tag and optional bytes to store the size of the payload

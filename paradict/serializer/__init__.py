@@ -5,12 +5,15 @@ from paradict.serializer.packer import Packer
 from paradict import const
 
 
+__all__ = ["encode", "write", "pack", "dump"]
+
+
 def encode(data, *, mode=const.DATA_MODE, type_ref=None,
            skip_comments=False, skip_bin_data=False):
     """
     Convert a Python dictionary object to Paradict binary format
 
-    [parameters]
+    [param]
     - data: Python dict
     - mode: either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE.
     - type_ref: optional TypeRef object
@@ -29,11 +32,28 @@ def encode(data, *, mode=const.DATA_MODE, type_ref=None,
     return "\n".join(lines)
 
 
+def write(data, path, *, mode=const.DATA_MODE, type_ref=None,
+          skip_comments=False, skip_bin_data=False):
+    """
+    Convert some Python dict in the Paradict textual format
+    then write it to a file
+
+    [param]
+    - path: path string or pathlib.Path instance
+    - mode: either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE.
+    - type_ref: optional TypeRef object
+    - skip_comments: boolean to tell whether comments should be ignored or not
+    """
+    r = encode(data, mode=mode, skip_comments=skip_comments,
+               type_ref=type_ref, skip_bin_data=skip_bin_data)
+    written.write(r, path)
+
+
 def pack(data, *, type_ref=None, skip_comments=False):
     """
     Convert a Python dictionary object to Paradict binary format
 
-    [parameters]
+    [param]
     - data: Python dict
     - type_ref: optional TypeRef object
     - skip_comments: boolean to tell whether comments should be ignored or not
@@ -52,7 +72,8 @@ def dump(data, path, *, type_ref=None, skip_comments=False):
     """
     Convert some Python dict in the Paradict binary format
     then dump it in a file
-    [parameters]
+
+    [param]
     - path: path string or pathlib.Path instance
     - type_ref: optional TypeRef object
     - skip_comments: boolean to tell whether comments should be ignored or not

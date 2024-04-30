@@ -2,6 +2,8 @@
 from paradict import misc
 from ustrid import ustrid
 
+__all__ = ["Grid", "Obj", "HexInt", "OctInt", "BinInt",
+           "CommentID", "Comment"]
 
 class Grid(list):
     """
@@ -9,9 +11,11 @@ class Grid(list):
     be consistent (rows should be of same size)
 
     Example:
-        # a grid with 2 rows and 3 columns
-        my_grid = Grid([(0, 1, 0),
-                        (1, 0, 1)])
+    ```
+    # a grid with 2 rows and 3 columns
+    my_grid = Grid([(0, 1, 0),
+                    (1, 0, 1)])
+    ```
     """
     pass
 
@@ -87,7 +91,9 @@ class CommentID(str):
     Box to hold a unique comment id.
     Instantiating this class will generate a new unique string.
     Under the hood, the 'ustrid' library is used.
-        CommentID() != CommentID()
+    ```
+    CommentID() != CommentID()
+    ```
     """
     def __new__(cls, *args, **kwargs):
         return super().__new__(cls, ustrid())

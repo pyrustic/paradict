@@ -6,6 +6,9 @@ from paradict.typeref import TypeRef
 from paradict.queue.txt_queue import TxtQueue
 
 
+__all__ = ["Decoder"]
+
+
 class Decoder:
     """Class to convert some textual Paradict data into a Python dict"""
     def __init__(self, *, type_ref=None, receiver=None, obj_builder=None,
@@ -13,7 +16,7 @@ class Decoder:
         """
         Init
 
-        [parameters]
+        [param]
         - type_ref: optional TypeRef object
         - receiver: callback function that will be called at the end of conversion.
         This callback function accepts the Decoder instance as argument
@@ -105,7 +108,7 @@ class Decoder:
         Note: it is very important to make sure that each line is ended
         by a "\n" newline character
 
-        Check the paradict.decode function to see an example of
+        Check the `paradict.decode` function to see an example of
         how to use this class
         """
         if not self._feedable:

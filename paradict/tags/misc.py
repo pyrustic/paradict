@@ -2,6 +2,9 @@
 from paradict import tags
 
 
+__all__ = []
+
+
 # Mapping bytes number to INT tags. Eg: 1 byte int belongs to tags.INT_8
 SIZE_TO_PINT = {1: tags.PINT_8, 2: tags.PINT_16,
                 3: tags.PINT_24, 4: tags.PINT_32,

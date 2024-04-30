@@ -1,8 +1,11 @@
-"""Private miscellaneous functions and classes. Do not use them !"""
+"""Private miscellaneous functions and classes."""
 import math
 import datetime
 from collections import namedtuple
 from paradict import errors, const
+
+
+__all__ = ["forge_bin", "stringify_bin"]
 
 
 # TODO: update this module (write/correct docstrings, etc), and write tests

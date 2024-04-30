@@ -248,13 +248,12 @@ On top of these classes, four functions, encode, decode, pack, and unpack, do th
 
 Then there are additional classes and functions to do various stuff such as the TypeRef class for types customization, load and dump functions for reading and writing binary Paradict file, etc.
 
-Note that this section is just an overview of the API, thus it doesn't replace the module documentation.
+Note that this section is just an overview of the API, thus it doesn't replace the **API reference**.
 
-> Please explore the source code ! The documentation generator isn't yet ready !
+> Explore [API reference](https://github.com/pyrustic/paradict/tree/master/docs/api).
 
 ## Textual serialization
 Encoder and Decoder are the foundation classes for serializing and deserializing data. These classes process data iteratively. On top of these classes, two functions, encode and decode, do the same thing but in bulk.
-
 
 ### Using the Encoder class
 The Encoder constructor accepts `mode`, type_ref, skip_comments and skip_bin_data as arguments. 
@@ -354,6 +353,21 @@ print(r)
 Output:
 ```text
 {'id': 42, 'name': 'alex'}
+```
+
+### Load and dump
+
+```python
+from paradict import read, write
+
+path = "/home/alex/user_card.bin"
+data = {"id": 42, "name": "alex"}
+# Serialize and write data to user_card.text
+write(data, path)
+# Read and deserialize data
+r = read(path)
+# test
+assert data == r
 ```
 
 

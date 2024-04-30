@@ -16,7 +16,7 @@ class Encoder:
         """
         Init
 
-        [parameters]
+        [param]
         - mode: either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE.
         - type_ref: optional TypeRef object
         - skip_comments: boolean to tell whether comments should be ignored or not

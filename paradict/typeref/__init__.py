@@ -5,6 +5,9 @@ from collections import OrderedDict
 from paradict import box, errors
 
 
+__all__ = ["TypeRef"]
+
+
 class TypeRef:
     """This class represents a mechanism for customizing
     Python types allowed for (de)serializing data with Paradict classes and functions.
@@ -440,7 +443,7 @@ class TypeRef:
         an adapter function registered for the type of the data argument.
         Then, calls the adapter on the data.
 
-        [parameters]
+        [param]
         - data: the data to adapt is an arbitrary Python object
 
         [return]
