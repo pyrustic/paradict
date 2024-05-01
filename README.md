@@ -15,8 +15,6 @@
 # Paradict
 <b>Streamable multi-format serialization with schema</b>
 
-This project is part of the [Pyrustic Open Ecosystem](https://pyrustic.github.io).
-
 ## Table of contents
 
 - [Overview](#overview)
