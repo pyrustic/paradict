@@ -5,6 +5,7 @@ from ustrid import ustrid
 __all__ = ["Grid", "Obj", "HexInt", "OctInt", "BinInt",
            "CommentID", "Comment"]
 
+
 class Grid(list):
     """
     Box to hold a grid. A grid is made of numbers and should

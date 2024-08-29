@@ -13,6 +13,10 @@ Boxes to hold comments, grids, hexadecimal integers, et cetera
 <br>
 No docstring.
 
+[paradict.datatype.\_\_init\_\_](/docs/api/modules/paradict/datatype/__init__/README.md)
+<br>
+Datatype enum
+
 [paradict.deserializer.\_\_init\_\_](/docs/api/modules/paradict/deserializer/__init__/README.md)
 <br>
 High-level functions to deserialize Paradict binary/text data into a Python dict

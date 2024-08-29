@@ -13,6 +13,7 @@ No docstring.
     - [obj\_builder](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [queue](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [receiver](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
+    - [root\_dir](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [skip\_comments](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [type\_ref](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [feed](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#feed): Feed the decoder engine with some string.         The string might represent a line in the textual Paradict data,         or an ...
@@ -34,6 +35,7 @@ No docstring.
     - [\_decode\_datetime](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#_decode_datetime): No docstring.
     - [\_decode\_float](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#_decode_float): No docstring.
     - [\_decode\_int](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#_decode_int): No docstring.
+    - [\_decode\_load\_func](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#_decode_load_func): No docstring.
     - [\_decode\_null](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#_decode_null): No docstring.
     - [\_decode\_str](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#_decode_str): No docstring.
     - [\_decode\_time](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#_decode_time): No docstring.

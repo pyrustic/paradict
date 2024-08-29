@@ -1,9 +1,11 @@
+import os
 import re
 import base64
 from textwrap import dedent
 from collections import namedtuple
-from paradict import errors, misc, const, box
+from paradict import errors, misc, const
 from paradict.typeref import TypeRef
+from paradict.datatype import Datatype
 
 
 Context = namedtuple("Context", ["name", "collection", "indents"])
@@ -12,7 +14,8 @@ Context = namedtuple("Context", ["name", "collection", "indents"])
 class Encoder:
     """Convert a Python dictionary object to Paradict text format"""
     def __init__(self, mode=const.DATA_MODE, type_ref=None,
-                 skip_comments=False, skip_bin_data=False):
+                 skip_comments=False, bin_to_text=True,
+                 root_dir=None, attachments_dir="attachments"):
         """
         Init
 
@@ -20,31 +23,37 @@ class Encoder:
         - mode: either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE.
         - type_ref: optional TypeRef object
         - skip_comments: boolean to tell whether comments should be ignored or not
-        - skip_bin_data: boolean to tell whether bin data should be ignored or not
+        - bin_to_text: boolean to tell whether bin data should be embedded as base16 or
+        stored in a linked file
+        - root_dir: root directory in which the attachments dir is supposed to be
+        - attachments_dir: attachments directory. This is a path that is relative to the root dir.
+            Note that relative paths should use a slash as separator.
         """
         self._mode = mode
         self._type_ref = type_ref if type_ref else TypeRef()
         self._skip_comments = skip_comments
-        self._skip_bin_data = skip_bin_data
+        self._bin_to_text = bin_to_text
+        self._root_dir = root_dir
+        self._attachments_dir = attachments_dir if attachments_dir else ""
         self._stack = list()
-        self._converters = {"dict": self._encode_dict,
-                            "list": self._encode_list,
-                            "set": self._encode_set,
-                            "obj": self._encode_obj,
-                            "grid": self._encode_grid,
-                            "bool": self._encode_bool,
-                            "str": self._encode_str,
-                            "comment": self._encode_comment,
-                            "bin": self._encode_bin,
-                            "int": self._encode_int,
-                            "hex_int": self._encode_hex_int,
-                            "oct_int": self._encode_oct_int,
-                            "bin_int": self._encode_bin_int,
-                            "float": self._encode_float,
-                            "complex": self._encode_complex,
-                            "datetime": self._encode_datetime,
-                            "date": self._encode_date,
-                            "time": self._encode_time}
+        self._converters = {Datatype.DICT: self._encode_dict,
+                            Datatype.LIST: self._encode_list,
+                            Datatype.SET: self._encode_set,
+                            Datatype.OBJ: self._encode_obj,
+                            Datatype.GRID: self._encode_grid,
+                            Datatype.BOOL: self._encode_bool,
+                            Datatype.STR: self._encode_str,
+                            Datatype.COMMENT: self._encode_comment,
+                            Datatype.BIN: self._encode_bin,
+                            Datatype.INT: self._encode_int,
+                            Datatype.HEX_INT: self._encode_hex_int,
+                            Datatype.OCT_INT: self._encode_oct_int,
+                            Datatype.BIN_INT: self._encode_bin_int,
+                            Datatype.FLOAT: self._encode_float,
+                            Datatype.COMPLEX: self._encode_complex,
+                            Datatype.DATETIME: self._encode_datetime,
+                            Datatype.DATE: self._encode_date,
+                            Datatype.TIME: self._encode_time}
 
     @property
     def mode(self):
@@ -71,12 +80,28 @@ class Encoder:
         self._skip_comments = val
 
     @property
-    def skip_bin_data(self):
-        return self._skip_bin_data
+    def bin_to_text(self):
+        return self._bin_to_text
 
-    @skip_bin_data.setter
-    def skip_bin_data(self, val):
-        self._skip_bin_data = val
+    @bin_to_text.setter
+    def bin_to_text(self, val):
+        self._bin_to_text = val
+
+    @property
+    def root_dir(self):
+        return self._root_dir
+
+    @root_dir.setter
+    def root_dir(self, val):
+        self._root_dir = val
+
+    @property
+    def attachments_dir(self):
+        return self._attachments_dir
+
+    @attachments_dir.setter
+    def attachments_dir(self, val):
+        self._attachments_dir = val
 
     def encode(self, data):
         """Generator for iteratively encoding data by yielding lines of Paradict text format"""
@@ -103,10 +128,10 @@ class Encoder:
 
     def _check_key(self, key):
         type_name = self._type_ref.check(type(key))
-        if (type_name == "str"
+        if (type_name == Datatype.STR
                 or (self._mode == const.DATA_MODE
-                    and type_name in ("int", "hex_int", "oct_int",
-                                      "bin_int", "float", "complex"))):
+                    and type_name in (Datatype.INT, Datatype.HEX_INT, Datatype.OCT_INT,
+                                      Datatype.BIN_INT, Datatype.FLOAT, Datatype.COMPLEX))):
             pass
         else:
             msg = ("In CONFIG_MODE, a key should be either str or raw"
@@ -114,7 +139,7 @@ class Encoder:
                    "In DATA_MODE, a key should be one of: str, raw, "
                    "int, hex_int, oct_int, bin_int, float, complex.")
             raise errors.Error(msg)
-        if type_name == "str":  # TODO
+        if type_name == Datatype.STR:
             key = key.replace("\\", "\\\\")
             key = key.replace("\n", "\\n")
             r = '"{}"'.format(key)
@@ -165,13 +190,14 @@ class Encoder:
         # iterate set
         for val in data:
             val = self._type_ref.adapt(val)
-            valid_types = ("int", "hex_int", "oct_int", "bin_int",
-                           "float", "complex", "str", "bin",
-                           "datetime", "date", "time", "comment")
+            valid_types = (Datatype.INT, Datatype.HEX_INT, Datatype.OCT_INT,
+                           Datatype.BIN_INT, Datatype.FLOAT, Datatype.COMPLEX,
+                           Datatype.STR, Datatype.BIN, Datatype.DATETIME,
+                           Datatype.DATE, Datatype.TIME, Datatype.COMMENT)
             if self._type_ref.check(type(val)) not in valid_types:
 
                 msg = "The set container can contain these types: {}"
-                msg = msg.format(", ".join(valid_types))
+                msg = msg.format(", ".join([x.name for x in valid_types]))
                 raise errors.Error(msg)
             # process val as comment if needed
             if type(val) in self._type_ref.comment_types:
@@ -228,8 +254,9 @@ class Encoder:
             for val in row:
                 val = self._type_ref.adapt(val)
                 type_name = self._type_ref.check(type(val))
-                if type_name not in ("int", "hex_int", "oct_int", "bin_int",
-                                     "float", "complex"):
+                if type_name not in (Datatype.INT, Datatype.HEX_INT,
+                                     Datatype.OCT_INT, Datatype.BIN_INT,
+                                     Datatype.FLOAT, Datatype.COMPLEX):
                     msg = "A Grid should be made of numbers only (integer, float, complex)"
                     raise errors.Error(msg)
                 g = self._encode(val, indents + 1)
@@ -267,11 +294,20 @@ class Encoder:
 
     def _encode_bin(self, data, indents=0):
         indent_str = misc.make_indent_str(indents)
-        yield indent_str + "(bin)"
-        if self._skip_bin_data:
-            return
-        indent_str = misc.make_indent_str(indents + 1)
-        for line in encode_bin(data):
+        if self._bin_to_text:
+            yield indent_str + "(bin)"
+            indent_str = misc.make_indent_str(indents + 1)
+            for line in encode_bin(data):
+                yield indent_str + line
+        else:
+            parts = misc.split_relative_path(self._attachments_dir)
+            root_dir = self._root_dir if self._root_dir else os.getcwd()
+            basename = misc.store_attachment(data, os.path.join(root_dir,
+                                                                *parts))
+            if self._attachments_dir:
+                line = "load('{}/{}')".format(self._attachments_dir, basename)
+            else:
+                line = "load('{}')".format(basename)
             yield indent_str + line
 
     def _encode_comment(self, data, indents=0):

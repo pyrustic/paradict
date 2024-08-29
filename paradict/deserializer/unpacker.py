@@ -5,6 +5,7 @@ from paradict.typeref import TypeRef
 from paradict import errors
 from paradict.queue.bin_queue import BinQueue
 from paradict import misc, box
+from paradict.datatype import Datatype
 
 
 __all__ = ["Unpacker"]
@@ -548,7 +549,9 @@ class Unpacker:
         for row in grid:
             for item in row:
                 dtype = self._type_ref.check(type(item))
-                if dtype not in ("int", "float", "complex"):
+                if dtype not in (Datatype.INT, Datatype.HEX_INT,
+                                 Datatype.OCT_INT, Datatype.BIN_INT,
+                                 Datatype.FLOAT, Datatype.COMPLEX):
                     msg = "A grid should be built with int, float, or complex numbers"
                     raise errors.Error(msg)
         return self._type_ref.grid_type(grid)

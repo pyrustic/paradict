@@ -16,7 +16,7 @@ class TestImports(unittest.TestCase):
             from paradict import dump
             from paradict import forge_bin
             from paradict import stringify_bin
-            from paradict import validate
+            from paradict import is_valid
             from paradict import split_kv
         except ImportError:
             self.assertTrue(False)
@@ -30,6 +30,7 @@ class TestImports(unittest.TestCase):
             from paradict import Unpacker
             from paradict import TypeRef
             from paradict import Validator
+            from paradict import Datatype  # enum
         except ImportError:
             self.assertTrue(False)
 

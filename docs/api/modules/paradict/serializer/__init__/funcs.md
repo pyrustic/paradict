@@ -31,7 +31,7 @@ def dump(data, path, *, type_ref=None, skip_comments=False):
 Convert a Python dictionary object to Paradict binary format
 
 ```python
-def encode(data, *, mode='d', type_ref=None, skip_comments=False, skip_bin_data=False):
+def encode(data, *, mode='d', type_ref=None, skip_comments=False, bin_to_text=True, root_dir=None, attachments_dir='attachments'):
     ...
 ```
 
@@ -41,7 +41,9 @@ def encode(data, *, mode='d', type_ref=None, skip_comments=False, skip_bin_data=
 | mode | either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE. |
 | type\_ref | optional TypeRef object |
 | skip\_comments | boolean to tell whether comments should be ignored or not |
-| skip\_bin\_data | boolean to tell whether bin data should be ignored or not |
+| bin\_to\_text | boolean to tell whether bin data should be converted into text or not |
+| root\_dir | root directory in which the attachments dir is supposed to be |
+| attachments\_dir | attachments directory. This is a path that is relative to the root dir. Note that relative paths should use a slash as separator. |
 
 ### Value to return
 Return a string in the Paradict text format
@@ -72,7 +74,7 @@ Convert some Python dict in the Paradict textual format
 then write it to a file
 
 ```python
-def write(data, path, *, mode='d', type_ref=None, skip_comments=False, skip_bin_data=False):
+def write(data, path, *, mode='d', type_ref=None, skip_comments=False, bin_to_text=False, attachments_dir='attachments'):
     ...
 ```
 
@@ -82,5 +84,7 @@ def write(data, path, *, mode='d', type_ref=None, skip_comments=False, skip_bin_
 | mode | either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE. |
 | type\_ref | optional TypeRef object |
 | skip\_comments | boolean to tell whether comments should be ignored or not |
+| bin\_to\_text | boolean to tell whether bin data should be converted into text or not |
+| attachments\_dir | path to attachments directory. Relative paths should use a slash as separator |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>

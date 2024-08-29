@@ -1,5 +1,8 @@
 """High-level functions to serialize Python dict in Paradict binary/text format"""
+import os
+import os.path
 import written
+import pathlib
 from paradict.serializer.encoder import Encoder
 from paradict.serializer.packer import Packer
 from paradict import const
@@ -9,7 +12,8 @@ __all__ = ["encode", "write", "pack", "dump"]
 
 
 def encode(data, *, mode=const.DATA_MODE, type_ref=None,
-           skip_comments=False, skip_bin_data=False):
+           skip_comments=False, bin_to_text=True,
+           root_dir=None, attachments_dir="attachments"):
     """
     Convert a Python dictionary object to Paradict binary format
 
@@ -18,14 +22,18 @@ def encode(data, *, mode=const.DATA_MODE, type_ref=None,
     - mode: either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE.
     - type_ref: optional TypeRef object
     - skip_comments: boolean to tell whether comments should be ignored or not
-    - skip_bin_data: boolean to tell whether bin data should be ignored or not
+    - bin_to_text: boolean to tell whether bin data should be converted into text or not
+    - root_dir: root directory in which the attachments dir is supposed to be
+    - attachments_dir: attachments directory. This is a path that is relative to the root dir.
+     Note that relative paths should use a slash as separator.
 
     [return]
     Return a string in the Paradict text format
     """
     encoder = Encoder(mode=mode, type_ref=type_ref,
                       skip_comments=skip_comments,
-                      skip_bin_data=skip_bin_data)
+                      bin_to_text=bin_to_text, root_dir=root_dir,
+                      attachments_dir=attachments_dir)
     lines = list()
     for r in encoder.encode(data):
         lines.append(r)
@@ -33,7 +41,8 @@ def encode(data, *, mode=const.DATA_MODE, type_ref=None,
 
 
 def write(data, path, *, mode=const.DATA_MODE, type_ref=None,
-          skip_comments=False, skip_bin_data=False):
+          skip_comments=False, bin_to_text=False,
+          attachments_dir="attachments"):
     """
     Convert some Python dict in the Paradict textual format
     then write it to a file
@@ -43,10 +52,16 @@ def write(data, path, *, mode=const.DATA_MODE, type_ref=None,
     - mode: either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE.
     - type_ref: optional TypeRef object
     - skip_comments: boolean to tell whether comments should be ignored or not
+    - bin_to_text: boolean to tell whether bin data should be converted into text or not
+    - attachments_dir: path to attachments directory. Relative paths should use
+        a slash as separator
     """
+    path = str(pathlib.Path(path).resolve())
     r = encode(data, mode=mode, skip_comments=skip_comments,
-               type_ref=type_ref, skip_bin_data=skip_bin_data)
-    written.write(r, path)
+               type_ref=type_ref, bin_to_text=bin_to_text,
+               root_dir=os.path.dirname(path),
+               attachments_dir=attachments_dir)
+    return written.write(r, path)
 
 
 def pack(data, *, type_ref=None, skip_comments=False):
@@ -78,5 +93,6 @@ def dump(data, path, *, type_ref=None, skip_comments=False):
     - type_ref: optional TypeRef object
     - skip_comments: boolean to tell whether comments should be ignored or not
     """
+    path = str(pathlib.Path(path).resolve())
     r = pack(data, skip_comments=skip_comments, type_ref=type_ref)
-    written.write(r, path)
+    return written.write(r, path)

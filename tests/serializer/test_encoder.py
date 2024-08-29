@@ -1,5 +1,8 @@
+import os
+import os.path
 import unittest
 import datetime
+import tempfile
 from decimal import Decimal
 from textwrap import dedent
 from paradict import serializer
@@ -900,13 +903,13 @@ class TestBin(unittest.TestCase):
 
     def test_empty_bin_data(self):
         d = {0: b""}
-        r = encode_data(d, skip_bin_data=False)
+        r = encode_data(d, bin_to_text=True)
         expected = """0: (bin)"""
         self.assertEqual(dedent(expected), r)
 
     def test_bin_data(self):
         d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
-        r = encode_data(d, skip_bin_data=False)
+        r = encode_data(d, bin_to_text=True)
         expected = """\
         0: (bin)
             68 65 6C 6C 6F 20 77 6F 72 6C 64 20 68 65 6C 6C
@@ -917,12 +920,60 @@ class TestBin(unittest.TestCase):
             72 6C 64"""
         self.assertEqual(dedent(expected), r)
 
-    def test_skipped_bin_data(self):
+
+class TestAttachments(unittest.TestCase):
+
+    def setUp(self):
+        self._tempdir = tempfile.TemporaryDirectory()
+        self._dirname = self._tempdir.name
+        self._cached_cwd = os.getcwd()
+        os.chdir(self._tempdir.name)
+
+    def tearDown(self):
+        os.chdir(self._cached_cwd)
+        # the Try/Except is needed here because I can only
+        # benefit from the constructor's "ignore_cleanup_errors=True"
+        # in Python 3.10
+        try:
+            self._tempdir.cleanup()
+        except Exception as e:
+            pass
+
+    def test_default_value(self):
         d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
-        r = encode_data(d, skip_bin_data=True)
-        expected = """\
-        0: (bin)"""
-        self.assertEqual(dedent(expected), r)
+        for i in range(1, 6):
+            with self.subTest(str(i)):
+                r = encode_data(d, bin_to_text=False)
+                expected = """\
+                0: load('attachments/{}')""".format(str(i))
+                self.assertEqual(dedent(expected), r)
+                attachment_filename = os.path.join(self._dirname, "attachments", str(i))
+                self.assertTrue(os.path.isfile(attachment_filename))
+
+    def test_with_custom_relative_attachments_dirname(self):
+        d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
+        for i in range(1, 6):
+            with self.subTest(str(i)):
+                r = encode_data(d, bin_to_text=False,
+                                attachments_dir="my/attachments")
+                expected = """\
+                0: load('my/attachments/{}')""".format(str(i))
+                self.assertEqual(dedent(expected), r)
+                attachment_filename = os.path.join(self._dirname, "my",
+                                                   "attachments", str(i))
+                self.assertTrue(os.path.isfile(attachment_filename))
+
+    def test_with_empty_attachments_dirname(self):
+        d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
+        for i in range(1, 6):
+            with self.subTest(str(i)):
+                r = encode_data(d, bin_to_text=False, root_dir=self._dirname,
+                                attachments_dir=None)
+                attachment_filename = os.path.join(self._dirname, str(i))
+                expected = """\
+                0: load('{}')""".format(str(i))
+                self.assertEqual(dedent(expected), r)
+                self.assertTrue(os.path.isfile(attachment_filename))
 
 
 def encode_data(data, **kwargs):

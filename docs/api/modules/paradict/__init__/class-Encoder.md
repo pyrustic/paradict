@@ -15,8 +15,10 @@ Here are properties exposed in the class:
 
 | Property | Methods | Description |
 | --- | --- | --- |
+| attachments\_dir | _getter, setter_ | No docstring. |
+| bin\_to\_text | _getter, setter_ | No docstring. |
 | mode | _getter, setter_ | No docstring. |
-| skip\_bin\_data | _getter, setter_ | No docstring. |
+| root\_dir | _getter, setter_ | No docstring. |
 | skip\_comments | _getter, setter_ | No docstring. |
 | type\_ref | _getter, setter_ | No docstring. |
 
@@ -53,7 +55,7 @@ Here are methods exposed in the class:
 Init
 
 ```python
-def __init__(self, mode='d', type_ref=None, skip_comments=False, skip_bin_data=False):
+def __init__(self, mode='d', type_ref=None, skip_comments=False, bin_to_text=True, root_dir=None, attachments_dir='attachments'):
     ...
 ```
 
@@ -62,7 +64,9 @@ def __init__(self, mode='d', type_ref=None, skip_comments=False, skip_bin_data=F
 | mode | either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE. |
 | type\_ref | optional TypeRef object |
 | skip\_comments | boolean to tell whether comments should be ignored or not |
-| skip\_bin\_data | boolean to tell whether bin data should be ignored or not |
+| bin\_to\_text | boolean to tell whether bin data should be embedded as base16 or stored in a linked file |
+| root\_dir | root directory in which the attachments dir is supposed to be |
+| attachments\_dir | attachments directory. This is a path that is relative to the root dir. Note that relative paths should use a slash as separator. |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 

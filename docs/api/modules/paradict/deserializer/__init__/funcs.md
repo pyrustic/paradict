@@ -14,7 +14,7 @@ Here are functions exposed in the module:
 Convert some textual Paradict data into a Python dictionary
 
 ```python
-def decode(text, type_ref=None, receiver=None, obj_builder=None, skip_comments=False):
+def decode(text, type_ref=None, receiver=None, obj_builder=None, skip_comments=False, root_dir=None):
     ...
 ```
 
@@ -25,6 +25,7 @@ def decode(text, type_ref=None, receiver=None, obj_builder=None, skip_comments=F
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
 | obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
 | skip\_comments | boolean to tell whether comments should be ignored or not |
+| root\_dir | root directory in which the attachments dir is supposed to be |
 
 ### Value to return
 Return the newly built Python object

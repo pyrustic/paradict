@@ -16,5 +16,8 @@ No docstring.
 - [**IndentError**](/docs/api/modules/paradict/errors/__init__/class-IndentError.md): Common base class for all non-exit exceptions.
     - [args](/docs/api/modules/paradict/errors/__init__/class-IndentError.md#fields-table) = `<attribute 'args' of 'BaseException' objects>`
     - [with\_traceback](/docs/api/modules/paradict/errors/__init__/class-IndentError.md#fields-table) = `<method 'with_traceback' of 'BaseException' objects>`
+- [**ValidationError**](/docs/api/modules/paradict/errors/__init__/class-ValidationError.md): Common base class for all non-exit exceptions.
+    - [args](/docs/api/modules/paradict/errors/__init__/class-ValidationError.md#fields-table) = `<attribute 'args' of 'BaseException' objects>`
+    - [with\_traceback](/docs/api/modules/paradict/errors/__init__/class-ValidationError.md#fields-table) = `<method 'with_traceback' of 'BaseException' objects>`
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>

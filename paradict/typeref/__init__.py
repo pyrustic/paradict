@@ -3,6 +3,7 @@ import datetime
 from decimal import Decimal
 from collections import OrderedDict
 from paradict import box, errors
+from paradict.datatype import Datatype
 
 
 __all__ = ["TypeRef"]
@@ -81,7 +82,7 @@ class TypeRef:
         self._obj_types = obj_types if obj_types else [box.Obj]
 
         # serializable data types
-        self._bin_types = bin_types if bin_types else [bytes]
+        self._bin_types = bin_types if bin_types else [bytes, bytearray]
         self._bin_int_types = bin_int_types if bin_int_types else [box.BinInt]
         self._bool_types = bool_types if bool_types else [bool]
         self._complex_types = complex_types if complex_types else [complex]
@@ -120,7 +121,7 @@ class TypeRef:
     @dict_type.setter
     def dict_type(self, val):
         self._dict_type = val
-        self._update_types("dict", val)
+        self._update_types(Datatype.DICT, val)
 
     @property
     def list_type(self):
@@ -129,7 +130,7 @@ class TypeRef:
     @list_type.setter
     def list_type(self, val):
         self._list_type = val
-        self._update_types("list", val)
+        self._update_types(Datatype.LIST, val)
 
     @property
     def set_type(self):
@@ -138,7 +139,7 @@ class TypeRef:
     @set_type.setter
     def set_type(self, val):
         self._set_type = val
-        self._update_types("set", val)
+        self._update_types(Datatype.SET, val)
 
     @property
     def obj_type(self):
@@ -147,7 +148,7 @@ class TypeRef:
     @obj_type.setter
     def obj_type(self, val):
         self._obj_type = val
-        self._update_types("obj", val)
+        self._update_types(Datatype.OBJ, val)
 
     @property
     def dict_types(self):
@@ -190,7 +191,7 @@ class TypeRef:
     @bin_type.setter
     def bin_type(self, val):
         self._bin_type = val
-        self._update_types("bin", val)
+        self._update_types(Datatype.BIN, val)
 
     @property
     def bin_int_type(self):
@@ -199,7 +200,7 @@ class TypeRef:
     @bin_int_type.setter
     def bin_int_type(self, val):
         self._bin_int_type = val
-        self._update_types("bin_int", val)
+        self._update_types(Datatype.BIN_INT, val)
 
     @property
     def bool_type(self):
@@ -208,7 +209,7 @@ class TypeRef:
     @bool_type.setter
     def bool_type(self, val):
         self._bool_type = val
-        self._update_types("bool", val)
+        self._update_types(Datatype.BOOL, val)
 
     @property
     def complex_type(self):
@@ -217,7 +218,7 @@ class TypeRef:
     @complex_type.setter
     def complex_type(self, val):
         self._complex_type = val
-        self._update_types("complex", val)
+        self._update_types(Datatype.COMPLEX, val)
 
     @property
     def date_type(self):
@@ -226,7 +227,7 @@ class TypeRef:
     @date_type.setter
     def date_type(self, val):
         self._date_type = val
-        self._update_types("date", val)
+        self._update_types(Datatype.DATE, val)
 
     @property
     def datetime_type(self):
@@ -235,7 +236,7 @@ class TypeRef:
     @datetime_type.setter
     def datetime_type(self, val):
         self._datetime_type = val
-        self._update_types("datetime", val)
+        self._update_types(Datatype.DATETIME, val)
 
     @property
     def comment_type(self):
@@ -244,7 +245,7 @@ class TypeRef:
     @comment_type.setter
     def comment_type(self, val):
         self._comment_type = val
-        self._update_types("comment", val)
+        self._update_types(Datatype.COMMENT, val)
 
     @property
     def comment_id_type(self):
@@ -253,7 +254,7 @@ class TypeRef:
     @comment_id_type.setter
     def comment_id_type(self, val):
         self._comment_id_type = val
-        self._update_types("comment_id", val)
+        self._update_types(Datatype.COMMENT_ID, val)
 
     @property
     def float_type(self):
@@ -262,7 +263,7 @@ class TypeRef:
     @float_type.setter
     def float_type(self, val):
         self._float_type = val
-        self._update_types("float", val)
+        self._update_types(Datatype.FLOAT, val)
 
     @property
     def grid_type(self):
@@ -271,7 +272,7 @@ class TypeRef:
     @grid_type.setter
     def grid_type(self, val):
         self._grid_type = val
-        self._update_types("grid", val)
+        self._update_types(Datatype.GRID, val)
 
     @property
     def hex_int_type(self):
@@ -280,7 +281,7 @@ class TypeRef:
     @hex_int_type.setter
     def hex_int_type(self, val):
         self._hex_int_type = val
-        self._update_types("hex_int", val)
+        self._update_types(Datatype.HEX_INT, val)
 
     @property
     def int_type(self):
@@ -289,7 +290,7 @@ class TypeRef:
     @int_type.setter
     def int_type(self, val):
         self._int_type = val
-        self._update_types("int", val)
+        self._update_types(Datatype.INT, val)
 
     @property
     def oct_int_type(self):
@@ -298,7 +299,7 @@ class TypeRef:
     @oct_int_type.setter
     def oct_int_type(self, val):
         self._oct_int_type = val
-        self._update_types("oct_int", val)
+        self._update_types(Datatype.OCT_INT, val)
 
     @property
     def str_type(self):
@@ -307,7 +308,7 @@ class TypeRef:
     @str_type.setter
     def str_type(self, val):
         self._str_type = val
-        self._update_types("str", val)
+        self._update_types(Datatype.STR, val)
 
     @property
     def time_type(self):
@@ -316,7 +317,7 @@ class TypeRef:
     @time_type.setter
     def time_type(self, val):
         self._time_type = val
-        self._update_types("time", val)
+        self._update_types(Datatype.TIME, val)
 
     @property
     def bin_types(self):
@@ -465,17 +466,17 @@ class TypeRef:
             pass
 
     def _create_map(self):
-        categories = {"dict": self._dict_types, "list": self._list_types,
-                      "set": self._set_types, "obj": self._obj_types,
+        categories = {Datatype.DICT: self._dict_types, Datatype.LIST: self._list_types,
+                      Datatype.SET: self._set_types, Datatype.OBJ: self._obj_types,
 
-                      "bin": self._bin_types, "bin_int": self._bin_int_types,
-                      "bool": self._bool_types, "complex": self._complex_types,
-                      "date": self._date_types, "datetime": self._datetime_types,
-                      "comment": self._comment_types, "comment_id": self._comment_id_types,
-                      "float": self._float_types, "grid": self._grid_types,
-                      "hex_int": self._hex_int_types, "int": self._int_types,
-                      "oct_int": self._oct_int_types, "str": self._str_types,
-                      "time": self._time_types}
+                      Datatype.BIN: self._bin_types, Datatype.BIN_INT: self._bin_int_types,
+                      Datatype.BOOL: self._bool_types, Datatype.COMPLEX: self._complex_types,
+                      Datatype.DATE: self._date_types, Datatype.DATETIME: self._datetime_types,
+                      Datatype.COMMENT: self._comment_types, Datatype.COMMENT_ID: self._comment_id_types,
+                      Datatype.FLOAT: self._float_types, Datatype.GRID: self._grid_types,
+                      Datatype.HEX_INT: self._hex_int_types, Datatype.INT: self._int_types,
+                      Datatype.OCT_INT: self._oct_int_types, Datatype.STR: self._str_types,
+                      Datatype.TIME: self._time_types}
         mapping = dict()
         for name, datatypes in categories.items():
             for datatype in datatypes:
@@ -483,43 +484,43 @@ class TypeRef:
         return mapping
 
     def _update_types(self, name, datatype):
-        if name == "dict" and datatype not in self._dict_types:
+        if name == Datatype.DICT and datatype not in self._dict_types:
             self._dict_types.insert(0, datatype)
-        elif name == "list" and datatype not in self._list_types:
+        elif name == Datatype.LIST and datatype not in self._list_types:
             self._list_types.insert(0, datatype)
-        elif name == "set" and datatype not in self._set_types:
+        elif name == Datatype.SET and datatype not in self._set_types:
             self._set_types.insert(0, datatype)
-        elif name == "obj" and datatype not in self._obj_types:
+        elif name == Datatype.OBJ and datatype not in self._obj_types:
             self._obj_types.insert(0, datatype)
-        elif name == "bin" and datatype not in self._bin_types:
+        elif name == Datatype.BIN and datatype not in self._bin_types:
             self._bin_types.insert(0, datatype)
-        elif name == "bin_int" and datatype not in self._bin_int_types:
+        elif name == Datatype.BIN_INT and datatype not in self._bin_int_types:
             self._bin_int_types.insert(0, datatype)
-        elif name == "bool" and datatype not in self._bool_types:
+        elif name == Datatype.BOOL and datatype not in self._bool_types:
             self._bool_types.insert(0, datatype)
-        elif name == "complex" and datatype not in self._complex_types:
+        elif name == Datatype.COMPLEX and datatype not in self._complex_types:
             self._complex_types.insert(0, datatype)
-        elif name == "date" and datatype not in self._date_types:
+        elif name == Datatype.DATE and datatype not in self._date_types:
             self._date_types.insert(0, datatype)
-        elif name == "datetime" and datatype not in self._datetime_types:
+        elif name == Datatype.DATETIME and datatype not in self._datetime_types:
             self._datetime_types.insert(0, datatype)
-        elif name == "comment" and datatype not in self._comment_types:
+        elif name == Datatype.COMMENT and datatype not in self._comment_types:
             self._comment_types.insert(0, datatype)
-        elif name == "comment_id" and datatype not in self._comment_id_types:
+        elif name == Datatype.COMMENT_ID and datatype not in self._comment_id_types:
             self._comment_id_types.insert(0, datatype)
-        elif name == "float" and datatype not in self._float_types:
+        elif name == Datatype.FLOAT and datatype not in self._float_types:
             self._float_types.insert(0, datatype)
-        elif name == "grid" and datatype not in self._grid_types:
+        elif name == Datatype.GRID and datatype not in self._grid_types:
             self._grid_types.insert(0, datatype)
-        elif name == "hex_int" and datatype not in self._hex_int_types:
+        elif name == Datatype.HEX_INT and datatype not in self._hex_int_types:
             self._hex_int_types.insert(0, datatype)
-        elif name == "int" and datatype not in self._int_types:
+        elif name == Datatype.INT and datatype not in self._int_types:
             self._int_types.insert(0, datatype)
-        elif name == "oct_int" and datatype not in self._oct_int_types:
+        elif name == Datatype.OCT_INT and datatype not in self._oct_int_types:
             self._oct_int_types.insert(0, datatype)
-        elif name == "str" and datatype not in self._str_types:
+        elif name == Datatype.STR and datatype not in self._str_types:
             self._str_types.insert(0, datatype)
-        elif name == "time" and datatype not in self._time_types:
+        elif name == Datatype.TIME and datatype not in self._time_types:
             self._time_types.insert(0, datatype)
         else:
             msg = "Unknown datatype named '{}'".format(name)

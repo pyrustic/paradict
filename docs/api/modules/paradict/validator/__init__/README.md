@@ -14,7 +14,8 @@ Data validation module
 
 ## Functions
 - [**All functions**](/docs/api/modules/paradict/validator/__init__/funcs.md)
-    - [validate](/docs/api/modules/paradict/validator/__init__/funcs.md#validate): This function returns True if the given data successfully validates against the given schema
+    - [is\_valid](/docs/api/modules/paradict/validator/__init__/funcs.md#is_valid): This function returns True if the given data successfully validates against the given schema
+    - [validate](/docs/api/modules/paradict/validator/__init__/funcs.md#validate): This function validate some data against a schema. Might raise a ValidationError.
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
@@ -25,7 +26,7 @@ Data validation module
 - [**Validator**](/docs/api/modules/paradict/validator/__init__/class-Validator.md): Class to validate data against a schema
     - [schema](/docs/api/modules/paradict/validator/__init__/class-Validator.md#properties-table); _getter_
     - [type\_ref](/docs/api/modules/paradict/validator/__init__/class-Validator.md#properties-table); _getter_
-    - [validate](/docs/api/modules/paradict/validator/__init__/class-Validator.md#validate): Validate data, then return a boolean
+    - [validate](/docs/api/modules/paradict/validator/__init__/class-Validator.md#validate): Validate data. Might raise a validation error
     - [\_ensure\_spec](/docs/api/modules/paradict/validator/__init__/class-Validator.md#_ensure_spec): No docstring.
     - [\_validate](/docs/api/modules/paradict/validator/__init__/class-Validator.md#_validate): No docstring.
     - [\_validate\_datatype](/docs/api/modules/paradict/validator/__init__/class-Validator.md#_validate_datatype): No docstring.

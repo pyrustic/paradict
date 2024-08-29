@@ -48,7 +48,7 @@ def __init__(self, schema, type_ref=None):
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
 ## validate
-Validate data, then return a boolean
+Validate data. Might raise a validation error
 
 ```python
 def validate(self, data):

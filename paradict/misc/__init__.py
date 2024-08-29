@@ -1,6 +1,9 @@
 """Private miscellaneous functions and classes."""
+import os
+import os.path
 import math
 import datetime
+import written
 from collections import namedtuple
 from paradict import errors, const
 
@@ -87,6 +90,31 @@ def prettify_base16(s):
     return make_multiline(s, group_size=2, row_size=16)
 
 
+def split_relative_path(path):
+    path = path.strip("/")
+    if path.startswith("./"):
+        path = path[2:]
+    return path.split("/")
+
+
+def store_attachment(attachment, directory):
+    basename = gen_attachment_name(directory)
+    filename = os.path.join(directory, basename)
+    written.write(attachment, filename)
+    return basename
+
+
+def gen_attachment_name(directory):
+    i = 1
+    while True:
+        basename = str(i)
+        filename = os.path.join(directory, basename)
+        if not os.path.exists(filename):
+            break
+        i += 1
+    return basename
+
+
 def make_multiline(s, group_size=0, row_size=42):
     group_size = 0 if group_size <= 0 else group_size
     row_size = 42 if row_size <= 0 else row_size
@@ -132,7 +160,9 @@ def strip_block_extra_space(block):
 
 def calc_uint_bytes(x):
     """Return the number of bytes needed for a given integer"""
-    return math.ceil(x.bit_length() / 8.0)
+    if x == 0:
+        return 1
+    return math.ceil(x.bit_length() / 8)
 
 
 def deconstruct_datetime(dt):

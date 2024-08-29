@@ -137,9 +137,11 @@ class TestQueueWithSTR(unittest.TestCase):
                           "STR_LONG": tags.STR_LONG}.items():
             i += 8
             with self.subTest("{} tag".format(name)):
+
                 n = (i // 8) - 1
                 size = 2**(8*n)
-                data = misc.forge_bin(tag, size-1,  b'\x00' * size)
+                size_minus_one = size - 1
+                data = misc.forge_bin(tag, size_minus_one,  b'\x00' * size_minus_one)
                 queue = BinQueue()
                 r = put_and_get(queue, data)
                 self.assertIsNone(r)
@@ -193,7 +195,8 @@ class TestQueueWithBIN(unittest.TestCase):
             with self.subTest("{} tag".format(name)):
                 n = (i // 8) - 1
                 size = 2**(8*n)
-                data = misc.forge_bin(tag, size-1,  b'\x00' * size)
+                size_minus_one = size - 1
+                data = misc.forge_bin(tag, size_minus_one, b'\x00' * size_minus_one)
                 queue = BinQueue()
                 r = put_and_get(queue, data)
                 self.assertIsNone(r)

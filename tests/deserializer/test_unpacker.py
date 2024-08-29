@@ -489,6 +489,13 @@ class TestBin(unittest.TestCase):
         self.assertEqual(d, r)
         self.assertIsInstance(r[0], bytes)
 
+    def test_one_byte_bin(self):
+        x = b'\x00'
+        d = {0: x}
+        r = pack_unpack(d)
+        self.assertEqual(d, r)
+        self.assertIsInstance(r[0], bytes)
+
     def test_short_bin_lower_endpoint(self):
         x = b'\x00' * 9
         d = {0: x}

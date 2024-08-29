@@ -29,6 +29,7 @@
     - [Type customization](#type-customization)
 - [Continuous data stream processing](#continuous-data-stream-processing)
 - [Paradict schema for data validation](#paradict-schema-for-data-validation)
+- [Attachments](#attachments)
 - [Miscellaneous](#miscellaneous)
 - [Testing and contributing](#testing-and-contributing)
 - [Installation](#installation)
@@ -615,8 +616,9 @@ A spec is either simply a string that represents an expected data type, or a `Sp
 Supported spec strings are: `dict`, `list`, `set`, `obj`, `bin`, `bin`, `bool`, `complex`, `date`, `datetime`, `float`, `grid`, `int`, `str`, `time`
 
 Code snippet:
+
 ```python
-from paradict import validate
+from paradict import is_valid
 from paradict.validator import Spec
 
 # data
@@ -628,8 +630,26 @@ schema = {"id": Spec("int", lambda x: 40 < x < 50),
           "name": "str",
           "books": ["str"]}
 
-assert validate(data, schema)
+assert is_valid(data, schema)
 ```
+
+<p align="right"><a href="#readme">Back to top</a></p>
+
+# Attachments
+The Paradict text format allows you to instruct the parser to automatically load files, namely **attachments**:
+
+``` 
+id = 42
+name = 'alex'
+photo = load('attachments/pic.png')
+```
+
+Here the parser would look for a `pic.png` file in the `attachments` folder located in the root directory and then load it as the binary value for the `photo` key.
+
+Note that when the root directory is not provided as an argument, it is assumed to be the current working directory.
+
+> Depending on whether its `bin_to_text` boolean parameter is `True` or `False`, the encoder processes binary values differently, either by converting them into Base16 strings or by storing them as **attachments**.
+
 
 <p align="right"><a href="#readme">Back to top</a></p>
 

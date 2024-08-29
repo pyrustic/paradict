@@ -1,4 +1,6 @@
 """High-level functions to deserialize Paradict binary/text data into a Python dict"""
+import os
+import os.path
 import pathlib
 from paradict.deserializer.decoder import Decoder
 from paradict.deserializer.unpacker import Unpacker
@@ -8,7 +10,7 @@ __all__ = ["decode", "read", "unpack", "load"]
 
 
 def decode(text, type_ref=None, receiver=None, obj_builder=None,
-           skip_comments=False):
+           skip_comments=False, root_dir=None):
     """
     Convert some textual Paradict data into a Python dictionary
 
@@ -20,13 +22,15 @@ def decode(text, type_ref=None, receiver=None, obj_builder=None,
     - obj_builder: function that accepts a paradict.box.Obj container and
     returns a fresh new Python object
     - skip_comments: boolean to tell whether comments should be ignored or not
+    - root_dir: root directory in which the attachments dir is supposed to be
 
     [return]
     Return the newly built Python object
     """
     decoder = Decoder(type_ref=type_ref, receiver=receiver,
                       obj_builder=obj_builder,
-                      skip_comments=skip_comments)
+                      skip_comments=skip_comments,
+                      root_dir=root_dir)
     decoder.feed(text)
     if decoder.queue.buffer:
         decoder.feed("\n")
@@ -55,7 +59,8 @@ def read(path, type_ref=None, receiver=None, obj_builder=None,
     with open(path, "r", encoding="utf-8") as file:
         r = file.read()
     return decode(r, obj_builder=obj_builder, type_ref=type_ref,
-                  receiver=receiver, skip_comments=skip_comments)
+                  receiver=receiver, skip_comments=skip_comments,
+                  root_dir=os.path.dirname(path))
 
 
 def unpack(raw, type_ref=None, receiver=None, obj_builder=None,

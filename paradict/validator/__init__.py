@@ -1,9 +1,9 @@
 """Data validation module"""
 from paradict.typeref import TypeRef
-from paradict.errors import Error
+from paradict.errors import Error, ValidationError
 
 
-__all__ = ["VALID_DATATYPES", "validate", "Spec", "Validator"]
+__all__ = ["VALID_DATATYPES", "is_valid", "validate", "Spec", "Validator"]
 
 
 VALID_DATATYPES = ("dict", "list", "set", "obj", "bin",
@@ -11,7 +11,7 @@ VALID_DATATYPES = ("dict", "list", "set", "obj", "bin",
                    "float", "grid", "int", "str", "time")
 
 
-def validate(data, schema, type_ref=None):
+def is_valid(data, schema, type_ref=None):
     """This function returns True if the given data
     successfully validates against the given schema
 
@@ -25,10 +25,34 @@ def validate(data, schema, type_ref=None):
     - type_ref: optional TypeRef object
 
     [return]
-    Returns True or False
+    Returns True or False"""
+    validator = Validator(schema, type_ref=type_ref)
+    try:
+        validator.validate(data)
+    except ValidationError as e:
+        return False
+    else:
+        return True
+
+
+def validate(data, schema, type_ref=None):
+    """This function validate some data against a schema.
+    Might raise a ValidationError.
+
+    [param]
+    - data: some Python object (like a dict, a list, ...) that is
+    part or include datatypes defined in VALID_DATATYPES.
+    - schema: a valid schema. It might be a collection containing
+    Spec instances and/or type-strings. The benefit of using Spec is
+    that you can add a checker function that will serve as an extra
+    programmatic validation.
+    - type_ref: optional TypeRef object
+
+    [except]
+    - ValidationError: Raised when an issue is encountered while validating the data
     """
     validator = Validator(schema, type_ref=type_ref)
-    return validator.validate(data)
+    validator.validate(data)
 
 
 class Spec:
@@ -38,17 +62,20 @@ class Spec:
     def __init__(self, datatype, checker=None):
         """
         Init
-        [parameter]
+        [param]
         - datatype: a string representing a valid datatype.
         Check the VALID_DATATYPES variable to discover valid types.
         - checker: an optional function that will be called with passed
         as argument, the specific data it should check. This function
         should return a boolean to validate this piece of data
+
+        [except]
+        - ValidationError: raised if the datatype isn't a valid one
         """
         if datatype not in VALID_DATATYPES:
             msg = "Only these datatypes are valid: {}"
             msg = msg.format(" ".join(VALID_DATATYPES))
-            raise Error(msg)
+            raise ValidationError(msg)
         self._datatype = datatype
         self._checker = checker
 
@@ -74,6 +101,7 @@ class Validator:
         self._schema = schema
         self._type_ref = type_ref if type_ref else TypeRef()
 
+
     @property
     def schema(self):
         return self._schema
@@ -83,8 +111,9 @@ class Validator:
         return self._type_ref
 
     def validate(self, data):
-        """Validate data, then return a boolean"""
-        return self._validate(data, self._schema)
+        """Validate data. Might raise a validation error"""
+        if not self._validate(data, self._schema):
+            raise ValidationError
 
     def _validate(self, target, schema):
         if target is None:
@@ -104,7 +133,7 @@ class Validator:
         if t in self._type_ref.obj_types:
             return self._validate_obj(target, schema)
         msg = "Invalid schema"
-        raise Error(msg)
+        raise ValidationError(msg)
 
     def _validate_list(self, target, schema):
         """Schema SHOULD be a list"""
@@ -190,7 +219,7 @@ class Validator:
             valid_types = valid_types_map[datatype]
         except KeyError as e:
             msg = "Unknown data type '{}'".format(datatype)
-            raise Error(msg)
+            raise ValidationError(msg)
         for valid_type in valid_types:
             if type(target) == valid_type:
                 return True
@@ -205,4 +234,4 @@ class Validator:
             return bool(spec.checker(target))
         except Exception as e:
             msg = "Error while running a checker"
-            raise Error(msg)
+            raise ValidationError(msg)

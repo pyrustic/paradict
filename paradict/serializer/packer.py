@@ -4,6 +4,7 @@ from paradict import tags
 from paradict.tags.misc import SIZE_TO_PINT, \
     SIZE_TO_NINT, ALPHABET, SIZE_TO_STR
 from paradict import errors, misc
+from paradict.datatype import Datatype
 
 
 __all__ = ["Packer"]
@@ -23,25 +24,25 @@ class Packer:
         """
         self._type_ref = type_ref if type_ref else TypeRef()
         self._skip_comments = skip_comments
-        self._converters = {"dict": self._pack_dict,
-                            "list": self._pack_list,
-                            "set": self._pack_set,
-                            "obj": self._pack_obj,
-                            "grid": self._pack_grid,
-                            "bool": self._pack_bool,
-                            "str": self._pack_str,
-                            "comment": self._pack_comment,
-                            "comment_id": self._pack_comment_id,
-                            "bin": self._pack_bin,
-                            "int": self._pack_int,
-                            "hex_int": self._pack_hex_int,
-                            "oct_int": self._pack_oct_int,
-                            "bin_int": self._pack_bin_int,
-                            "float": self._pack_float,
-                            "complex": self._pack_complex,
-                            "datetime": self._pack_datetime,
-                            "date": self._pack_date,
-                            "time": self._pack_time}
+        self._converters = {Datatype.DICT: self._pack_dict,
+                            Datatype.LIST: self._pack_list,
+                            Datatype.SET: self._pack_set,
+                            Datatype.OBJ: self._pack_obj,
+                            Datatype.GRID: self._pack_grid,
+                            Datatype.BOOL: self._pack_bool,
+                            Datatype.STR: self._pack_str,
+                            Datatype.COMMENT: self._pack_comment,
+                            Datatype.COMMENT_ID: self._pack_comment_id,
+                            Datatype.BIN: self._pack_bin,
+                            Datatype.INT: self._pack_int,
+                            Datatype.HEX_INT: self._pack_hex_int,
+                            Datatype.OCT_INT: self._pack_oct_int,
+                            Datatype.BIN_INT: self._pack_bin_int,
+                            Datatype.FLOAT: self._pack_float,
+                            Datatype.COMPLEX: self._pack_complex,
+                            Datatype.DATETIME: self._pack_datetime,
+                            Datatype.DATE: self._pack_date,
+                            Datatype.TIME: self._pack_time}
 
     @property
     def type_ref(self):
@@ -123,9 +124,11 @@ class Packer:
         # iterate set
         for item in data:
             item = self._type_ref.adapt(item)
-            if self._type_ref.check(type(item)) in ("dict", "list",
-                                                    "set", "obj",
-                                                    "grid"):
+            if self._type_ref.check(type(item)) in (Datatype.DICT,
+                                                    Datatype.LIST,
+                                                    Datatype.SET,
+                                                    Datatype.OBJ,
+                                                    Datatype.GRID):
                 msg = "The set container can't contain a dict, list, set, obj, or grid"
                 raise errors.Error(msg)
             yield from self._pack(item)
@@ -171,15 +174,17 @@ class Packer:
             for item in row:
                 item = self._type_ref.adapt(item)
                 typename = self._type_ref.check(type(item))
-                if typename not in ("int", "float", "complex"):
+                if typename not in (Datatype.INT, Datatype.HEX_INT,
+                                    Datatype.OCT_INT, Datatype.BIN_INT,
+                                    Datatype.FLOAT, Datatype.COMPLEX):
                     msg = "A grid should be built with int, float, or complex numbers"
                     raise errors.Error(msg)
                 # process int, float
-                if typename == "int":
+                if typename == Datatype.INT:
                     yield from self._pack_int(item)
-                elif typename == "float":
+                elif typename == Datatype.FLOAT:
                     yield from self._pack_float(item)
-                elif typename == "complex":
+                elif typename == Datatype.COMPLEX:
                     yield from self._pack_complex(item)
             # add grid div if this is the first row
             if is_first_row and len(data) > 1:

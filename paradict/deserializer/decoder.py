@@ -1,9 +1,11 @@
+import os.path
 import re
 import datetime
 import base64
 from paradict import errors, misc, const, kv, box
 from paradict.typeref import TypeRef
 from paradict.queue.txt_queue import TxtQueue
+from paradict.datatype import Datatype
 
 
 __all__ = ["Decoder"]
@@ -12,7 +14,7 @@ __all__ = ["Decoder"]
 class Decoder:
     """Class to convert some textual Paradict data into a Python dict"""
     def __init__(self, *, type_ref=None, receiver=None, obj_builder=None,
-                 skip_comments=False):
+                 skip_comments=False, root_dir=None):
         """
         Init
 
@@ -23,11 +25,13 @@ class Decoder:
         - obj_builder: function that accepts a paradict.box.Obj container and
         returns a fresh new Python object
         - skip_comments: boolean to tell whether comments should be ignored or not
+        - root_dir: root directory in which the attachments dir is supposed to be
         """
         self._type_ref = type_ref if type_ref else TypeRef()
         self._receiver = receiver
         self._obj_builder = obj_builder
         self._skip_comments = skip_comments
+        self._root_dir = root_dir
         # data
         self._data = dict()
         # feedable
@@ -42,7 +46,7 @@ class Decoder:
                                     self._decode_complex_number,
                                     self._decode_int, self._decode_float,
                                     self._decode_date, self._decode_time,
-                                    self._decode_datetime)
+                                    self._decode_datetime, self._decode_load_func)
 
     @property
     def data(self):
@@ -90,6 +94,14 @@ class Decoder:
     @skip_comments.setter
     def skip_comments(self, val):
         self._skip_comments = val
+
+    @property
+    def root_dir(self):
+        return self._root_dir
+
+    @root_dir.setter
+    def root_dir(self, val):
+        self._root_dir = val
 
     @property
     def queue(self):
@@ -287,9 +299,10 @@ class Decoder:
                 raise errors.Error(msg)
             key = "'{}'".format(key)
         key = self._decode_value(key)
-        if self._type_ref.check(type(key)) in ("str", "int",
-                                               "hex_int", "oct_int", "bin_int",
-                                               "float", "complex"):
+        if self._type_ref.check(type(key)) in (Datatype.STR, Datatype.INT,
+                                               Datatype.HEX_INT, Datatype.OCT_INT,
+                                               Datatype.BIN_INT, Datatype.FLOAT,
+                                               Datatype.COMPLEX):
             return key
         # exception
         if mode == const.DATA_MODE:
@@ -386,17 +399,22 @@ class Decoder:
         grid = list()
         # turn lines into rows
         for line in container:
+            if not line or line.isspace():
+                continue
             temp_row = line.split()
             if row_size == 0:
                 row_size = len(temp_row)
             elif len(temp_row) != row_size:
+                print(len(temp_row), row_size)
                 msg = "Inconsistent grid"
                 raise errors.Error(msg)
             row = list()
             for item in temp_row:
                 val = self._decode_value(item)
                 dtype = self._type_ref.check(type(val))
-                if dtype not in ("int", "float", "complex"):
+                if dtype not in (Datatype.INT, Datatype.HEX_INT,
+                                 Datatype.OCT_INT, Datatype.BIN_INT,
+                                 Datatype.FLOAT, Datatype.COMPLEX):
                     msg = "A grid should be built with int, float, or complex numbers"
                     raise errors.Error(msg)
                 row.append(val)
@@ -545,6 +563,20 @@ class Decoder:
         r = r if self._type_ref.datetime_type is datetime.datetime else self._type_ref.datetime_type(r)
         return r
 
+    def _decode_load_func(self, val):
+        filename = decode_load_func(val)
+        if not os.path.isabs(filename):
+            parts = misc.split_relative_path(filename)
+            root_dir = self._root_dir if self._root_dir else os.getcwd()
+            filename = os.path.join(root_dir, *parts)
+        if not os.path.isfile(filename):
+            msg = "Attachment not found. Filename: {}".format(filename)
+            raise errors.Error(msg)
+        with open(filename, "rb") as file:
+            r = file.read()
+        r = r if self._type_ref.bin_type is bytes else self._type_ref.bin_type(r)
+        return r
+
 
 class Context:
     def __init__(self, name, container, indents):
@@ -667,3 +699,11 @@ def decode_time(val):
         val += "+00:00"
     # time ISO format
     return datetime.time.fromisoformat(val)
+
+
+def decode_load_func(val):
+    a, b = "load(", ")"
+    if val.startswith(a) and val.endswith(b):
+        argument = val[len(a):-1]
+        return decode_str(argument)
+    raise errors.Error("Conversion error")

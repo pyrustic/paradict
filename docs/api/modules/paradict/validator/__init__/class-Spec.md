@@ -34,4 +34,16 @@ def __init__(self, datatype, checker=None):
     ...
 ```
 
+| Parameter | Description |
+| --- | --- |
+| datatype | a string representing a valid datatype. Check the VALID_DATATYPES variable to discover valid types. |
+| checker | an optional function that will be called with passed as argument, the specific data it should check. This function should return a boolean to validate this piece of data |
+
+### Exceptions table
+The table below outlines exceptions that may occur.
+
+| Exception | Circumstance |
+| --- | --- |
+| ValidationError | raised if the datatype isn't a valid one |
+
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>

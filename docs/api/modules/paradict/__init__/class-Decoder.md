@@ -20,6 +20,7 @@ Here are properties exposed in the class:
 | obj\_builder | _getter, setter_ | No docstring. |
 | queue | _getter, setter_ | No docstring. |
 | receiver | _getter, setter_ | No docstring. |
+| root\_dir | _getter, setter_ | No docstring. |
 | skip\_comments | _getter, setter_ | No docstring. |
 | type\_ref | _getter, setter_ | No docstring. |
 
@@ -47,6 +48,7 @@ Here are methods exposed in the class:
 - [\_decode\_datetime](#_decode_datetime)
 - [\_decode\_float](#_decode_float)
 - [\_decode\_int](#_decode_int)
+- [\_decode\_load\_func](#_decode_load_func)
 - [\_decode\_null](#_decode_null)
 - [\_decode\_str](#_decode_str)
 - [\_decode\_time](#_decode_time)
@@ -67,7 +69,7 @@ Here are methods exposed in the class:
 Init
 
 ```python
-def __init__(self, *, type_ref=None, receiver=None, obj_builder=None, skip_comments=False):
+def __init__(self, *, type_ref=None, receiver=None, obj_builder=None, skip_comments=False, root_dir=None):
     ...
 ```
 
@@ -77,6 +79,7 @@ def __init__(self, *, type_ref=None, receiver=None, obj_builder=None, skip_comme
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
 | obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
 | skip\_comments | boolean to tell whether comments should be ignored or not |
+| root\_dir | root directory in which the attachments dir is supposed to be |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
@@ -275,6 +278,16 @@ No docstring
 
 ```python
 def _decode_int(self, val):
+    ...
+```
+
+<p align="right"><a href="#paradict-api-reference">Back to top</a></p>
+
+## \_decode\_load\_func
+No docstring
+
+```python
+def _decode_load_func(self, val):
     ...
 ```
 

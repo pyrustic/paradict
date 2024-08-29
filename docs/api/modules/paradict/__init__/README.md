@@ -19,24 +19,45 @@ No docstring.
     - [dump](/docs/api/modules/paradict/__init__/funcs.md#dump): Convert some Python dict in the Paradict binary format then dump it in a file
     - [encode](/docs/api/modules/paradict/__init__/funcs.md#encode): Convert a Python dictionary object to Paradict binary format
     - [forge\_bin](/docs/api/modules/paradict/__init__/funcs.md#forge_bin): items are int, bytes, bytearrays, or Nones, returns a bytearray
+    - [is\_valid](/docs/api/modules/paradict/__init__/funcs.md#is_valid): This function returns True if the given data successfully validates against the given schema
     - [load](/docs/api/modules/paradict/__init__/funcs.md#load): Open a binary Paradict file then unpack its contents into Python dict
     - [pack](/docs/api/modules/paradict/__init__/funcs.md#pack): Convert a Python dictionary object to Paradict binary format
     - [read](/docs/api/modules/paradict/__init__/funcs.md#read): Open a textual Paradict file then read its contents into Python dict
     - [split\_kv](/docs/api/modules/paradict/__init__/funcs.md#split_kv): Split a non-empty string into key val. The string should follow one of these format: - data_mode format: key: value - config_mod...
     - [stringify\_bin](/docs/api/modules/paradict/__init__/funcs.md#stringify_bin): Good for debug. Stringify some binary data
     - [unpack](/docs/api/modules/paradict/__init__/funcs.md#unpack): Convert some binary Paradict data into a Python dictionary
-    - [validate](/docs/api/modules/paradict/__init__/funcs.md#validate): This function returns True if the given data successfully validates against the given schema
     - [write](/docs/api/modules/paradict/__init__/funcs.md#write): Convert some Python dict in the Paradict textual format then write it to a file
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
 ## Classes
+- [**Datatype**](/docs/api/modules/paradict/__init__/class-Datatype.md): An enumeration.
+    - DICT = `1`
+    - LIST = `2`
+    - SET = `3`
+    - OBJ = `4`
+    - BIN = `5`
+    - BIN\_INT = `6`
+    - BOOL = `7`
+    - COMMENT = `8`
+    - COMMENT\_ID = `9`
+    - COMPLEX = `10`
+    - DATE = `11`
+    - DATETIME = `12`
+    - FLOAT = `13`
+    - GRID = `14`
+    - HEX\_INT = `15`
+    - INT = `16`
+    - OCT\_INT = `17`
+    - STR = `18`
+    - TIME = `19`
 - [**Decoder**](/docs/api/modules/paradict/__init__/class-Decoder.md): Class to convert some textual Paradict data into a Python dict
     - [data](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter_
     - [feedable](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [obj\_builder](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [queue](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [receiver](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
+    - [root\_dir](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [skip\_comments](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [type\_ref](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [feed](/docs/api/modules/paradict/__init__/class-Decoder.md#feed): Feed the decoder engine with some string.         The string might represent a line in the textual Paradict data,         or an ...
@@ -58,6 +79,7 @@ No docstring.
     - [\_decode\_datetime](/docs/api/modules/paradict/__init__/class-Decoder.md#_decode_datetime): No docstring.
     - [\_decode\_float](/docs/api/modules/paradict/__init__/class-Decoder.md#_decode_float): No docstring.
     - [\_decode\_int](/docs/api/modules/paradict/__init__/class-Decoder.md#_decode_int): No docstring.
+    - [\_decode\_load\_func](/docs/api/modules/paradict/__init__/class-Decoder.md#_decode_load_func): No docstring.
     - [\_decode\_null](/docs/api/modules/paradict/__init__/class-Decoder.md#_decode_null): No docstring.
     - [\_decode\_str](/docs/api/modules/paradict/__init__/class-Decoder.md#_decode_str): No docstring.
     - [\_decode\_time](/docs/api/modules/paradict/__init__/class-Decoder.md#_decode_time): No docstring.
@@ -74,8 +96,10 @@ No docstring.
     - [\_update\_set\_container](/docs/api/modules/paradict/__init__/class-Decoder.md#_update_set_container): No docstring.
     - [\_update\_stack](/docs/api/modules/paradict/__init__/class-Decoder.md#_update_stack): No docstring.
 - [**Encoder**](/docs/api/modules/paradict/__init__/class-Encoder.md): Convert a Python dictionary object to Paradict text format
+    - [attachments\_dir](/docs/api/modules/paradict/__init__/class-Encoder.md#properties-table); _getter, setter_
+    - [bin\_to\_text](/docs/api/modules/paradict/__init__/class-Encoder.md#properties-table); _getter, setter_
     - [mode](/docs/api/modules/paradict/__init__/class-Encoder.md#properties-table); _getter, setter_
-    - [skip\_bin\_data](/docs/api/modules/paradict/__init__/class-Encoder.md#properties-table); _getter, setter_
+    - [root\_dir](/docs/api/modules/paradict/__init__/class-Encoder.md#properties-table); _getter, setter_
     - [skip\_comments](/docs/api/modules/paradict/__init__/class-Encoder.md#properties-table); _getter, setter_
     - [type\_ref](/docs/api/modules/paradict/__init__/class-Encoder.md#properties-table); _getter, setter_
     - [encode](/docs/api/modules/paradict/__init__/class-Encoder.md#encode): Generator for iteratively encoding data by yielding lines of Paradict text format
@@ -213,7 +237,7 @@ No docstring.
 - [**Validator**](/docs/api/modules/paradict/__init__/class-Validator.md): Class to validate data against a schema
     - [schema](/docs/api/modules/paradict/__init__/class-Validator.md#properties-table); _getter_
     - [type\_ref](/docs/api/modules/paradict/__init__/class-Validator.md#properties-table); _getter_
-    - [validate](/docs/api/modules/paradict/__init__/class-Validator.md#validate): Validate data, then return a boolean
+    - [validate](/docs/api/modules/paradict/__init__/class-Validator.md#validate): Validate data. Might raise a validation error
     - [\_ensure\_spec](/docs/api/modules/paradict/__init__/class-Validator.md#_ensure_spec): No docstring.
     - [\_validate](/docs/api/modules/paradict/__init__/class-Validator.md#_validate): No docstring.
     - [\_validate\_datatype](/docs/api/modules/paradict/__init__/class-Validator.md#_validate_datatype): No docstring.

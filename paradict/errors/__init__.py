@@ -8,3 +8,8 @@ class IndentError(Error):
 
 class CommentSkip(Error):
     pass
+    
+    
+class ValidationError(Error):
+    pass
+
