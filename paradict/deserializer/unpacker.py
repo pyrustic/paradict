@@ -34,7 +34,7 @@ class Unpacker:
         self._buffer = bytearray()
         self._index = 0
         self._queue = BinQueue()
-        self._feedable = True
+        self._is_feedable = True
         self._stack = list()
         self._data = None
         self._block_on = False
@@ -52,12 +52,12 @@ class Unpacker:
         return self._data
 
     @property
-    def feedable(self):
-        return self._feedable
+    def is_feedable(self):
+        return self._is_feedable
 
-    @feedable.setter
-    def feedable(self, val):
-        self._feedable = val
+    @is_feedable.setter
+    def is_feedable(self, val):
+        self._is_feedable = val
 
     @property
     def type_ref(self):
@@ -101,7 +101,7 @@ class Unpacker:
 
     def feed(self, raw):
         """Feed in arbitrary chunks of data"""
-        if not self._feedable:
+        if not self._is_feedable:
             return False
         self._queue.enqueue(raw)
         for tag, payload in self._queue.dequeue():
@@ -217,15 +217,15 @@ class Unpacker:
 
     def _update_context(self, data):
         context = self._stack[-1]
-        is_dict_key_cached = context.is_dict_key_cached
-        cached_dict_key = context.cached_dict_key
+        is_dict_key_stored = context.is_dict_key_stored
+        stored_dict_key = context.stored_dict_key
         # Dict and obj
         if context.datatype == "dict":
-            if is_dict_key_cached:
-                context.container[cached_dict_key] = data
-                context.is_dict_key_cached, context.cached_dict_key = False, None
+            if is_dict_key_stored:
+                context.container[stored_dict_key] = data
+                context.is_dict_key_stored, context.stored_dict_key = False, None
             else:
-                context.is_dict_key_cached, context.cached_dict_key = True, data
+                context.is_dict_key_stored, context.stored_dict_key = True, data
         # List
         elif context.datatype == "list":
             context.container.append(data)
@@ -234,11 +234,11 @@ class Unpacker:
             context.container.add(data)
         # Obj
         elif context.datatype == "obj":
-            if is_dict_key_cached:
-                context.container[cached_dict_key] = data
-                context.is_dict_key_cached, context.cached_dict_key = False, None
+            if is_dict_key_stored:
+                context.container[stored_dict_key] = data
+                context.is_dict_key_stored, context.stored_dict_key = False, None
             else:
-                context.is_dict_key_cached, context.cached_dict_key = True, data
+                context.is_dict_key_stored, context.stored_dict_key = True, data
 
     def _remove_context(self):
         if not self._stack:
@@ -610,8 +610,8 @@ class Context:
         self._tag = tag
         self._datatype = datatype
         self._container = container
-        self._cached_dict_key = None
-        self._is_dict_key_cached = False
+        self._stored_dict_key = None
+        self._is_dict_key_stored = False
 
     @property
     def tag(self):
@@ -626,20 +626,20 @@ class Context:
         return self._container
 
     @property
-    def cached_dict_key(self):
-        return self._cached_dict_key
+    def stored_dict_key(self):
+        return self._stored_dict_key
 
-    @cached_dict_key.setter
-    def cached_dict_key(self, val):
-        self._cached_dict_key = val
+    @stored_dict_key.setter
+    def stored_dict_key(self, val):
+        self._stored_dict_key = val
 
     @property
-    def is_dict_key_cached(self):
-        return self._is_dict_key_cached
+    def is_dict_key_stored(self):
+        return self._is_dict_key_stored
 
-    @is_dict_key_cached.setter
-    def is_dict_key_cached(self, val):
-        self._is_dict_key_cached = val
+    @is_dict_key_stored.setter
+    def is_dict_key_stored(self, val):
+        self._is_dict_key_stored = val
 
 
 class GridDiv:

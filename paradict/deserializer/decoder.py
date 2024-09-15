@@ -35,7 +35,7 @@ class Decoder:
         # data
         self._data = dict()
         # feedable
-        self._feedable = True
+        self._is_feedable = True
         # misc
         self._queue = TxtQueue()
         self._stack = list()
@@ -56,12 +56,12 @@ class Decoder:
         return self._data
 
     @property
-    def feedable(self):
-        return self._feedable
+    def is_feedable(self):
+        return self._is_feedable
 
-    @feedable.setter
-    def feedable(self, val):
-        self._feedable = val
+    @is_feedable.setter
+    def is_feedable(self, val):
+        self._is_feedable = val
 
     @property
     def type_ref(self):
@@ -123,7 +123,7 @@ class Decoder:
         Check the `paradict.decode` function to see an example of
         how to use this class
         """
-        if not self._feedable:
+        if not self._is_feedable:
             return False
         self._queue.enqueue(s)
         for line in self._queue.dequeue():
@@ -205,10 +205,10 @@ class Decoder:
             tag = self._check_multiline_tag(val)
             if tag in ("dict", "list", "set"):
                 container[key] = value
-                context.cached_dict_key = None
+                context.stored_dict_key = None
                 self._update_stack(tag, value, indents + 1)
             elif tag in ("grid", "obj", "bin", "raw", "text", "int", "float"):
-                context.cached_dict_key = key
+                context.stored_dict_key = key
                 self._update_stack(tag, value, indents + 1)
             else:
                 container[key] = value
@@ -405,7 +405,6 @@ class Decoder:
             if row_size == 0:
                 row_size = len(temp_row)
             elif len(temp_row) != row_size:
-                print(len(temp_row), row_size)
                 msg = "Inconsistent grid"
                 raise errors.Error(msg)
             row = list()
@@ -425,7 +424,7 @@ class Decoder:
 
     def _update_parent_context(self, parent_context, data):
         if parent_context.name in ("dict", "obj"):
-            key = parent_context.cached_dict_key
+            key = parent_context.stored_dict_key
             parent_context.container[key] = data
         elif parent_context.name == "list":
             parent_context.container.append(data)
@@ -583,8 +582,8 @@ class Context:
         self._name = name
         self._container = container
         self._indents = indents
-        self._cached_dict_key = None
-        self._is_dict_key_cached = False
+        self._stored_dict_key = None
+        self._is_dict_key_stored = False
 
     @property
     def name(self):
@@ -599,20 +598,20 @@ class Context:
         return self._indents
 
     @property
-    def cached_dict_key(self):
-        return self._cached_dict_key
+    def stored_dict_key(self):
+        return self._stored_dict_key
 
-    @cached_dict_key.setter
-    def cached_dict_key(self, val):
-        self._cached_dict_key = val
+    @stored_dict_key.setter
+    def stored_dict_key(self, val):
+        self._stored_dict_key = val
 
     @property
-    def is_dict_key_cached(self):
-        return self._is_dict_key_cached
+    def is_dict_key_stored(self):
+        return self._is_dict_key_stored
 
-    @is_dict_key_cached.setter
-    def is_dict_key_cached(self, val):
-        self._is_dict_key_cached = val
+    @is_dict_key_stored.setter
+    def is_dict_key_stored(self, val):
+        self._is_dict_key_stored = val
 
 
 # === Decoders ===
@@ -650,6 +649,7 @@ def decode_date(val):
 def decode_datetime(val):
     # datetime (2023-03-13T09:10:42Z)
     if val.endswith("Z"):
+        val = val.rstrip("Z")
         val += "+00:00"
     return datetime.datetime.fromisoformat(val)
 
@@ -696,6 +696,7 @@ def decode_str(val):
 
 def decode_time(val):
     if val.endswith("Z"):
+        val = val.rstrip("Z")
         val += "+00:00"
     # time ISO format
     return datetime.time.fromisoformat(val)
