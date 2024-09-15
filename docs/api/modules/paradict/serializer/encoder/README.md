@@ -8,12 +8,12 @@ No docstring.
 
 ## Fields
 - [**All fields**](/docs/api/modules/paradict/serializer/encoder/fields.md)
-    - base64 = `<module 'base64' from '/usr/local/lib/python3.8/base64.py'>`
+    - base64 = `<module 'base64' from '/usr/local/lib/python3.12/base64.py'>`
     - const = `<module 'paradict.const' from '/home/alex/PycharmProjects/paradict/paradict/const/__init__.py'>`
     - errors = `<module 'paradict.errors' from '/home/alex/PycharmProjects/paradict/paradict/errors/__init__.py'>`
     - misc = `<module 'paradict.misc' from '/home/alex/PycharmProjects/paradict/paradict/misc/__init__.py'>`
-    - os = `<module 'os' from '/usr/local/lib/python3.8/os.py'>`
-    - re = `<module 're' from '/usr/local/lib/python3.8/re.py'>`
+    - os = `<module 'os' (frozen)>`
+    - re = `<module 're' from '/usr/local/lib/python3.12/re/__init__.py'>`
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 

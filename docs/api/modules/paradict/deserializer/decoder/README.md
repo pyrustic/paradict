@@ -9,7 +9,7 @@ No docstring.
 ## Classes
 - [**Decoder**](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md): Class to convert some textual Paradict data into a Python dict
     - [data](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter_
-    - [feedable](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
+    - [is\_feedable](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [obj\_builder](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [queue](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_
     - [receiver](/docs/api/modules/paradict/deserializer/decoder/class-Decoder.md#properties-table); _getter, setter_

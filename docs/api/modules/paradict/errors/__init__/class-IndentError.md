@@ -16,6 +16,7 @@ Here are fields exposed in the class:
 | Field | Value |
 | --- | --- |
 | \_\_init\_\_ | `<slot wrapper '__init__' of 'Exception' objects>` |
+| add\_note | `<method 'add_note' of 'BaseException' objects>` |
 | args | `<attribute 'args' of 'BaseException' objects>` |
 | with\_traceback | `<method 'with_traceback' of 'BaseException' objects>` |
 

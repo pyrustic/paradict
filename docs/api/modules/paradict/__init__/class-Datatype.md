@@ -8,7 +8,38 @@
 >
 > Inheritance: `enum.Enum`
 
-An enumeration.
+Create a collection of name/value pairs.
+
+Example enumeration:
+
+>>> class Color(Enum):
+...     RED = 1
+...     BLUE = 2
+...     GREEN = 3
+
+Access them by:
+
+- attribute access:
+
+  >>> Color.RED
+  <Color.RED: 1>
+
+- value lookup:
+
+  >>> Color(1)
+  <Color.RED: 1>
+
+- name lookup:
+
+  >>> Color['RED']
+  <Color.RED: 1>
+
+Enumerations can be iterated over, and know how many members they have:
+
+>>> len(Color)
+3
+
+>>> list(Color)
 
 ## Fields table
 Here are fields exposed in the class:
@@ -39,13 +70,30 @@ Here are fields exposed in the class:
 
 # Methods within class
 Here are methods exposed in the class:
+- [\_\_init\_\_](#__init__)
 - [\_generate\_next\_value\_](#_generate_next_value_)
 - [\_missing\_](#_missing_)
 
-## \_generate\_next\_value\_
-No docstring
+## \_\_init\_\_
+Initialize self.  See help(type(self)) for accurate signature.
 
 ```python
+def __init__(self, *args, **kwds):
+    ...
+```
+
+<p align="right"><a href="#paradict-api-reference">Back to top</a></p>
+
+## \_generate\_next\_value\_
+Generate the next value when not given.
+
+name: the name of the member
+start: the initial start value or None
+count: the number of existing members
+last_values: the list of values assigned
+
+```python
+@staticmethod
 def _generate_next_value_(name, start, count, last_values):
     ...
 ```

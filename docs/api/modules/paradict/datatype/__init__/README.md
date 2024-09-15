@@ -7,7 +7,7 @@
 Datatype enum
 
 ## Classes
-- [**Datatype**](/docs/api/modules/paradict/datatype/__init__/class-Datatype.md): An enumeration.
+- [**Datatype**](/docs/api/modules/paradict/datatype/__init__/class-Datatype.md): Create a collection of name/value pairs.
     - DICT = `1`
     - LIST = `2`
     - SET = `3`

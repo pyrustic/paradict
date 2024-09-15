@@ -42,8 +42,10 @@ Here are fields exposed in the class:
 | ljust | `<method 'ljust' of 'str' objects>` |
 | lower | `<method 'lower' of 'str' objects>` |
 | lstrip | `<method 'lstrip' of 'str' objects>` |
-| maketrans | `<built-in method maketrans of type object at 0x912100>` |
+| maketrans | `<built-in method maketrans of type object at 0x57b2de7acfa0>` |
 | partition | `<method 'partition' of 'str' objects>` |
+| removeprefix | `<method 'removeprefix' of 'str' objects>` |
+| removesuffix | `<method 'removesuffix' of 'str' objects>` |
 | replace | `<method 'replace' of 'str' objects>` |
 | rfind | `<method 'rfind' of 'str' objects>` |
 | rindex | `<method 'rindex' of 'str' objects>` |

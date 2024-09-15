@@ -9,11 +9,13 @@ Boxes to hold comments, grids, hexadecimal integers, et cetera
 ## Classes
 - [**BinInt**](/docs/api/modules/paradict/box/__init__/class-BinInt.md): Box to hold binary integer
     - [as\_integer\_ratio](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<method 'as_integer_ratio' of 'int' objects>`
+    - [bit\_count](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<method 'bit_count' of 'int' objects>`
     - [bit\_length](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<method 'bit_length' of 'int' objects>`
     - [conjugate](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<method 'conjugate' of 'int' objects>`
     - [denominator](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<attribute 'denominator' of 'int' objects>`
-    - [from\_bytes](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<built-in method from_bytes of type object at 0x9092a0>`
+    - [from\_bytes](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<built-in method from_bytes of type object at 0x57b2de7a1ec0>`
     - [imag](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<attribute 'imag' of 'int' objects>`
+    - [is\_integer](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<method 'is_integer' of 'int' objects>`
     - [numerator](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<attribute 'numerator' of 'int' objects>`
     - [real](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<attribute 'real' of 'int' objects>`
     - [to\_bytes](/docs/api/modules/paradict/box/__init__/class-BinInt.md#fields-table) = `<method 'to_bytes' of 'int' objects>`
@@ -45,8 +47,10 @@ Boxes to hold comments, grids, hexadecimal integers, et cetera
     - [ljust](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'ljust' of 'str' objects>`
     - [lower](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'lower' of 'str' objects>`
     - [lstrip](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'lstrip' of 'str' objects>`
-    - [maketrans](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<built-in method maketrans of type object at 0x912100>`
+    - [maketrans](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<built-in method maketrans of type object at 0x57b2de7acfa0>`
     - [partition](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'partition' of 'str' objects>`
+    - [removeprefix](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'removeprefix' of 'str' objects>`
+    - [removesuffix](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'removesuffix' of 'str' objects>`
     - [replace](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'replace' of 'str' objects>`
     - [rfind](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'rfind' of 'str' objects>`
     - [rindex](/docs/api/modules/paradict/box/__init__/class-Comment.md#fields-table) = `<method 'rindex' of 'str' objects>`
@@ -91,8 +95,10 @@ Boxes to hold comments, grids, hexadecimal integers, et cetera
     - [ljust](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'ljust' of 'str' objects>`
     - [lower](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'lower' of 'str' objects>`
     - [lstrip](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'lstrip' of 'str' objects>`
-    - [maketrans](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<built-in method maketrans of type object at 0x912100>`
+    - [maketrans](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<built-in method maketrans of type object at 0x57b2de7acfa0>`
     - [partition](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'partition' of 'str' objects>`
+    - [removeprefix](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'removeprefix' of 'str' objects>`
+    - [removesuffix](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'removesuffix' of 'str' objects>`
     - [replace](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'replace' of 'str' objects>`
     - [rfind](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'rfind' of 'str' objects>`
     - [rindex](/docs/api/modules/paradict/box/__init__/class-CommentID.md#fields-table) = `<method 'rindex' of 'str' objects>`
@@ -123,18 +129,20 @@ Boxes to hold comments, grids, hexadecimal integers, et cetera
     - [sort](/docs/api/modules/paradict/box/__init__/class-Grid.md#fields-table) = `<method 'sort' of 'list' objects>`
 - [**HexInt**](/docs/api/modules/paradict/box/__init__/class-HexInt.md): Box to hold hexadecimal integer
     - [as\_integer\_ratio](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<method 'as_integer_ratio' of 'int' objects>`
+    - [bit\_count](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<method 'bit_count' of 'int' objects>`
     - [bit\_length](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<method 'bit_length' of 'int' objects>`
     - [conjugate](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<method 'conjugate' of 'int' objects>`
     - [denominator](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<attribute 'denominator' of 'int' objects>`
-    - [from\_bytes](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<built-in method from_bytes of type object at 0x9092a0>`
+    - [from\_bytes](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<built-in method from_bytes of type object at 0x57b2de7a1ec0>`
     - [imag](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<attribute 'imag' of 'int' objects>`
+    - [is\_integer](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<method 'is_integer' of 'int' objects>`
     - [numerator](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<attribute 'numerator' of 'int' objects>`
     - [real](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<attribute 'real' of 'int' objects>`
     - [to\_bytes](/docs/api/modules/paradict/box/__init__/class-HexInt.md#fields-table) = `<method 'to_bytes' of 'int' objects>`
 - [**Obj**](/docs/api/modules/paradict/box/__init__/class-Obj.md): Box to hold an Extension Object. Such objects behave like a dictionary. An object builder is passed as argument to the right fun...
     - [clear](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<method 'clear' of 'dict' objects>`
     - [copy](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<method 'copy' of 'dict' objects>`
-    - [fromkeys](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<built-in method fromkeys of type object at 0x90ac40>`
+    - [fromkeys](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<built-in method fromkeys of type object at 0x57b2de7a34c0>`
     - [get](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<method 'get' of 'dict' objects>`
     - [items](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<method 'items' of 'dict' objects>`
     - [keys](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<method 'keys' of 'dict' objects>`
@@ -145,11 +153,13 @@ Boxes to hold comments, grids, hexadecimal integers, et cetera
     - [values](/docs/api/modules/paradict/box/__init__/class-Obj.md#fields-table) = `<method 'values' of 'dict' objects>`
 - [**OctInt**](/docs/api/modules/paradict/box/__init__/class-OctInt.md): Box to hold octal integer
     - [as\_integer\_ratio](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<method 'as_integer_ratio' of 'int' objects>`
+    - [bit\_count](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<method 'bit_count' of 'int' objects>`
     - [bit\_length](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<method 'bit_length' of 'int' objects>`
     - [conjugate](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<method 'conjugate' of 'int' objects>`
     - [denominator](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<attribute 'denominator' of 'int' objects>`
-    - [from\_bytes](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<built-in method from_bytes of type object at 0x9092a0>`
+    - [from\_bytes](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<built-in method from_bytes of type object at 0x57b2de7a1ec0>`
     - [imag](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<attribute 'imag' of 'int' objects>`
+    - [is\_integer](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<method 'is_integer' of 'int' objects>`
     - [numerator](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<attribute 'numerator' of 'int' objects>`
     - [real](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<attribute 'real' of 'int' objects>`
     - [to\_bytes](/docs/api/modules/paradict/box/__init__/class-OctInt.md#fields-table) = `<method 'to_bytes' of 'int' objects>`

@@ -16,7 +16,7 @@ Here are properties exposed in the class:
 | Property | Methods | Description |
 | --- | --- | --- |
 | data | _getter_ | No docstring. |
-| feedable | _getter, setter_ | No docstring. |
+| is\_feedable | _getter, setter_ | No docstring. |
 | obj\_builder | _getter, setter_ | No docstring. |
 | queue | _getter, setter_ | No docstring. |
 | receiver | _getter, setter_ | No docstring. |

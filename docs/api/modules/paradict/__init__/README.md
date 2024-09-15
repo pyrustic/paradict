@@ -31,7 +31,7 @@ No docstring.
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
 ## Classes
-- [**Datatype**](/docs/api/modules/paradict/__init__/class-Datatype.md): An enumeration.
+- [**Datatype**](/docs/api/modules/paradict/__init__/class-Datatype.md): Create a collection of name/value pairs.
     - DICT = `1`
     - LIST = `2`
     - SET = `3`
@@ -53,7 +53,7 @@ No docstring.
     - TIME = `19`
 - [**Decoder**](/docs/api/modules/paradict/__init__/class-Decoder.md): Class to convert some textual Paradict data into a Python dict
     - [data](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter_
-    - [feedable](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
+    - [is\_feedable](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [obj\_builder](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [queue](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
     - [receiver](/docs/api/modules/paradict/__init__/class-Decoder.md#properties-table); _getter, setter_
@@ -196,7 +196,7 @@ No docstring.
     - [\_update\_types](/docs/api/modules/paradict/__init__/class-TypeRef.md#_update_types): No docstring.
 - [**Unpacker**](/docs/api/modules/paradict/__init__/class-Unpacker.md): Class to convert some binary Paradict data into a Python dict
     - [data](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter_
-    - [feedable](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_
+    - [is\_feedable](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_
     - [obj\_builder](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_
     - [queue](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_
     - [receiver](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_
