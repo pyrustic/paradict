@@ -3,7 +3,6 @@ import os
 import os.path
 import math
 import datetime
-import written
 from collections import namedtuple
 from paradict import errors, const
 
@@ -100,7 +99,9 @@ def split_relative_path(path):
 def store_attachment(attachment, directory):
     basename = gen_attachment_name(directory)
     filename = os.path.join(directory, basename)
-    written.write(attachment, filename)
+    ensure_parent_dir(filename)
+    with open(filename, "wb") as file:
+        file.write(attachment)
     return basename
 
 
@@ -113,6 +114,15 @@ def gen_attachment_name(directory):
             break
         i += 1
     return basename
+
+
+def ensure_parent_dir(path):
+    """Make sure that parent dir exists (create it if isn't yet created)"""
+    parent = os.path.dirname(path)
+    try:
+        os.makedirs(parent)
+    except FileExistsError as e:
+        pass
 
 
 def make_multiline(s, group_size=0, row_size=42):

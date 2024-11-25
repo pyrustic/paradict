@@ -7,10 +7,10 @@ name = "paradict"
 description = "Streamable multi-format serialization"
 readme = "README.md"
 authors = [
-    {name = "Pyrustic Evangelist", email = "rusticalex@yahoo.com"},
+    {name = "Pyrustic Architect", email = "rusticalex@yahoo.com"},
 ]
 maintainers = [
-    {name = "Pyrustic Evangelist", email = "rusticalex@yahoo.com"},
+    {name = "Pyrustic Architect", email = "rusticalex@yahoo.com"},
 ]
 license = {file = "LICENSE"}
 keywords = [
