@@ -23,7 +23,8 @@ class TestDumpFunc(unittest.TestCase):
 
     def test(self):
         data = {0: "hello world", "pi": 3.14}
-        dump(data, self._path)
+        with open(self._path, "wb") as file:
+            dump(data, file)
         with open(self._path, "rb") as file:
             r = file.read()
         expected = pack(data)
@@ -49,12 +50,13 @@ class TestWriteFunc(unittest.TestCase):
 
     def test(self):
         data = {0: "hello world", "pi": 3.14}
-        write(data, self._path)
+        with open(self._path, "w", encoding="utf-8") as file:
+            write(data, file)
         with open(self._path, "r", encoding="utf-8") as file:
             r = file.read()
-        expected = encode(data)
+        expected = encode(data) + "\n"
         self.assertEqual(expected, r)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

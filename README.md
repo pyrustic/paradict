@@ -49,7 +49,7 @@ Paradict is used by the Braq data format for mixing structured data with prose i
 
 ## A rich set of datatypes
 
-A Paradict dictionary can be populated with strings, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), comments, extension objects, and grids (matrices).
+A Paradict dictionary can be populated with strings, binary data, integers, floats, complex numbers, booleans, dates, times, [datetimes](https://en.wikipedia.org/wiki/ISO_8601), extension objects, and grids (matrices).
 
 Although Paradict's root data structure is a dictionary, lists, sets, and dictionaries can be nested within it at arbitrary depth.
  
@@ -182,7 +182,6 @@ Following are Paradict datatypes for both textual and binary formats:
 - **bool**: boolean type (true and false)
 - **str**: string type with unicode escape sequences support
 - **raw**: raw string without unicode escape sequences support
-- **comment**: comment datatype
 - **bin**: binary datatype
 - **int**: integer datatype
 - **float**: float datatype
@@ -193,7 +192,7 @@ Following are Paradict datatypes for both textual and binary formats:
 
 > Paradict supports **null** for representing the intentional absence of any value.
 
-For the dictionary data structure, Paradict allows keys to be either strings or numbers. However, in the config mode of the textual format, keys should only be alphanumeric strings with underscores or hyphens.
+For the dictionary data structure, Paradict allows keys to be either strings or numbers. However, in the `config mode` of the textual format, keys shouldn't contain a space or the equal `=` character.
 
 Paradict allows ordinary and raw strings, integers, and float numbers to span over multiple lines when they are tagged with `(text)`, `(raw)`, `(int)`, and `(float)`, respectively.
 
@@ -207,10 +206,10 @@ At the high level of the textual representation is the **message** which represe
 
 For human readability, data expected to span multiple lines is first introduced with a **tag** (the data type in parentheses) under which the data is placed with the correct number of **4-space indents**.
 
-The format comes with two modes, the data mode and the config mode. These modes differ based on the data type of dictionary keys and the character utilized to separate each key from its corresponding value. 
+The format comes with two modes, the `data mode` and the `config mode`. These modes differ based on the data type of dictionary keys and the character utilized to separate each key from its corresponding value. 
 
 ### Data mode
-The data mode formally represents data (bidirectional mapping to binary format). It allows strings and numbers as keys and use a colon as separator between a key and its value. 
+The `data mode` formally represents data (bidirectional mapping to binary format). It allows strings and numbers as keys and use a colon as separator between a key and its value. 
 
 ```text
 # this is a comment
@@ -219,7 +218,7 @@ The data mode formally represents data (bidirectional mapping to binary format).
 ```
 
 ### Config mode
-The config mode is only for configuration files. It only allows strings as key, removing the need to surround them with quotes, and also uses the equal sign as separator between a key and its value.
+The `config mode` is only for configuration files. It only allows strings as key, removing the need to surround them with quotes, and also uses the equal sign as separator between a key and its value.
 
 
 ```python
@@ -255,7 +254,7 @@ Note that this section is just an overview of the API, thus it doesn't replace t
 Encoder and Decoder are the foundation classes for serializing and deserializing data. These classes process data iteratively. On top of these classes, two functions, encode and decode, do the same thing but in bulk.
 
 ### Using the Encoder class
-The Encoder constructor accepts `mode`, type_ref, skip_comments and skip_bin_data as arguments. 
+The Encoder constructor accepts `mode`, `type_ref`, and `skip_bin_data` as arguments. 
 
 The `encode` method of this class takes as input a Python dictionary, then iteratively serialize it, yielding a line after another.
 
@@ -283,7 +282,7 @@ name = "alex"
 ```
 
 ### Using the Decoder class
-The Decoder constructor accepts `type_ref`, `receiver`, `obj_builder` and `skip_comments` as arguments.
+The Decoder constructor accepts `type_ref`, `receiver`, and `obj_builder` as arguments.
 
 The `feed` method of this class takes as input a multiline string that represent the data to deserialize. This string can be fed up to the deserializer, line by line.
 
@@ -307,7 +306,7 @@ Output:
 ```
 
 ### Using the encode function
-The `encode` function accepts `data`, `mode`, `type_ref`, `skip_comments`, and `skip_bin_data` as arguments.
+The `encode` function accepts `data`, `mode`, `type_ref`, and `skip_bin_data` as arguments.
 
 ```python
 from paradict import encode, const
@@ -334,7 +333,7 @@ name = "alex"
 ```
 
 ### Using the decode function
-The `decode` function accepts `type_ref`, `receiver`, `obj_builder`, and `skip_comments` as arguments.
+The `decode` function accepts `type_ref`, `receiver`, and `obj_builder` as arguments.
 
 ```python
 from paradict import decode
@@ -395,7 +394,7 @@ Packer and Unpacker are the foundation classes for serializing and deserializing
 Two additional functions, load and dump offer to read and write binary files.
 
 ### Using the Packer class
-The Packer constructor accepts type_ref, and skip_comments as arguments. 
+The Packer constructor accepts `type_ref` as argument. 
 
 The `pack` method of this class takes as input a Python dictionary, then iteratively serialize it, yielding a binary datum (or part of it) after another.
 
@@ -416,7 +415,7 @@ Output:
 ```
 
 ### Using the Unpacker class
-The Unpacker constructor accepts `type_ref`, `receiver`, `obj_builder` and `skip_comments` as arguments.
+The Unpacker constructor accepts `type_ref`, `receiver`, and `obj_builder` as arguments.
 
 The `feed` method of this class takes as input some binary data that represent the data to deserialize. This binary data can be fed up to the deserializer, by small amount of chunks.
 
@@ -432,7 +431,7 @@ assert unpacker.data == data
 ```
 
 ### Using the pack function
-The `pack` function accepts `data`, `type_ref`, and `skip_comments` as arguments.
+The `pack` function accepts `data` and `type_ref` as arguments.
 
 ```python
 from paradict import pack, stringify_bin
@@ -448,7 +447,7 @@ Output:
 ```
 
 ### Using the unpack function
-The `unpack` function accepts `raw`, `type_ref`, `receiver`, `obj_builder`, and `skip_comments` as arguments.
+The `unpack` function accepts `raw`, `type_ref`, `receiver`, and `obj_builder` as arguments.
 
 ```python
 from paradict import pack, unpack

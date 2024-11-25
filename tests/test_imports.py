@@ -12,6 +12,7 @@ class TestImports(unittest.TestCase):
             from paradict import read
             from paradict import write
             from paradict import unpack
+            from paradict import scan
             from paradict import load
             from paradict import dump
             from paradict import forge_bin
@@ -30,7 +31,7 @@ class TestImports(unittest.TestCase):
             from paradict import Unpacker
             from paradict import TypeRef
             from paradict import Validator
-            from paradict import Datatype  # enum
+            from paradict import Datatype
         except ImportError:
             self.assertTrue(False)
 

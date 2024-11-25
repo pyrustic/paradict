@@ -1,9 +1,21 @@
 import unittest
 import datetime
 from paradict import serializer, deserializer
-from paradict import box, errors, tags
+from paradict import box, errors, tags, unpack
 from paradict.deserializer.unpacker import Unpacker
 from paradict.serializer.packer import Packer
+
+
+utc_datetime = datetime.datetime(2024, 7, 25,
+                        14, 30, 59,
+                        tzinfo=datetime.timezone.utc)
+
+
+USER = {"id": 42, "name": "alex", "pi": 3.14,
+        "created_at": utc_datetime, "weight": None,
+        "photo": b'avatar.png', "music": {},
+        "books": {"thriller": ["book 1", "book 2"],
+                  "sci-fi": {"book 3", "book 4"}}}
 
 
 class TestEmptyData(unittest.TestCase):
@@ -435,51 +447,6 @@ class TestString(unittest.TestCase):
         self.assertTrue(True)
 
 
-class TestCommentString(unittest.TestCase):
-
-    def test_empty_comment_str(self):
-        x = str()
-        d = {box.CommentID(): box.Comment(x)}
-        r = pack_unpack(d, skip_comments=False)
-        self.assertEqual(d[next(iter(d))], r[next(iter(r))])
-        self.assertIsInstance(next(iter(r)), box.CommentID)
-
-    def test_comment_str_8(self):
-        x = "#"
-        d = {box.CommentID(): box.Comment(x)}
-        r = pack_unpack(d, skip_comments=False)
-        self.assertEqual(d[next(iter(d))], r[next(iter(r))])
-        self.assertIsInstance(next(iter(r)), box.CommentID)
-
-    def test_comment_str_64(self):
-        x = "#" * 8
-        d = {box.CommentID(): box.Comment(x)}
-        r = pack_unpack(d, skip_comments=False)
-        self.assertEqual(d[next(iter(d))], r[next(iter(r))])
-        self.assertIsInstance(next(iter(r)), box.CommentID)
-
-    def test_short_comment_str(self):
-        x = "#" * (2**8)
-        d = {box.CommentID(): box.Comment(x)}
-        r = pack_unpack(d, skip_comments=False)
-        self.assertEqual(d[next(iter(d))], r[next(iter(r))])
-        self.assertIsInstance(next(iter(r)), box.CommentID)
-
-    def test_medium_comment_str(self):
-        x = "#" * (2**16)
-        d = {box.CommentID(): box.Comment(x)}
-        r = pack_unpack(d, skip_comments=False)
-        self.assertEqual(d[next(iter(d))], r[next(iter(r))])
-        self.assertIsInstance(next(iter(r)), box.CommentID)
-
-    def test_long_comment_str(self):
-        x = "#" * (2**24)
-        d = {box.CommentID(): box.Comment(x)}
-        r = pack_unpack(d, skip_comments=False)
-        self.assertEqual(d[next(iter(d))], r[next(iter(r))])
-        self.assertIsInstance(next(iter(r)), box.CommentID)
-
-
 class TestBin(unittest.TestCase):
 
     def test_empty_bin(self):
@@ -873,9 +840,81 @@ class TestComplexNumber(unittest.TestCase):
         self.assertIsInstance(r[0], complex)
 
 
-def pack_unpack(data, skip_comments=True):
-    data = serializer.pack(data, skip_comments=skip_comments)
-    return deserializer.unpack(data, skip_comments=skip_comments)
+class TestDictOnly(unittest.TestCase):
+    def test(self):
+        d = datetime.datetime(2020, 1, 1)
+        # paradict.errors.Error: The root data structure should be a dict
+        with self.assertRaises(errors.Error):
+            pack_unpack(d, dict_only=True)
+
+
+class TestNotDictOnly(unittest.TestCase):
+
+    def test_datetime(self):
+        d = datetime.datetime(2020, 1, 1)
+        r = pack_unpack(d)
+        self.assertEqual(d, r)
+        self.assertIsInstance(r, datetime.datetime)
+
+    def test_string(self):
+        d = "hello world !"
+        r = pack_unpack(d)
+        self.assertEqual(d, r)
+        self.assertIsInstance(r, str)
+
+    def test_integer(self):
+        d = 42
+        r = pack_unpack(d)
+        self.assertEqual(d, r)
+        self.assertIsInstance(r, int)
+
+    def test_float(self):
+        d = 3.14
+        r = pack_unpack(d)
+        self.assertEqual(d, r)
+        self.assertIsInstance(r, float)
+
+    def test_list(self):
+        d = [0, 1, "2", [3, "4"]]
+        r = pack_unpack(d)
+        self.assertEqual(d, r)
+        self.assertIsInstance(r, list)
+
+    def test_set(self):
+        d = {0, 1, "2"}
+        r = pack_unpack(d)
+        self.assertEqual(d, r)
+        self.assertIsInstance(r, set)
+
+
+class TestAutoIndex(unittest.TestCase):
+
+    def test_with_auto_index(self):
+        packer = Packer(auto_index=True)  # auto_index = False (by default)
+        buffer = bytearray()
+        for b in packer.pack(USER):
+            buffer.extend(b)
+        for field, slice_obj in packer.index_dict.items():
+            data = buffer[slice_obj]
+            with self.subTest(field):
+                r = unpack(data)
+                expected = USER[field]
+                self.assertEqual(expected, r)
+        expected_keys = set(packer.index_dict.keys())
+        self.assertEqual(expected_keys, set(USER.keys()))
+
+    def test_without_auto_index(self):
+        packer = Packer()  # auto_index = False (by default)
+        buffer = bytearray()
+        for b in packer.pack(USER):
+            buffer.extend(b)
+        self.assertEqual(USER, unpack(buffer))
+        self.assertEqual(0, len(packer.index_dict))
+
+
+def pack_unpack(data, dict_only=False):
+    data = serializer.pack(data, dict_only=dict_only)
+    return deserializer.unpack(data, dict_only=dict_only)
 
 
 def my_obj_builder(obj):

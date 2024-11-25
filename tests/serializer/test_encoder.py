@@ -845,60 +845,6 @@ class TestMultilineString(unittest.TestCase):
         self.assertEqual(dedent(expected), r)
 
 
-class TestComment(unittest.TestCase):
-
-    def test_empty_comment(self):
-        c = ""
-        d = {box.CommentID(): box.Comment(c),
-             box.CommentID(): box.Comment(c),
-             0: {box.CommentID(): box.Comment(c),
-                 box.CommentID(): box.Comment(c),
-                 0: [box.Comment(c), box.Comment(c),
-                     box.Obj({box.CommentID(): box.Comment(c),
-                              box.CommentID(): box.Comment(c),
-                              0: {box.Comment(c)}})]}}
-        r = encode_data(d, skip_comments=False)
-        expected = """\
-        #
-        #
-        0: (dict)
-            #
-            #
-            0: (list)
-                #
-                #
-                (obj)
-                    #
-                    #
-                    0: (set)
-                        #"""
-        self.assertEqual(dedent(expected), r)
-
-    def test_regular_comment(self):
-        c1 = "comment 1"
-        c2 = "comment 2"
-        c3 = "comment 3"
-        c4 = "comment 4"
-        c5 = "comment 5"
-        d = {box.CommentID(): box.Comment(c1),
-             0: {box.CommentID(): box.Comment(c2),
-                 0: [box.Comment(c3),
-                     box.Obj({box.CommentID(): box.Comment(c4),
-                              0: {box.Comment(c5)}})]}}
-        r = encode_data(d, skip_comments=False)
-        expected = """\
-        # comment 1
-        0: (dict)
-            # comment 2
-            0: (list)
-                # comment 3
-                (obj)
-                    # comment 4
-                    0: (set)
-                        # comment 5"""
-        self.assertEqual(dedent(expected), r)
-
-
 class TestBin(unittest.TestCase):
 
     def test_empty_bin_data(self):
@@ -980,5 +926,5 @@ def encode_data(data, **kwargs):
     return serializer.encode(data, **kwargs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

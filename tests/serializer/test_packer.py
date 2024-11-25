@@ -4,7 +4,7 @@ from paradict import errors
 from paradict import serializer
 from paradict.serializer.packer import Packer, pack_int
 from paradict import misc, box, tags
-from paradict.tags.misc import ALPHABET
+from paradict.tags.mappings import LETTER_TO_TAG
 
 
 class TestEmptyData(unittest.TestCase):
@@ -423,7 +423,7 @@ class TestConstChar(unittest.TestCase):
                 data = {letter: letter}
                 packer = Packer(data)
                 r = pack_data(data)
-                const_tag = ALPHABET.get(letter)
+                const_tag = LETTER_TO_TAG.get(letter)
                 expected = misc.forge_bin(tags.DICT,
                                           const_tag, const_tag,
                                           tags.END)
@@ -438,7 +438,7 @@ class TestConstChar(unittest.TestCase):
                 data = {letter: letter}
                 packer = Packer(data)
                 r = pack_data(data)
-                const_tag = ALPHABET.get(letter)
+                const_tag = LETTER_TO_TAG.get(letter)
                 expected = misc.forge_bin(tags.DICT,
                                           const_tag, const_tag,
                                           tags.END)
@@ -881,79 +881,6 @@ class TestString(unittest.TestCase):
     def test_heavy_str(self):
         # toooooo heavy to test ;)
         self.assertTrue(True)
-
-
-class TestComment(unittest.TestCase):
-
-    def test_empty_comment(self):
-        data = {box.CommentID(): box.Comment()}
-        r = pack_data(data, skip_comments=False)
-        expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT,
-                                  tags.NULL,
-                                  tags.COMMENT,
-                                  tags.STR_EMPTY,
-                                  tags.END)
-        self.assertEqual(expected, r)
-
-    def test_skipped_comment(self):
-        data = {box.CommentID(): box.Comment()}
-        r = pack_data(data, skip_comments=True)
-        expected = misc.forge_bin(tags.DICT,
-                                  tags.END)
-        self.assertEqual(expected, r)
-
-    def test_one_char_comment(self):
-        x = box.Comment("#")
-        bin_x = x.encode("utf-8")
-        data = {box.CommentID(): x}
-        r = pack_data(data, skip_comments=False)
-        expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT,
-                                  tags.NULL,
-                                  tags.COMMENT,
-                                  tags.STR_8, bin_x,
-                                  tags.END)
-        self.assertEqual(expected, r)
-
-    def test_two_char_comment(self):
-        x = box.Comment("##")
-        bin_x = x.encode("utf-8")
-        data = {box.CommentID(): x}
-        r = pack_data(data, skip_comments=False)
-        expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT,
-                                  tags.NULL,
-                                  tags.COMMENT,
-                                  tags.STR_16, bin_x,
-                                  tags.END)
-        self.assertEqual(expected, r)
-
-    def test_short_comment(self):
-        x = box.Comment("#"*(2**8))
-        bin_x = x.encode("utf-8")
-        data = {box.CommentID(): x}
-        r = pack_data(data, skip_comments=False)
-        expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT,
-                                  tags.NULL,
-                                  tags.COMMENT,
-                                  tags.STR_SHORT, len(bin_x) - 1, bin_x,
-                                  tags.END)
-        self.assertEqual(expected, r)
-
-    def test_long_comment(self):
-        x = box.Comment("#" * (2**24))
-        bin_x = x.encode("utf-8")
-        data = {box.CommentID(): x}
-        r = pack_data(data, skip_comments=False)
-        expected = misc.forge_bin(tags.DICT,
-                                  tags.COMMENT,
-                                  tags.NULL,
-                                  tags.COMMENT,
-                                  tags.STR_LONG, len(bin_x) - 1, bin_x,
-                                  tags.END)
-        self.assertEqual(expected, r)
 
 
 class TestBin(unittest.TestCase):
@@ -1993,6 +1920,30 @@ class TestComplexNumber(unittest.TestCase):
                                   tags.NINT_8, 3,
                                   tags.CONST_4,
                                   tags.END)
+        self.assertEqual(expected, r)
+
+
+class TestDictOnly(unittest.TestCase):
+    def test(self):
+        data = datetime.datetime(2020, 1, 1)
+        # paradict.errors.Error: The root data structure should be a dict
+        with self.assertRaises(errors.Error):
+            pack_data(data, dict_only=True)
+
+
+class TestNotDictOnly(unittest.TestCase):
+    def test_empty_list(self):
+        data = list()
+        r = pack_data(data)
+        expected = misc.forge_bin(tags.LIST_EMPTY)
+        self.assertEqual(expected, r)
+
+    def test_str_8(self):
+        x = ";"
+        bin_x = x.encode("utf-8")
+        data = x
+        r = pack_data(data)
+        expected = misc.forge_bin(tags.STR_8, bin_x)
         self.assertEqual(expected, r)
 
 

@@ -533,25 +533,7 @@ class TestGrid(unittest.TestCase):
 
 class TestComment(unittest.TestCase):
 
-    def test_empty_comment(self):
-        d = """\
-        #
-        #
-        0: (dict)
-            #
-            #
-            0: (list)
-                #
-                #
-                (obj)
-                    #
-                    #
-                    0: (set)
-                        #"""
-        r = decode_encode(dedent(d), skip_comments=False)
-        self.assertEqual(dedent(d), r)
-
-    def test_regular_comment(self):
+    def test(self):
         d = """\
         # comment 1
         0: (dict)
@@ -562,8 +544,13 @@ class TestComment(unittest.TestCase):
                     # comment 4
                     0: (set)
                         # comment 5"""
-        r = decode_encode(dedent(d), skip_comments=False)
-        self.assertEqual(dedent(d), r)
+        r = decode_encode(dedent(d))
+        expected = """\
+        0: (dict)
+            0: (list)
+                (obj)
+                    0: (set)"""
+        self.assertEqual(dedent(expected), r)
 
 
 class TestDatetime(unittest.TestCase):

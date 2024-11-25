@@ -1,6 +1,9 @@
 import unittest
 import pathlib
 import tempfile
+
+from docutils.parsers.rst.directives import encoding
+
 from paradict import load, dump, read, write
 
 
@@ -16,8 +19,10 @@ class TestLoadFunc(unittest.TestCase):
 
     def test(self):
         data = {0: "hello world", "pi": 3.14}
-        dump(data, self._path)
-        r = load(self._path)
+        with open(self._path, "wb") as file:
+            dump(data, file)
+        with open(self._path, "rb") as file:
+            r = load(file)
         expected = data
         self.assertEqual(expected, r)
 
@@ -48,11 +53,13 @@ class TestReadFunc(unittest.TestCase):
 
     def test(self):
         data = {0: "hello world", "pi": 3.14}
-        write(data, self._path)
-        r = read(self._path)
+        with open(self._path, "w", encoding="utf-8") as file:
+            write(data, file)
+        with open(self._path, "r", encoding="utf-8") as file:
+            r = read(file)
         expected = data
         self.assertEqual(expected, r)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
