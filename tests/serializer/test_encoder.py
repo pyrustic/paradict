@@ -849,13 +849,13 @@ class TestBin(unittest.TestCase):
 
     def test_empty_bin_data(self):
         d = {0: b""}
-        r = encode_data(d, bin_to_text=True)
+        r = encode_data(d)
         expected = """0: (bin)"""
         self.assertEqual(dedent(expected), r)
 
     def test_bin_data(self):
         d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
-        r = encode_data(d, bin_to_text=True)
+        r = encode_data(d)
         expected = """\
         0: (bin)
             68 65 6C 6C 6F 20 77 6F 72 6C 64 20 68 65 6C 6C
@@ -872,6 +872,7 @@ class TestAttachments(unittest.TestCase):
     def setUp(self):
         self._tempdir = tempfile.TemporaryDirectory()
         self._dirname = self._tempdir.name
+        self._filename = os.path.join(self._dirname, "my_file.txt")
         self._cached_cwd = os.getcwd()
         os.chdir(self._tempdir.name)
 
@@ -889,9 +890,12 @@ class TestAttachments(unittest.TestCase):
         d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
         for i in range(1, 6):
             with self.subTest(str(i)):
-                r = encode_data(d, bin_to_text=False)
+                with open(self._filename, "w", encoding="utf-8") as file:
+                    r = serializer.write(d, file, bin_to_text=False)
+                with open(self._filename, "r", encoding="utf-8") as file:
+                    r = file.read()
                 expected = """\
-                0: load('attachments/{}')""".format(str(i))
+                0: load('attachments/{}')\n""".format(str(i))
                 self.assertEqual(dedent(expected), r)
                 attachment_filename = os.path.join(self._dirname, "attachments", str(i))
                 self.assertTrue(os.path.isfile(attachment_filename))
@@ -900,10 +904,13 @@ class TestAttachments(unittest.TestCase):
         d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
         for i in range(1, 6):
             with self.subTest(str(i)):
-                r = encode_data(d, bin_to_text=False,
-                                attachments_dir="my/attachments")
+                with open(self._filename, "w", encoding="utf-8") as file:
+                    serializer.write(d, file, bin_to_text=False,
+                                     attachments_dir="my/attachments")
+                with open(self._filename, "r", encoding="utf-8") as file:
+                    r = file.read()
                 expected = """\
-                0: load('my/attachments/{}')""".format(str(i))
+                0: load('my/attachments/{}')\n""".format(str(i))
                 self.assertEqual(dedent(expected), r)
                 attachment_filename = os.path.join(self._dirname, "my",
                                                    "attachments", str(i))
@@ -913,11 +920,14 @@ class TestAttachments(unittest.TestCase):
         d = {0: b"hello world hello world hello world hello world hello world hello world hello world"}
         for i in range(1, 6):
             with self.subTest(str(i)):
-                r = encode_data(d, bin_to_text=False, root_dir=self._dirname,
-                                attachments_dir=None)
+                with open(self._filename, "w", encoding="utf-8") as file:
+                    serializer.write(d, file, bin_to_text=False,
+                                     attachments_dir=None)
+                with open(self._filename, "r", encoding="utf-8") as file:
+                    r = file.read()
                 attachment_filename = os.path.join(self._dirname, str(i))
                 expected = """\
-                0: load('{}')""".format(str(i))
+                0: load('{}')\n""".format(str(i))
                 self.assertEqual(dedent(expected), r)
                 self.assertTrue(os.path.isfile(attachment_filename))
 

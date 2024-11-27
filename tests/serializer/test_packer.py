@@ -1951,5 +1951,5 @@ def pack_data(data, **kwargs):
     return serializer.pack(data, **kwargs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
