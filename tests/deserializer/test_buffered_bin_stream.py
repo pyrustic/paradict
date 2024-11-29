@@ -1,5 +1,5 @@
 import unittest
-from paradict.queue.bin_queue import BinQueue
+from paradict.deserializer.buffered_bin_stream import BufferedBinStream
 from paradict import misc, tags
 
 
@@ -7,7 +7,7 @@ class TestQueueWithINT(unittest.TestCase):
 
     def test_complete_pint_datum(self):
         data = misc.forge_bin(tags.PINT_BIG, 1, b'\x00' * 2)
-        queue = BinQueue()
+        queue = BufferedBinStream()
         r = put_and_get(queue, data)
         expected = misc.forge_bin(tags.PINT_BIG, b'\x00' * 2)
         self.assertEqual(expected, r)
@@ -15,7 +15,7 @@ class TestQueueWithINT(unittest.TestCase):
 
     def test_complete_nint_datum(self):
         data = misc.forge_bin(tags.NINT_BIG, 1, b'\x00' * 2)
-        queue = BinQueue()
+        queue = BufferedBinStream()
         r = put_and_get(queue, data)
         expected = misc.forge_bin(tags.NINT_BIG, b'\x00' * 2)
         self.assertEqual(expected, r)
@@ -30,7 +30,7 @@ class TestQueueWithINT(unittest.TestCase):
             with self.subTest("PINT_{} tag".format(i)):
                 n = i//8
                 data = misc.forge_bin(tag, b'\x00'*n)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertEqual(data, r)
                 self.assertEqual(0, len(queue.buffer))
@@ -44,21 +44,21 @@ class TestQueueWithINT(unittest.TestCase):
             with self.subTest("NINT_{} tag".format(i)):
                 n = i//8
                 data = misc.forge_bin(tag, b'\x00'*n)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertEqual(data, r)
                 self.assertEqual(0, len(queue.buffer))
 
     def test_incomplete_pint_datum(self):
         data = misc.forge_bin(tags.PINT_BIG, 1, b'\x00' * 1)
-        queue = BinQueue()
+        queue = BufferedBinStream()
         r = put_and_get(queue, data)
         self.assertIsNone(r)
         self.assertNotEqual(0, len(queue.buffer))
 
     def test_incomplete_nint_datum(self):
         data = misc.forge_bin(tags.NINT_BIG, 1, b'\x00' * 1)
-        queue = BinQueue()
+        queue = BufferedBinStream()
         r = put_and_get(queue, data)
         self.assertIsNone(r)
         self.assertNotEqual(0, len(queue.buffer))
@@ -72,7 +72,7 @@ class TestQueueWithINT(unittest.TestCase):
             with self.subTest("PINT_{} tag".format(i)):
                 n = (i//8) - 1
                 data = misc.forge_bin(tag, b'\x00'*n)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertIsNone(r)
                 self.assertNotEqual(0, len(queue.buffer))
@@ -86,7 +86,7 @@ class TestQueueWithINT(unittest.TestCase):
             with self.subTest("NINT_{} tag".format(i)):
                 n = (i//8) - 1
                 data = misc.forge_bin(tag, b'\x00'*n)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertIsNone(r)
                 self.assertNotEqual(0, len(queue.buffer))
@@ -104,7 +104,7 @@ class TestQueueWithSTR(unittest.TestCase):
                 n = i // 8
                 size = 2**(8*n)
                 data = misc.forge_bin(tag, size-1,  b'\x00' * size)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 expected = misc.forge_bin(tag, b'\x00' * size)
                 self.assertEqual(expected, r)
@@ -125,7 +125,7 @@ class TestQueueWithSTR(unittest.TestCase):
             with self.subTest("STR_{} tag".format(i)):
                 n = i // 8
                 data = misc.forge_bin(tag, b'\x00' * n)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertEqual(data, r)
                 self.assertEqual(0, len(queue.buffer))
@@ -142,7 +142,7 @@ class TestQueueWithSTR(unittest.TestCase):
                 size = 2**(8*n)
                 size_minus_one = size - 1
                 data = misc.forge_bin(tag, size_minus_one,  b'\x00' * size_minus_one)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertIsNone(r)
                 self.assertNotEqual(0, len(queue.buffer))
@@ -162,7 +162,7 @@ class TestQueueWithSTR(unittest.TestCase):
             with self.subTest("STR_{} tag".format(i)):
                 n = (i // 8) - 1
                 data = misc.forge_bin(tag, b'\x00' * n)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertIsNone(r)
                 self.assertNotEqual(0, len(queue.buffer))
@@ -180,7 +180,7 @@ class TestQueueWithBIN(unittest.TestCase):
                 n = i // 8
                 size = 2**(8*n)
                 data = misc.forge_bin(tag, size-1,  b'\x00' * size)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 expected = misc.forge_bin(tag, b'\x00' * size)
                 self.assertEqual(expected, r)
@@ -197,16 +197,16 @@ class TestQueueWithBIN(unittest.TestCase):
                 size = 2**(8*n)
                 size_minus_one = size - 1
                 data = misc.forge_bin(tag, size_minus_one, b'\x00' * size_minus_one)
-                queue = BinQueue()
+                queue = BufferedBinStream()
                 r = put_and_get(queue, data)
                 self.assertIsNone(r)
                 self.assertNotEqual(0, len(queue.buffer))
 
 
 def put_and_get(queue, raw):
-    queue.enqueue(raw)
+    queue.put(raw)
     buffer = bytearray()
-    for tag, payload in queue.dequeue():
+    for tag, payload in queue.get_all():
         buffer.extend(tag)
         buffer.extend(payload)
     return None if not buffer else buffer

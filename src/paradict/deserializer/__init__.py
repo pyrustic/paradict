@@ -1,12 +1,9 @@
 """High-level functions to deserialize Paradict binary/text data into a Python dict"""
-import os
-import os.path
-import pathlib
 from paradict.deserializer.decoder import Decoder
 from paradict.deserializer.unpacker import Unpacker
 
 
-__all__ = ["decode", "read", "unpack", "load"]
+__all__ = ["decode", "unpack"]
 
 
 def decode(text, type_ref=None, receiver=None, obj_builder=None,
@@ -30,42 +27,9 @@ def decode(text, type_ref=None, receiver=None, obj_builder=None,
                       obj_builder=obj_builder,
                       root_dir=root_dir)
     decoder.feed(text)
-    if decoder.queue.buffer:
+    if not decoder.queue.is_empty():
         decoder.feed("\n")
     decoder.feed("===\n")  # it's important to send an explicit end of stream
-    return decoder.data
-
-
-def read(file, type_ref=None, receiver=None, obj_builder=None):
-    """
-    Open a textual Paradict file then read its contents into Python dict
-
-    [param]
-    - file: text file object
-    - type_ref: optional TypeRef object
-    - receiver: callback function that will be called at the end of conversion.
-    This callback function accepts the Decoder instance as argument
-    - obj_builder: function that accepts a paradict.box.Obj container and
-    returns a fresh new Python object
-
-    [return]
-    Return the newly built Python object
-    """
-    try:
-        root_dir = os.path.dirname(os.path.abspath(file.name))
-    except AttributeError as e:
-        root_dir = None
-    decoder = Decoder(type_ref=type_ref, receiver=receiver,
-                      obj_builder=obj_builder,
-                      root_dir=root_dir)
-    while True:
-        line = file.readline()
-        if not line:
-            break
-        decoder.feed(line)
-    if decoder.queue.buffer:
-        decoder.feed("\n")
-    decoder.feed("===\n")
     return decoder.data
 
 
@@ -91,34 +55,4 @@ def unpack(raw, type_ref=None, receiver=None, obj_builder=None,
                         obj_builder=obj_builder,
                         dict_only=dict_only)
     unpacker.feed(raw)
-    return unpacker.data
-
-
-def load(file, type_ref=None, receiver=None,
-         obj_builder=None, dict_only=False):
-    """
-    Open a binary Paradict file then unpack its contents into Python dict
-
-    [param]
-    - file: bin file object
-    - type_ref: optional TypeRef object
-    - receiver: callback function that will be called at the end of conversion.
-    This callback function accepts the Decoder instance as argument
-    - obj_builder: function that accepts a paradict.box.Obj container and
-    returns a fresh new Python object
-    - dict_only: boolean to enforce dict as root
-
-    [return]
-    Return the newly built Python object
-    """
-    unpacker = Unpacker(type_ref=type_ref,
-                        receiver=receiver,
-                        obj_builder=obj_builder,
-                        dict_only=dict_only)
-    chunk_size = 1024
-    while True:
-        r = file.read(chunk_size)
-        if not r:
-            break
-        unpacker.feed(r)
     return unpacker.data

@@ -1,4 +1,6 @@
 import os
+
+import paradict.io_text
 from paradict import tags
 from paradict.tags.mappings import (PINT_TO_SIZE,
                                     NINT_TO_SIZE, BIN_TO_SIZE,

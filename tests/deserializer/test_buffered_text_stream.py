@@ -1,31 +1,31 @@
 import unittest
-from paradict.queue.txt_queue import TxtQueue
+from paradict.deserializer.buffered_text_stream import BufferedTextStream
 
 
 class TestQueue(unittest.TestCase):
 
     def test_with_complete_data(self):
         s = "first line\nsecond line\n"
-        queue = TxtQueue()
+        queue = BufferedTextStream()
         r = put_and_get(queue, s)
         self.assertEqual(s, r)
-        self.assertEqual(0, len(queue.buffer))
+        self.assertTrue(queue.is_empty())
 
     def test_with_incomplete_data(self):
         s = "first line\nsecond lin"
-        queue = TxtQueue()
+        queue = BufferedTextStream()
         r = put_and_get(queue, s)
         self.assertEqual("first line\n", r)
-        self.assertNotEqual(0, len(queue.buffer))
+        self.assertFalse(queue.is_empty())
 
 
 def put_and_get(queue, s):
-    queue.enqueue(s)
+    queue.put(s)
     buffer = list()
-    for s in queue.dequeue():
+    for s in queue.get_all():
         buffer.append(s)
     return "".join(buffer)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

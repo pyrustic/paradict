@@ -4,6 +4,9 @@ import paradict
 
 __all__ = []
 
+import paradict.io_bin
+
+import paradict.io_text
 
 TEXT = """\
 Paradict - Streamable multi-format serialization
@@ -45,9 +48,9 @@ def t2b(args):
     if not args:
         return
     src, dst = args
-    data = paradict.read(src)
+    data = paradict.io_text.read(src)
     if dst:
-        paradict.dump(data, dst)
+        paradict.io_bin.dump(data, dst)
     else:
         print(paradict.pack(data))
 
@@ -57,9 +60,9 @@ def b2t(args):
     if not args:
         return
     src, dst = args
-    data = paradict.load(src)
+    data = paradict.io_bin.load(src)
     if dst:
-        paradict.write(data, dst)
+        paradict.io_text.write(data, dst)
     else:
         print(paradict.encode(data))
 

@@ -42,10 +42,8 @@ It comes with a data validation mechanism as well as other cool stuff, and its e
 
 > Read the **backstory** in this [HN discussion](https://news.ycombinator.com/item?id=38684724) !
 
-## Transparently used by Braq for config files, AI prompts, and more
-Paradict is used by the Braq data format for mixing structured data with prose in the same document
-
-> Discover [Braq](https://github.com/pyrustic/braq) !
+## Transparently used by KvF for config files
+> Discover [KvF](https://github.com/pyrustic/kvf) (key-value file format with sections) !
 
 ## A rich set of datatypes
 
@@ -125,19 +123,24 @@ assert my_dict == unpack(bin_data)
 
 ```python
 from datetime import datetime
-from paradict import load, dump
+from paradict.io_bin import load, dump
 
 path = "/home/alex/test/user_card.bin"
 user_card = {"name": "alex", "id": 42, "group": "admin",
              "birthday": datetime(2020, 1, 1, 4, 20, 59)}
 
 # serialize user_card then dump it into the file
-dump(user_card, path)
+with open(path, "wb") as file:
+    dump(user_card, file)
+    
 # deserialize user_card from the file
-data = load(path)
+with open(path, "rb") as file:
+    data = load(file)
+
 # test
 assert user_card == data
 ```
+
 The code snippet above will serialize the `user_card` dictionary then dump it into the `user_card.bin` file. The file would contain 43 bytes as following:
 ```python
 from paradict import stringify_bin
@@ -166,7 +169,7 @@ assert my_dict == decode(txt_data)
 ```
 
 ## Working with config files
-> Discover [Braq](https://github.com/pyrustic/braq) !
+> Discover [KvF](https://github.com/pyrustic/kvf) (key-value file format with sections) !
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
@@ -356,14 +359,19 @@ Output:
 ### Load and dump
 
 ```python
-from paradict import read, write
+from paradict.io_text import load, dump
 
-path = "/home/alex/user_card.bin"
+path = "/home/alex/user_card.txt"
 data = {"id": 42, "name": "alex"}
-# Serialize and write data to user_card.text
-write(data, path)
+
+# Serialize and write data to user_card.txt
+with open(path, "w", encoding="utf-8") as file:
+    dump(data, file)
+
 # Read and deserialize data
-r = read(path)
+with open(path, "r", encoding="utf-8") as file:
+    r = load(file)
+    
 # test
 assert data == r
 ```
@@ -461,14 +469,19 @@ assert data == r
 ### Load and dump
 
 ```python
-from paradict import dump, load
+from paradict.io_bin import dump, load
 
 path = "/home/alex/user_card.bin"
 data = {"id": 42, "name": "alex"}
+
 # Serialize and write data to user_card.bin
-dump(data, path)
+with open(path, "wb") as file:
+    dump(data, file)
+    
 # Read and deserialize data
-r = load(path)
+with open(path, "rb") as file:
+    r = load(file)
+    
 # test
 assert data == r
 ```

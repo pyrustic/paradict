@@ -9,16 +9,16 @@ class TestImports(unittest.TestCase):
             from paradict import encode
             from paradict import decode
             from paradict import pack
-            from paradict import read
-            from paradict import write
             from paradict import unpack
             from paradict import scan
-            from paradict import load
-            from paradict import dump
             from paradict import forge_bin
             from paradict import stringify_bin
             from paradict import is_valid
             from paradict import split_kv
+            from paradict.io_bin import load
+            from paradict.io_bin import dump
+            from paradict.io_text import load
+            from paradict.io_text import dump
         except ImportError:
             self.assertTrue(False)
 
@@ -36,5 +36,5 @@ class TestImports(unittest.TestCase):
             self.assertTrue(False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

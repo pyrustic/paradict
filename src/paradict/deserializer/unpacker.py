@@ -4,7 +4,7 @@ from paradict.const import Datatype
 from paradict.tags.mappings import TAG_TO_LETTER
 from paradict.typeref import TypeRef
 from paradict import errors
-from paradict.queue.bin_queue import BinQueue
+from paradict.deserializer.buffered_bin_stream import BufferedBinStream
 from paradict import misc, box
 
 
@@ -32,7 +32,7 @@ class Unpacker:
         self._obj_builder = obj_builder
         self._dict_only = dict_only
         self._buffer = bytearray()
-        self._queue = BinQueue()
+        self._queue = BufferedBinStream()
         self._stack = list()
         self._data = None
         self._block_on = False
@@ -85,8 +85,8 @@ class Unpacker:
 
     def feed(self, raw):
         """Feed in arbitrary chunks of data"""
-        self._queue.enqueue(raw)
-        for tag, payload in self._queue.dequeue():
+        self._queue.put(raw)
+        for tag, payload in self._queue.get_all():
             self.process(tag, payload)
 
     def process(self, tag, payload):

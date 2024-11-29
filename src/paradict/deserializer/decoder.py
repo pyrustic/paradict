@@ -1,11 +1,10 @@
 import os.path
-import re
 import datetime
 import base64
 from paradict import errors, misc, const, kv, box
 from paradict.const import Datatype
 from paradict.typeref import TypeRef
-from paradict.queue.txt_queue import TxtQueue
+from paradict.deserializer.buffered_text_stream import BufferedTextStream
 
 __all__ = ["Decoder"]
 
@@ -32,7 +31,7 @@ class Decoder:
         # data
         self._data = dict()
         # misc
-        self._queue = TxtQueue()
+        self._queue = BufferedTextStream()
         self._stack = list()
         self._lineno = 1
         self._active = False
@@ -102,8 +101,8 @@ class Decoder:
         Check the `paradict.decode` function to see an example of
         how to use this class
         """
-        self._queue.enqueue(s)
-        for line in self._queue.dequeue():
+        self._queue.put(s)
+        for line in self._queue.get_all():
             line = line.rstrip("\n")
             if line.rstrip() == "===":  # END
                 self._cleanup_stack(0)

@@ -5,7 +5,7 @@ from paradict.tags.mappings import (SIZE_TO_STR, VARSTR_TO_SIZE,
                                     BIN_TO_SIZE, PINT_TO_SIZE,
                                     NINT_TO_SIZE)
 
-__all__ = ["BinQueue"]
+__all__ = ["BufferedBinStream"]
 
 
 # a datum is made of a header and payload
@@ -14,7 +14,7 @@ __all__ = ["BinQueue"]
 Datum = namedtuple("Datum", ["tag", "payload", "width"])
 
 
-class BinQueue:
+class BufferedBinStream:
     """A FIFO queue for processing binary Paradict data"""
     def __init__(self):
         self._tag = None
@@ -25,12 +25,24 @@ class BinQueue:
     def buffer(self):
         return self._buffer
 
-    def enqueue(self, raw):
+    def is_empty(self):
+        if not self._buffer:
+            return True
+        return False
+
+    def put(self, raw):
         """Store binary data in the buffer. This data will then be iteratively
         extracted by the 'get' method"""
         self._buffer.extend(raw)
 
-    def dequeue(self):
+    def get(self):
+        r = self._read()
+        if not r:
+            return
+        tag, payload = r
+        return tag, payload
+
+    def get_all(self):
         """Generator for iteratively getting each tag-payload tuple composing the
         raw data stored in the buffer"""
         while True:

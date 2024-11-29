@@ -5,7 +5,7 @@ project_name = 'Paradict'
 project_url = '/README.md'
 
 # package directory (relative path)
-pkg_dir = 'paradict'
+pkg_dir = 'src/paradict'
 
 # API directory (relative path)
 api_dir = 'docs/api'

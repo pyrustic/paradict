@@ -5,6 +5,8 @@ import datetime
 import tempfile
 from decimal import Decimal
 from textwrap import dedent
+
+import paradict.io_text
 from paradict import serializer
 from paradict import box, const, errors
 
@@ -891,7 +893,7 @@ class TestAttachments(unittest.TestCase):
         for i in range(1, 6):
             with self.subTest(str(i)):
                 with open(self._filename, "w", encoding="utf-8") as file:
-                    r = serializer.write(d, file, bin_to_text=False)
+                    r = paradict.io_text.dump(d, file, bin_to_text=False)
                 with open(self._filename, "r", encoding="utf-8") as file:
                     r = file.read()
                 expected = """\
@@ -905,8 +907,8 @@ class TestAttachments(unittest.TestCase):
         for i in range(1, 6):
             with self.subTest(str(i)):
                 with open(self._filename, "w", encoding="utf-8") as file:
-                    serializer.write(d, file, bin_to_text=False,
-                                     attachments_dir="my/attachments")
+                    paradict.io_text.dump(d, file, bin_to_text=False,
+                                           attachments_dir="my/attachments")
                 with open(self._filename, "r", encoding="utf-8") as file:
                     r = file.read()
                 expected = """\
@@ -921,8 +923,8 @@ class TestAttachments(unittest.TestCase):
         for i in range(1, 6):
             with self.subTest(str(i)):
                 with open(self._filename, "w", encoding="utf-8") as file:
-                    serializer.write(d, file, bin_to_text=False,
-                                     attachments_dir=None)
+                    paradict.io_text.dump(d, file, bin_to_text=False,
+                                           attachments_dir=None)
                 with open(self._filename, "r", encoding="utf-8") as file:
                     r = file.read()
                 attachment_filename = os.path.join(self._dirname, str(i))
