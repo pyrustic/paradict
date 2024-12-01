@@ -202,7 +202,7 @@ Paradict allows ordinary and raw strings, integers, and float numbers to span ov
 <p align="right"><a href="#readme">Back to top</a></p>
 
 # Data format specification
-This section is just an overview of the binary and the textual Paradict formats. For more information, consult [txt_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/paradict/spec/txt_paradict_spec.md) and [bin_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/paradict/spec/bin_paradict_spec.md).
+This section is just an overview of the binary and the textual Paradict formats. For more information, consult [txt_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/src/paradict/spec/txt_paradict_spec.md) and [bin_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/src/paradict/spec/bin_paradict_spec.md).
 
 ## Textual format
 At the high level of the textual representation is the **message** which represents a dictionary data structure and at the low level is the **line** of text. A line of text can represent either complete data, such as a number, or a portion of some data that spans multiple lines, such as a multiline string.
@@ -230,7 +230,7 @@ my_key = "Hello World"
 ```
 
 
-> Read the full specification in [txt_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/paradict/spec/txt_paradict_spec.md) !
+> Read the full specification in [txt_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/src/paradict/spec/txt_paradict_spec.md) !
 
 
 ## Binary format
@@ -238,7 +238,7 @@ At the high level of the [binary](https://en.wikipedia.org/wiki/Byte) representa
 
 The binary format is designed from scratch, thus each datatype benefited from a scrupulous attention in order to have a compact and coherent binary representation.
 
-> Read the full specification in [bin_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/paradict/spec/txt_paradict_spec.md) !
+> Read the full specification in [bin_paradict_spec.md](https://github.com/pyrustic/paradict/blob/master/src/paradict/spec/txt_paradict_spec.md) !
 
 <p align="right"><a href="#readme">Back to top</a></p>
 
