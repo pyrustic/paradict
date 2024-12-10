@@ -5,7 +5,7 @@ from paradict.tags.mappings import TAG_TO_LETTER
 from paradict.typeref import TypeRef
 from paradict import errors
 from paradict.deserializer.buffered_bin_stream import BufferedBinStream
-from paradict import misc, box
+from paradict import misc, xtypes
 
 
 __all__ = ["Unpacker"]
@@ -14,8 +14,7 @@ __all__ = ["Unpacker"]
 class Unpacker:
     """Class to convert some binary Paradict data into a Python dict"""
 
-    def __init__(self, type_ref=None, receiver=None, obj_builder=None,
-                 dict_only=False):
+    def __init__(self, type_ref=None, receiver=None, obj_builder=None):
         """
         Init
 
@@ -23,14 +22,12 @@ class Unpacker:
         - type_ref: optional TypeRef object
         - receiver: callback function that will be called at the end of conversion.
         This callback function accepts the Unpacker instance as argument
-        - obj_builder: function that accepts a paradict.box.Obj container and
+        - obj_builder: function that accepts a paradict.xtypes.Obj container and
         returns a fresh new Python object
-        - dict_only: boolean to enforce dict as root
         """
         self._type_ref = type_ref if type_ref else TypeRef()
         self._receiver = receiver
         self._obj_builder = obj_builder
-        self._dict_only = dict_only
         self._buffer = bytearray()
         self._queue = BufferedBinStream()
         self._stack = list()
@@ -72,10 +69,6 @@ class Unpacker:
         self._obj_builder = val
 
     @property
-    def dict_only(self):
-        return self._dict_only
-
-    @property
     def queue(self):
         return self._queue
 
@@ -93,11 +86,6 @@ class Unpacker:
         """Pass in a tag and its associated payload"""
         if tag == tags.NOP:
             return
-        # ensure that root data structure is a dict
-        if self._dict_only and not self._stack and tag not in (tags.DICT,
-                                                               tags.DICT_EMPTY):
-            msg = "The root data structure should be a dict"
-            raise errors.Error(msg)
         # interpret tag
         try:
             self._interpret(tag, payload)
@@ -176,7 +164,7 @@ class Unpacker:
 
     def _create_beta_context(self, tag):
         if tag == tags.OBJ:
-            context = Context(tag, "obj", box.Obj())
+            context = Context(tag, "obj", xtypes.Obj())
         else:
             context = Context(tag, "list", list())
         self._stack.append(context)
@@ -360,7 +348,7 @@ class Unpacker:
         else:
             msg = "Malformed hex_int block"
             raise errors.Error(msg)
-        return box.HexInt(r)
+        return xtypes.HexInt(r)
 
     def _unpack_oct_int(self, tag, payload_list=None):
         if payload_list is None:
@@ -374,7 +362,7 @@ class Unpacker:
         else:
             msg = "Malformed oct_int block"
             raise errors.Error(msg)
-        return box.OctInt(r)
+        return xtypes.OctInt(r)
 
     def _unpack_bin_int(self, tag, payload_list=None):
         if payload_list is None:
@@ -388,7 +376,7 @@ class Unpacker:
         else:
             msg = "Malformed bin_int block"
             raise errors.Error(msg)
-        return box.BinInt(r)
+        return xtypes.BinInt(r)
 
     def _unpack_float(self, tag, payload_list=None):
         if payload_list is None:

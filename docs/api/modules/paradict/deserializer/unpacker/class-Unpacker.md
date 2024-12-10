@@ -16,7 +16,6 @@ Here are properties exposed in the class:
 | Property | Methods | Description |
 | --- | --- | --- |
 | data | _getter_ | No docstring. |
-| dict\_only | _getter_ | No docstring. |
 | obj\_builder | _getter, setter_ | No docstring. |
 | queue | _getter, setter_ | No docstring. |
 | receiver | _getter, setter_ | No docstring. |
@@ -61,7 +60,7 @@ Here are methods exposed in the class:
 Init
 
 ```python
-def __init__(self, type_ref=None, receiver=None, obj_builder=None, dict_only=False):
+def __init__(self, type_ref=None, receiver=None, obj_builder=None):
     ...
 ```
 
@@ -69,8 +68,7 @@ def __init__(self, type_ref=None, receiver=None, obj_builder=None, dict_only=Fal
 | --- | --- |
 | type\_ref | optional TypeRef object |
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Unpacker instance as argument |
-| obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
-| dict\_only | boolean to enforce dict as root |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 

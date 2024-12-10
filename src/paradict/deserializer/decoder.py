@@ -1,7 +1,7 @@
 import os.path
 import datetime
 import base64
-from paradict import errors, misc, const, kv, box
+from paradict import errors, misc, const, kv, xtypes
 from paradict.const import Datatype
 from paradict.typeref import TypeRef
 from paradict.deserializer.buffered_text_stream import BufferedTextStream
@@ -20,7 +20,7 @@ class Decoder:
         - type_ref: optional TypeRef object
         - receiver: callback function that will be called at the end of conversion.
         This callback function accepts the Decoder instance as argument
-        - obj_builder: function that accepts a paradict.box.Obj container and
+        - obj_builder: function that accepts a paradict.xtypes.Obj container and
         returns a fresh new Python object
         - root_dir: root directory in which the attachments dir is supposed to be
         """
@@ -615,15 +615,15 @@ def decode_int(val):
     # hexadecimal
     if v.startswith("0x"):
         val = int(val, 16)
-        return box.HexInt(val)
+        return xtypes.HexInt(val)
     # octal
     if v.startswith("0o"):
         val = int(val, 8)
-        return box.OctInt(val)
+        return xtypes.OctInt(val)
     # binary
     if v.startswith("0b"):
         val = int(val, 2)
-        return box.BinInt(val)
+        return xtypes.BinInt(val)
     # default base 10
     return int(val)
 

@@ -16,14 +16,18 @@ No docstring.
 ## Functions
 - [**All functions**](/docs/api/modules/paradict/__init__/funcs.md)
     - [decode](/docs/api/modules/paradict/__init__/funcs.md#decode): Convert some textual Paradict data into a Python dictionary
+    - [decode\_from](/docs/api/modules/paradict/__init__/funcs.md#decode_from): Open a textual Paradict file then read its contents into Python dict
     - [encode](/docs/api/modules/paradict/__init__/funcs.md#encode): Serialize a Python dict object with the Paradict binary format
+    - [encode\_into](/docs/api/modules/paradict/__init__/funcs.md#encode_into): Serialize a Python dict object with the Paradict text format then write it to a file
     - [forge\_bin](/docs/api/modules/paradict/__init__/funcs.md#forge_bin): items are int, bytes, bytearrays, or Nones, returns a bytearray
     - [is\_valid](/docs/api/modules/paradict/__init__/funcs.md#is_valid): This function returns True if the given data successfully validates against the given schema
     - [pack](/docs/api/modules/paradict/__init__/funcs.md#pack): Serialize a Python dict object with the Paradict binary format
+    - [pack\_into](/docs/api/modules/paradict/__init__/funcs.md#pack_into): Serialize a Python data object with the Paradict binary format then dump it in a file
     - [scan](/docs/api/modules/paradict/__init__/funcs.md#scan): Scan a binary Paradict file object, yielding a tag with the slice object of its associated payload
     - [split\_kv](/docs/api/modules/paradict/__init__/funcs.md#split_kv): Split a non-empty string into key val. The string should follow one of these format: - data_mode format: key: value - config_mod...
     - [stringify\_bin](/docs/api/modules/paradict/__init__/funcs.md#stringify_bin): Good for debug. Stringify some binary data
     - [unpack](/docs/api/modules/paradict/__init__/funcs.md#unpack): Convert some binary Paradict data into a Python dictionary
+    - [unpack\_from](/docs/api/modules/paradict/__init__/funcs.md#unpack_from): Open a binary Paradict file then unpack its contents into Python dict
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
@@ -173,7 +177,6 @@ No docstring.
     - [\_update\_types](/docs/api/modules/paradict/__init__/class-TypeRef.md#_update_types): No docstring.
 - [**Unpacker**](/docs/api/modules/paradict/__init__/class-Unpacker.md): Class to convert some binary Paradict data into a Python dict
     - [data](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter_
-    - [dict\_only](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter_
     - [obj\_builder](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_
     - [queue](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_
     - [receiver](/docs/api/modules/paradict/__init__/class-Unpacker.md#properties-table); _getter, setter_

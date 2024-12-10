@@ -2,10 +2,10 @@ import unittest
 import pathlib
 import tempfile
 from paradict import pack
-from paradict.io_bin import load, dump
+from paradict.io_bin import unpack_from, pack_into
 
 
-class TestLoadFunc(unittest.TestCase):
+class TestUnpackFromFunc(unittest.TestCase):
 
     def setUp(self):
         file = tempfile.NamedTemporaryFile(delete=False)
@@ -18,14 +18,14 @@ class TestLoadFunc(unittest.TestCase):
     def test(self):
         data = {0: "hello world", "pi": 3.14}
         with open(self._path, "wb") as file:
-            dump(data, file)
+            pack_into(data, file)
         with open(self._path, "rb") as file:
-            r = load(file)
+            r = unpack_from(file)
         expected = data
         self.assertEqual(expected, r)
 
 
-class TestDumpFunc(unittest.TestCase):
+class TestPackIntoFunc(unittest.TestCase):
 
     def setUp(self):
         file = tempfile.NamedTemporaryFile(delete=False)
@@ -38,7 +38,7 @@ class TestDumpFunc(unittest.TestCase):
     def test(self):
         data = {0: "hello world", "pi": 3.14}
         with open(self._path, "wb") as file:
-            dump(data, file)
+            pack_into(data, file)
         with open(self._path, "rb") as file:
             r = file.read()
         expected = pack(data)

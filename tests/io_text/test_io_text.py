@@ -2,10 +2,10 @@ import unittest
 import pathlib
 import tempfile
 from paradict import encode
-from paradict.io_text import load, dump
+from paradict.io_text import decode_from, encode_into
 
 
-class TestLoadFunc(unittest.TestCase):
+class TestDecodeFromFunc(unittest.TestCase):
 
     def setUp(self):
         file = tempfile.NamedTemporaryFile(delete=False)
@@ -18,14 +18,14 @@ class TestLoadFunc(unittest.TestCase):
     def test(self):
         data = {0: "hello world", "pi": 3.14}
         with open(self._path, "w", encoding="utf-8") as file:
-            dump(data, file)
+            encode_into(data, file)
         with open(self._path, "r", encoding="utf-8") as file:
-            r = load(file)
+            r = decode_from(file)
         expected = data
         self.assertEqual(expected, r)
 
 
-class TestWriteFunc(unittest.TestCase):
+class TestEncodeIntoFunc(unittest.TestCase):
 
     def setUp(self):
         file = tempfile.NamedTemporaryFile(delete=False)
@@ -38,7 +38,7 @@ class TestWriteFunc(unittest.TestCase):
     def test(self):
         data = {0: "hello world", "pi": 3.14}
         with open(self._path, "w", encoding="utf-8") as file:
-            dump(data, file)
+            encode_into(data, file)
         with open(self._path, "r", encoding="utf-8") as file:
             r = file.read()
         expected = encode(data) + "\n"

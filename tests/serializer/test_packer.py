@@ -3,7 +3,7 @@ import datetime
 from paradict import errors
 from paradict import serializer
 from paradict.serializer.packer import Packer, pack_int
-from paradict import misc, box, tags
+from paradict import misc, xtypes, tags
 from paradict.tags.mappings import LETTER_TO_TAG
 
 
@@ -67,7 +67,7 @@ class TestObj(unittest.TestCase):
     paradict.tests.test_unpacker
     """
     def test_empty_obj(self):
-        data = {0: box.Obj()}
+        data = {0: xtypes.Obj()}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
@@ -79,7 +79,7 @@ class TestObj(unittest.TestCase):
 class TestGrid(unittest.TestCase):
 
     def test_empty_grid(self):
-        data = {0: box.Grid()}
+        data = {0: xtypes.Grid()}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
@@ -91,7 +91,7 @@ class TestGrid(unittest.TestCase):
         x = [(0, 1, 2),
              (3, 4, 5),
              (6, 7, -8)]
-        data = {0: box.Grid(x)}
+        data = {0: xtypes.Grid(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
@@ -112,7 +112,7 @@ class TestGrid(unittest.TestCase):
 
     def test_with_float(self):
         x = [(0.0, 1.1, -2.2)]
-        data = {0: box.Grid(x)}
+        data = {0: xtypes.Grid(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
@@ -131,7 +131,7 @@ class TestGrid(unittest.TestCase):
 
     def test_with_complex(self):
         x = [(1+2j, 3+4.5j)]
-        data = {0: box.Grid(x)}
+        data = {0: xtypes.Grid(x)}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
                                   tags.CONST_0,
@@ -1424,7 +1424,7 @@ class TestNegativeInt(unittest.TestCase):
 class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_zero_as_hex(self):
-        x = box.HexInt(0)
+        x = xtypes.HexInt(0)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1435,7 +1435,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_zero_as_oct(self):
-        x = box.OctInt(0)
+        x = xtypes.OctInt(0)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1446,7 +1446,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_zero_as_bin(self):
-        x = box.BinInt(0)
+        x = xtypes.BinInt(0)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1458,7 +1458,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_pint_as_hex(self):
         val = 2**8 - 1
-        x = box.HexInt(val)
+        x = xtypes.HexInt(val)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1470,7 +1470,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_pint_as_oct(self):
         val = 2**8 - 1
-        x = box.OctInt(val)
+        x = xtypes.OctInt(val)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1482,7 +1482,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_pint_as_bin(self):
         val = 2**8 - 1
-        x = box.BinInt(val)
+        x = xtypes.BinInt(val)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1494,7 +1494,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_nint_as_hex(self):
         val = 2**8 - 1
-        x = box.HexInt(-val)
+        x = xtypes.HexInt(-val)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1506,7 +1506,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_nint_as_oct(self):
         val = 2**8 - 1
-        x = box.OctInt(-val)
+        x = xtypes.OctInt(-val)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1518,7 +1518,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_nint_as_bin(self):
         val = 2**8 - 1
-        x = box.BinInt(-val)
+        x = xtypes.BinInt(-val)
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1532,7 +1532,7 @@ class TestIntAsHexOctBin(unittest.TestCase):
 class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_zero_as_hex(self):
-        x = box.HexInt("0x0000")
+        x = xtypes.HexInt("0x0000")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1544,7 +1544,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_zero_as_oct(self):
-        x = box.OctInt("0o0000")
+        x = xtypes.OctInt("0o0000")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1556,7 +1556,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_zero_as_bin(self):
-        x = box.BinInt("0b0000")
+        x = xtypes.BinInt("0b0000")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1569,7 +1569,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_pint_as_hex(self):
         val = 2**8 - 1
-        x = box.HexInt("0x0000_00ff")
+        x = xtypes.HexInt("0x0000_00ff")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1582,7 +1582,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_pint_as_oct(self):
         val = 2**8 - 1
-        x = box.OctInt("0o00_000_377")
+        x = xtypes.OctInt("0o00_000_377")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1595,7 +1595,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_pint_as_bin(self):
         val = 2**8 - 1
-        x = box.BinInt("0b1111_1111")
+        x = xtypes.BinInt("0b1111_1111")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1607,7 +1607,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_nint_as_hex(self):
         val = 2**8 - 1
-        x = box.HexInt("-0x0000_00ff")
+        x = xtypes.HexInt("-0x0000_00ff")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1620,7 +1620,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_nint_as_oct(self):
         val = 2**8 - 1
-        x = box.OctInt("-0o00_000_377")
+        x = xtypes.OctInt("-0o00_000_377")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,
@@ -1633,7 +1633,7 @@ class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_nint_as_bin(self):
         val = 2**8 - 1
-        x = box.BinInt("-0b11111111")
+        x = xtypes.BinInt("-0b11111111")
         data = {0: x}
         r = pack_data(data)
         expected = misc.forge_bin(tags.DICT,

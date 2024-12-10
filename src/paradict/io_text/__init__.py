@@ -5,11 +5,11 @@ from paradict.serializer.encoder import Encoder
 from paradict.deserializer.decoder import Decoder
 
 
-__all__ = ["load", "dump"]
+__all__ = ["decode_from", "encode_into"]
 
 
-def load(file, type_ref=None, receiver=None, obj_builder=None,
-         root_dir=None):
+def decode_from(file, type_ref=None, receiver=None, obj_builder=None,
+                root_dir=None):
     """
     Open a textual Paradict file then read its contents into Python dict
 
@@ -18,7 +18,7 @@ def load(file, type_ref=None, receiver=None, obj_builder=None,
     - type_ref: optional TypeRef object
     - receiver: callback function that will be called at the end of conversion.
     This callback function accepts the Decoder instance as argument
-    - obj_builder: function that accepts a paradict.box.Obj container and
+    - obj_builder: function that accepts a paradict.xtypes.Obj container and
     returns a fresh new Python object
     - root_dir: The root_dir should be set only when the file object doesn't have
         a '.name' property. The root_dir will help to load attachments.
@@ -44,8 +44,8 @@ def load(file, type_ref=None, receiver=None, obj_builder=None,
     return decoder.data
 
 
-def dump(data, file, *, mode=const.DATA_MODE, type_ref=None,
-          bin_to_text=False, root_dir=None, attachments_dir="attachments"):
+def encode_into(data, file, *, mode=const.DATA_MODE, type_ref=None,
+                bin_to_text=False, root_dir=None, attachments_dir="attachments"):
     """
     Serialize a Python dict object with the Paradict text format then write it to a file
 

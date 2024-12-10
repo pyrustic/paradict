@@ -1,14 +1,14 @@
 ###### Paradict API Reference
-[Home](/docs/api/README.md) | [Project](/README.md) | [Module](/docs/api/modules/paradict/box/__init__/README.md) | [Source](/src/paradict/box/__init__.py)
+[Home](/docs/api/README.md) | [Project](/README.md) | [Module](/docs/api/modules/paradict/xtypes/__init__/README.md) | [Source](/src/paradict/xtypes/__init__.py)
 
-# Class BinInt
-> Module: [paradict.box.\_\_init\_\_](/docs/api/modules/paradict/box/__init__/README.md)
+# Class OctInt
+> Module: [paradict.xtypes.\_\_init\_\_](/docs/api/modules/paradict/xtypes/__init__/README.md)
 >
-> Class: **BinInt**
+> Class: **OctInt**
 >
 > Inheritance: `int`
 
-Box to hold binary integer
+Box to hold octal integer
 
 ## Fields table
 Here are fields exposed in the class:

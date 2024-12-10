@@ -58,16 +58,16 @@ DATE = b'\x15'
 
 # ----------- TIME -------------
 
-# <tag, nanoseconds_delta, trailing_zeros>
+# <tag, nanoseconds_leading_digits, trailing_zeros>
 TIME = b'\x16'
-# <tag, nanoseconds_delta, trailing_zeros, utc_offset_minutes>
+# <tag, nanoseconds_leading_digits, trailing_zeros, utc_offset_minutes>
 TIME_EXT = b'\x17'
 
 # ----------- DATETIME -------------
 
-# <tag, year_delta, nanoseconds_delta, trailing_zeros>
+# <tag, year_delta, nanoseconds_delta_leading_digits, trailing_zeros>
 DATETIME = b'\x18'
-# <tag, year_delta, nanoseconds_delta, trailing_zeros, utc_offset_minutes>
+# <tag, year_delta, nanoseconds_delta_leading_digits, trailing_zeros, utc_offset_minutes>
 DATETIME_EXT = b'\x19'
 
 # ----------- BIN OCT HEX INTEGER NOTATION -------------

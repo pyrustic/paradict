@@ -1,8 +1,8 @@
 ###### Paradict API Reference
-[Home](/docs/api/README.md) | [Project](/README.md) | [Module](/docs/api/modules/paradict/box/__init__/README.md) | [Source](/src/paradict/box/__init__.py)
+[Home](/docs/api/README.md) | [Project](/README.md) | [Module](/docs/api/modules/paradict/xtypes/__init__/README.md) | [Source](/src/paradict/xtypes/__init__.py)
 
 # Class Obj
-> Module: [paradict.box.\_\_init\_\_](/docs/api/modules/paradict/box/__init__/README.md)
+> Module: [paradict.xtypes.\_\_init\_\_](/docs/api/modules/paradict/xtypes/__init__/README.md)
 >
 > Class: **Obj**
 >
@@ -17,8 +17,8 @@ Here are fields exposed in the class:
 
 | Field | Value |
 | --- | --- |
-| \_MutableMapping\_\_marker | `<object object at 0x7f99105141d0>` |
-| \_abc\_impl | `<_abc._abc_data object at 0x7f990f827c00>` |
+| \_MutableMapping\_\_marker | `<object object at 0x794d9eecc1d0>` |
+| \_abc\_impl | `<_abc._abc_data object at 0x794d9e1f0580>` |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
@@ -113,7 +113,7 @@ D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
 If key is not found, d is returned if given, otherwise KeyError is raised.
 
 ```python
-def pop(self, key, default=<object object at 0x7f99105141d0>):
+def pop(self, key, default=<object object at 0x794d9eecc1d0>):
     ...
 ```
 

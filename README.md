@@ -72,7 +72,7 @@ The library [API](https://en.wikipedia.org/wiki/API) is designed to be simple to
 
 On top of these classes, four functions namely `encode`, `decode`, `pack`, and `unpack` do the same thing but in bulk.
 
-Then there are additional classes and functions to perform various tasks such as `TypeRef` class for customizing types, `load`, and `dump` functions for reading and writing Paradict binary files, etc.
+Then there are additional classes and functions to perform various tasks such as `TypeRef` class for customizing types, `pack_into`, and `unpack_from` functions for reading and writing Paradict binary files, etc.
 
 ## And more...
 There's more to say about Paradict that can't fit in this Overview section.
@@ -123,7 +123,7 @@ assert my_dict == unpack(bin_data)
 
 ```python
 from datetime import datetime
-from paradict.io_bin import load, dump
+from paradict import unpack_from, pack_into
 
 path = "/home/alex/test/user_card.bin"
 user_card = {"name": "alex", "id": 42, "group": "admin",
@@ -131,11 +131,11 @@ user_card = {"name": "alex", "id": 42, "group": "admin",
 
 # serialize user_card then dump it into the file
 with open(path, "wb") as file:
-    dump(user_card, file)
-    
+  pack_into(user_card, file)
+
 # deserialize user_card from the file
 with open(path, "rb") as file:
-    data = load(file)
+  data = unpack_from(file)
 
 # test
 assert user_card == data
@@ -243,11 +243,11 @@ The binary format is designed from scratch, thus each datatype benefited from a 
 <p align="right"><a href="#readme">Back to top</a></p>
 
 # Application programming interface
-The API exposes four foundational classes, Encoder, Decoder, Packer, and Unpacker, that serialize and deserialize data iteratively. 
+The API exposes four foundational classes, `Encoder`, `Decoder`, `Packer`, and `Unpacker`, that serialize and deserialize data iteratively. 
 
-On top of these classes, four functions, encode, decode, pack, and unpack, do the same thing but in bulk. 
+On top of these classes, four functions, `encode`, `decode`, `pack`, and `unpack`, do the same thing but in bulk. 
 
-Then there are additional classes and functions to do various stuff such as the TypeRef class for types customization, load and dump functions for reading and writing binary Paradict file, etc.
+Then there are additional classes and functions to do various stuff such as the `TypeRef` class for types customization, `pack_into` and `unpack_from` functions for reading and writing binary Paradict file, etc.
 
 Note that this section is just an overview of the API, thus it doesn't replace the **API reference**.
 
@@ -359,19 +359,19 @@ Output:
 ### Load and dump
 
 ```python
-from paradict.io_text import load, dump
+from paradict import decode_from, encode_into
 
 path = "/home/alex/user_card.txt"
 data = {"id": 42, "name": "alex"}
 
 # Serialize and write data to user_card.txt
 with open(path, "w", encoding="utf-8") as file:
-    dump(data, file)
+  encode_into(data, file)
 
 # Read and deserialize data
 with open(path, "r", encoding="utf-8") as file:
-    r = load(file)
-    
+  r = decode_from(file)
+
 # test
 assert data == r
 ```
@@ -397,9 +397,9 @@ key, val, sep, mode = info
 ```
 
 ## Binary serialization
-Packer and Unpacker are the foundation classes for serializing and deserializing data. These classes process data iteratively and on top of them, two functions, pack and unpack, do the same thing but in bulk.
+`Packer` and `Unpacker` are the foundation classes for serializing and deserializing data. These classes process data iteratively and on top of them, two functions, pack and unpack, do the same thing but in bulk.
 
-Two additional functions, load and dump offer to read and write binary files.
+Two additional functions, `pack_into` and `unpack_from` offer to read and write binary files.
 
 ### Using the Packer class
 The Packer constructor accepts `type_ref` as argument. 
@@ -469,19 +469,19 @@ assert data == r
 ### Load and dump
 
 ```python
-from paradict.io_bin import dump, load
+from paradict import pack_into, unpack_from
 
 path = "/home/alex/user_card.bin"
 data = {"id": 42, "name": "alex"}
 
 # Serialize and write data to user_card.bin
 with open(path, "wb") as file:
-    dump(data, file)
-    
+  pack_into(data, file)
+
 # Read and deserialize data
 with open(path, "rb") as file:
-    r = load(file)
-    
+  r = unpack_from(file)
+
 # test
 assert data == r
 ```

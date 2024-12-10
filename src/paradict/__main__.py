@@ -50,7 +50,7 @@ def t2b(args):
     src, dst = args
     data = paradict.io_text.read(src)
     if dst:
-        paradict.io_bin.dump(data, dst)
+        paradict.io_bin.pack_into(data, dst)
     else:
         print(paradict.pack(data))
 
@@ -60,7 +60,7 @@ def b2t(args):
     if not args:
         return
     src, dst = args
-    data = paradict.io_bin.load(src)
+    data = paradict.io_bin.unpack_from(src)
     if dst:
         paradict.io_text.write(data, dst)
     else:

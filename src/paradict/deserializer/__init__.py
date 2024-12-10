@@ -16,7 +16,7 @@ def decode(text, type_ref=None, receiver=None, obj_builder=None,
     - type_ref: optional TypeRef object
     - receiver: callback function that will be called at the end of conversion.
     This callback function accepts the Decoder instance as argument
-    - obj_builder: function that accepts a paradict.box.Obj container and
+    - obj_builder: function that accepts a paradict.xtypes.Obj container and
     returns a fresh new Python object
     - root_dir: root directory in which the attachments dir is supposed to be
 
@@ -33,8 +33,7 @@ def decode(text, type_ref=None, receiver=None, obj_builder=None,
     return decoder.data
 
 
-def unpack(raw, type_ref=None, receiver=None, obj_builder=None,
-           dict_only=False):
+def unpack(raw, type_ref=None, receiver=None, obj_builder=None):
     """
     Convert some binary Paradict data into a Python dictionary
 
@@ -43,7 +42,7 @@ def unpack(raw, type_ref=None, receiver=None, obj_builder=None,
     - type_ref: optional TypeRef object
     - receiver: callback function that will be called at the end of conversion.
     This callback function accepts the Decoder instance as argument
-    - obj_builder: function that accepts a paradict.box.Obj container and
+    - obj_builder: function that accepts a paradict.xtypes.Obj container and
     returns a fresh new Python object
     - dict_only: boolean to enforce dict as root
 
@@ -52,7 +51,6 @@ def unpack(raw, type_ref=None, receiver=None, obj_builder=None,
     """
     unpacker = Unpacker(type_ref=type_ref,
                         receiver=receiver,
-                        obj_builder=obj_builder,
-                        dict_only=dict_only)
+                        obj_builder=obj_builder)
     unpacker.feed(raw)
     return unpacker.data

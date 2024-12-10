@@ -5,15 +5,15 @@
 > Module: [paradict.io\_bin.\_\_init\_\_](/docs/api/modules/paradict/io_bin/__init__/README.md)
 
 Here are functions exposed in the module:
-- [dump](#dump)
-- [load](#load)
+- [pack\_into](#pack_into)
+- [unpack\_from](#unpack_from)
 
-## dump
+## pack\_into
 Serialize a Python data object with the Paradict binary format
 then dump it in a file
 
 ```python
-def dump(data, file, *, type_ref=None, dict_only=False):
+def pack_into(data, file, *, type_ref=None):
     ...
 ```
 
@@ -26,11 +26,11 @@ def dump(data, file, *, type_ref=None, dict_only=False):
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
-## load
+## unpack\_from
 Open a binary Paradict file then unpack its contents into Python dict
 
 ```python
-def load(file, type_ref=None, receiver=None, obj_builder=None, dict_only=False):
+def unpack_from(file, type_ref=None, receiver=None, obj_builder=None):
     ...
 ```
 
@@ -39,8 +39,7 @@ def load(file, type_ref=None, receiver=None, obj_builder=None, dict_only=False):
 | file | bin file object |
 | type\_ref | optional TypeRef object |
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
-| obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
-| dict\_only | boolean to enforce dict as root |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 
 ### Value to return
 Return the newly built Python object

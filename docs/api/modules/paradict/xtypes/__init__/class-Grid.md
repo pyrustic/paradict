@@ -1,8 +1,8 @@
 ###### Paradict API Reference
-[Home](/docs/api/README.md) | [Project](/README.md) | [Module](/docs/api/modules/paradict/box/__init__/README.md) | [Source](/src/paradict/box/__init__.py)
+[Home](/docs/api/README.md) | [Project](/README.md) | [Module](/docs/api/modules/paradict/xtypes/__init__/README.md) | [Source](/src/paradict/xtypes/__init__.py)
 
 # Class Grid
-> Module: [paradict.box.\_\_init\_\_](/docs/api/modules/paradict/box/__init__/README.md)
+> Module: [paradict.xtypes.\_\_init\_\_](/docs/api/modules/paradict/xtypes/__init__/README.md)
 >
 > Class: **Grid**
 >
@@ -23,7 +23,7 @@ Here are fields exposed in the class:
 
 | Field | Value |
 | --- | --- |
-| \_abc\_impl | `<_abc._abc_data object at 0x7f990f827d00>` |
+| \_abc\_impl | `<_abc._abc_data object at 0x794d9e1e8880>` |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 

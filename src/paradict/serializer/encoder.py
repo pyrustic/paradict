@@ -3,7 +3,7 @@ import re
 import base64
 from textwrap import dedent
 from collections import namedtuple
-from paradict import errors, misc, const, box
+from paradict import errors, misc, const, xtypes
 from paradict.const import Datatype
 from paradict.typeref import TypeRef
 
@@ -268,13 +268,13 @@ class Encoder:
             yield indent_str + line
 
     def _encode_int(self, data, indents=0):
-        if isinstance(data, box.HexInt):
+        if isinstance(data, xtypes.HexInt):
             yield from self._encode_hex_int(data, indents)
             return
-        if isinstance(data, box.BinInt):
+        if isinstance(data, xtypes.BinInt):
             yield from self._encode_bin_int(data, indents)
             return
-        if isinstance(data, box.OctInt):
+        if isinstance(data, xtypes.OctInt):
             yield from self._encode_oct_int(data, indents)
             return
         indent_str = misc.make_indent_str(indents)

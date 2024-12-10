@@ -6,14 +6,18 @@
 
 Here are functions exposed in the module:
 - [decode](#decode)
+- [decode\_from](#decode_from)
 - [encode](#encode)
+- [encode\_into](#encode_into)
 - [forge\_bin](#forge_bin)
 - [is\_valid](#is_valid)
 - [pack](#pack)
+- [pack\_into](#pack_into)
 - [scan](#scan)
 - [split\_kv](#split_kv)
 - [stringify\_bin](#stringify_bin)
 - [unpack](#unpack)
+- [unpack\_from](#unpack_from)
 
 ## decode
 Convert some textual Paradict data into a Python dictionary
@@ -28,8 +32,29 @@ def decode(text, type_ref=None, receiver=None, obj_builder=None, root_dir=None):
 | text | string to convert into a Python dict |
 | type\_ref | optional TypeRef object |
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
-| obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 | root\_dir | root directory in which the attachments dir is supposed to be |
+
+### Value to return
+Return the newly built Python object
+
+<p align="right"><a href="#paradict-api-reference">Back to top</a></p>
+
+## decode\_from
+Open a textual Paradict file then read its contents into Python dict
+
+```python
+def decode_from(file, type_ref=None, receiver=None, obj_builder=None, root_dir=None):
+    ...
+```
+
+| Parameter | Description |
+| --- | --- |
+| file | text file object |
+| type\_ref | optional TypeRef object |
+| receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
+| root\_dir | The root_dir should be set only when the file object doesn't have a '.name' property. The root_dir will help to load attachments. |
 
 ### Value to return
 Return the newly built Python object
@@ -55,6 +80,26 @@ def encode(data, *, mode='d', type_ref=None, bin_to_text=True, root_dir=None, at
 
 ### Value to return
 Return a string in the Paradict text format
+
+<p align="right"><a href="#paradict-api-reference">Back to top</a></p>
+
+## encode\_into
+Serialize a Python dict object with the Paradict text format then write it to a file
+
+```python
+def encode_into(data, file, *, mode='d', type_ref=None, bin_to_text=False, root_dir=None, attachments_dir='attachments'):
+    ...
+```
+
+| Parameter | Description |
+| --- | --- |
+| data | Python dict object |
+| file | text file object |
+| mode | either const.DATA_MODE or const.CONFIG_MODE. Defaults to DATA_MODE. |
+| type\_ref | optional TypeRef object |
+| bin\_to\_text | boolean to tell whether bin data should be converted into text or not |
+| root\_dir | the root_dir inside which attachments_dir is supposed to be. Set this only when bin_to_text is False and when the file object doesn't have a '.name' property that is basically the filename. |
+| attachments\_dir | path to attachments directory. Relative paths should use a slash as separator |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
@@ -107,6 +152,24 @@ Return a Python bytes object packed in the Paradict binary format
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>
 
+## pack\_into
+Serialize a Python data object with the Paradict binary format
+then dump it in a file
+
+```python
+def pack_into(data, file, *, type_ref=None):
+    ...
+```
+
+| Parameter | Description |
+| --- | --- |
+| data | Python data object |
+| file | binary file object |
+| type\_ref | optional TypeRef object |
+| dict\_only | boolean to enforce dict as root |
+
+<p align="right"><a href="#paradict-api-reference">Back to top</a></p>
+
 ## scan
 Scan a binary Paradict file object, yielding a tag with
 the slice object of its associated payload
@@ -155,7 +218,7 @@ def stringify_bin(b, offset=0, width=None, spaced=False):
 Convert some binary Paradict data into a Python dictionary
 
 ```python
-def unpack(raw, type_ref=None, receiver=None, obj_builder=None, dict_only=False):
+def unpack(raw, type_ref=None, receiver=None, obj_builder=None):
     ...
 ```
 
@@ -164,8 +227,28 @@ def unpack(raw, type_ref=None, receiver=None, obj_builder=None, dict_only=False)
 | raw | raw data previously packed with Paradict |
 | type\_ref | optional TypeRef object |
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
-| obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 | dict\_only | boolean to enforce dict as root |
+
+### Value to return
+Return the newly built Python object
+
+<p align="right"><a href="#paradict-api-reference">Back to top</a></p>
+
+## unpack\_from
+Open a binary Paradict file then unpack its contents into Python dict
+
+```python
+def unpack_from(file, type_ref=None, receiver=None, obj_builder=None):
+    ...
+```
+
+| Parameter | Description |
+| --- | --- |
+| file | bin file object |
+| type\_ref | optional TypeRef object |
+| receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 
 ### Value to return
 Return the newly built Python object

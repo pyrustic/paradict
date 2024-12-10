@@ -8,17 +8,17 @@ class TestImports(unittest.TestCase):
             # import functions
             from paradict import encode
             from paradict import decode
+            from paradict import encode_into
+            from paradict import decode_from
             from paradict import pack
             from paradict import unpack
+            from paradict import pack_into
+            from paradict import unpack_from
             from paradict import scan
             from paradict import forge_bin
             from paradict import stringify_bin
             from paradict import is_valid
             from paradict import split_kv
-            from paradict.io_bin import load
-            from paradict.io_bin import dump
-            from paradict.io_text import load
-            from paradict.io_text import dump
         except ImportError:
             self.assertTrue(False)
 

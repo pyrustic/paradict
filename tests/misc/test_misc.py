@@ -1,13 +1,13 @@
 import unittest
-from paradict import misc, box
+from paradict import misc, xtypes
 
 
 class TestPrettifyGridFunc(unittest.TestCase):
 
     def test(self):
-        grid = box.Grid([[10, 1,   0],
-                         [0,  100, 0],
-                         [0,  1,   10000]])
+        grid = xtypes.Grid([[10, 1, 0],
+                            [0,  100, 0],
+                            [0,  1,   10000]])
         r = misc.prettify_grid(grid)
         expected = [("10", "1  ", "0    "),
                     ("0 ", "100", "0    "),

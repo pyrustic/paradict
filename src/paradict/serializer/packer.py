@@ -4,7 +4,7 @@ from paradict import tags
 from paradict.const import Datatype
 from paradict.tags.mappings import SIZE_TO_PINT, \
     SIZE_TO_NINT, LETTER_TO_TAG, SIZE_TO_STR
-from paradict import errors, misc, box
+from paradict import errors, misc, xtypes
 
 __all__ = ["Packer"]
 
@@ -220,13 +220,13 @@ class Packer:
         yield pack_bin(data)
 
     def _pack_int(self, data):
-        if isinstance(data, box.HexInt):
+        if isinstance(data, xtypes.HexInt):
             yield from self._pack_hex_int(data)
             return
-        if isinstance(data, box.BinInt):
+        if isinstance(data, xtypes.BinInt):
             yield from self._pack_bin_int(data)
             return
-        if isinstance(data, box.OctInt):
+        if isinstance(data, xtypes.OctInt):
             yield from self._pack_oct_int(data)
             return
         yield pack_int(data)

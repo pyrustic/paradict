@@ -5,6 +5,8 @@ from paradict.deserializer import decode, unpack
 from paradict.deserializer.scanner import scan
 from paradict.deserializer.decoder import Decoder
 from paradict.deserializer.unpacker import Unpacker
+from paradict.io_text import encode_into, decode_from
+from paradict.io_bin import pack_into, unpack_from
 from paradict.typeref import TypeRef
 from paradict.validator import is_valid, Validator
 from paradict.kv import split as split_kv
@@ -13,8 +15,10 @@ from paradict.const import CONFIG_MODE, DATA_MODE, Datatype
 
 
 __all__ = ["encode", "decode",
+           "encode_into", "decode_from",
            "pack", "unpack", "scan",
-           "validate", "is_valid", "split_kv",
+           "pack_into", "unpack_from",
+           "is_valid", "split_kv",
            "forge_bin", "stringify_bin",
            "Encoder", "Decoder",
            "Packer", "Unpacker", "Datatype",

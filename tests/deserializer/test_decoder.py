@@ -1,7 +1,7 @@
 import unittest
 import datetime
 from textwrap import dedent
-from paradict import box, errors, deserializer
+from paradict import xtypes, errors, deserializer
 from paradict.serializer.encoder import Encoder
 
 
@@ -315,9 +315,9 @@ class TestObj(unittest.TestCase):
         0: (obj)
         """
         r = decode_data(dedent(d))
-        expected = {0: box.Obj()}
+        expected = {0: xtypes.Obj()}
         self.assertEqual(expected, r)
-        self.assertIsInstance(r[0], box.Obj)
+        self.assertIsInstance(r[0], xtypes.Obj)
 
     def test_obj_with_valid_keys(self):
         d = """\
@@ -332,12 +332,12 @@ class TestObj(unittest.TestCase):
             "\\\\n": null
         """
         r = decode_data(dedent(d))
-        expected = {0: box.Obj({0: None,
+        expected = {0: xtypes.Obj({0: None,
                                 "1": None,
                                 "": None,
                                 "key": None,
-                                3.14: None,
-                                complex(1, 2): None,
+                                   3.14: None,
+                                   complex(1, 2): None,
                                 "\n": None,
                                 "\\n": None})}
         self.assertEqual(expected, r)
@@ -358,14 +358,14 @@ class TestObj(unittest.TestCase):
             7: 2020-12-31
         """
         r = decode_data(dedent(d))
-        expected = {0: box.Obj({0:"hello world",
-                                1: "multiline\nstring",
-                                2: True,
-                                3: False,
-                                4: complex(1, 2),
-                                5: 42,
-                                6: 4.2,
-                                7: datetime.date(2020, 12, 31)})}
+        expected = {0: xtypes.Obj({0: "hello world",
+                                   1: "multiline\nstring",
+                                   2: True,
+                                   3: False,
+                                   4: complex(1, 2),
+                                   5: 42,
+                                   6: 4.2,
+                                   7: datetime.date(2020, 12, 31)})}
         self.assertEqual(expected, r)
 
     def test_obj_with_invalid_keys(self):
@@ -430,12 +430,12 @@ class TestObj(unittest.TestCase):
                     complex(1, 2): 42,
                     "\n": 4.2,
                     "\\n": datetime.date(2020, 12, 31),
-                    "nested": box.Obj({0: box.Obj({0: "hello world",
+                    "nested": xtypes.Obj({0: xtypes.Obj({0: "hello world",
                                "1": "multiline\nstring",
                                "": True,
                                "key": False,
-                               3.14: complex(1, 2),
-                               complex(1, 2): 42,
+                                                         3.14: complex(1, 2),
+                                                         complex(1, 2): 42,
                                "\n": 4.2,
                                "\\n": datetime.date(2020, 12, 31)})})}
         self.assertEqual(expected, r)
@@ -481,9 +481,9 @@ class TestGrid(unittest.TestCase):
         0: (grid)
         """
         r = decode_data(dedent(d))
-        expected = {0: box.Grid()}
+        expected = {0: xtypes.Grid()}
         self.assertEqual(expected, r)
-        self.assertIsInstance(r[0], box.Grid)
+        self.assertIsInstance(r[0], xtypes.Grid)
 
     def test_with_integer(self):  #
         d = """\
@@ -498,7 +498,7 @@ class TestGrid(unittest.TestCase):
                    (6, 7, -8)]
         expected = {0: my_grid}
         self.assertEqual(expected, r)
-        self.assertIsInstance(r[0], box.Grid)
+        self.assertIsInstance(r[0], xtypes.Grid)
 
     def test_with_float(self):
         d = """\
@@ -509,7 +509,7 @@ class TestGrid(unittest.TestCase):
         my_grid = [(0.0, 1.1, -2.2_000_000_000)]
         expected = {0: my_grid}
         self.assertEqual(expected, r)
-        self.assertIsInstance(r[0], box.Grid)
+        self.assertIsInstance(r[0], xtypes.Grid)
 
     def test_with_complex(self):
         d = """\
@@ -520,7 +520,7 @@ class TestGrid(unittest.TestCase):
         my_grid = [(1+2j, 3+4.5_000_000_000j)]
         expected = {0: my_grid}
         self.assertEqual(expected, r)
-        self.assertIsInstance(r[0], box.Grid)
+        self.assertIsInstance(r[0], xtypes.Grid)
 
     def test_with_illegal_data(self):
         d = """\
@@ -759,9 +759,9 @@ class TestInt(unittest.TestCase):
         """
         r = decode_data(dedent(d))
         x = 2**32-1
-        expected = {0: [box.HexInt(x),
-                        box.OctInt(x),
-                        box.BinInt(x)]}
+        expected = {0: [xtypes.HexInt(x),
+                        xtypes.OctInt(x),
+                        xtypes.BinInt(x)]}
         self.assertEqual(expected, r)
 
 
@@ -819,9 +819,9 @@ class TestComplex(unittest.TestCase):
         """
         r = decode_data(dedent(d))
         x = 2**32-1
-        expected = {0: [box.HexInt(x),
-                        box.OctInt(x),
-                        box.BinInt(x)]}
+        expected = {0: [xtypes.HexInt(x),
+                        xtypes.OctInt(x),
+                        xtypes.BinInt(x)]}
         self.assertEqual(expected, r)
 
 

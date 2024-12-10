@@ -15,7 +15,7 @@ def is_valid(data, schema, type_ref=None):
     """This function returns True if the given data
     successfully validates against the given schema
 
-    [param]
+    [params]
     - data: some Python object (like a dict, a list, ...) that is
     part or include datatypes defined in VALID_DATATYPES.
     - schema: a valid schema. It might be a collection containing
@@ -24,7 +24,7 @@ def is_valid(data, schema, type_ref=None):
     programmatic validation.
     - type_ref: optional TypeRef object
 
-    [return]
+    [returns]
     Returns True or False"""
     validator = Validator(schema, type_ref=type_ref)
     try:
@@ -39,7 +39,7 @@ def validate(data, schema, type_ref=None):
     """This function validate some data against a schema.
     Might raise a ValidationError.
 
-    [param]
+    [params]
     - data: some Python object (like a dict, a list, ...) that is
     part or include datatypes defined in VALID_DATATYPES.
     - schema: a valid schema. It might be a collection containing
@@ -48,7 +48,7 @@ def validate(data, schema, type_ref=None):
     programmatic validation.
     - type_ref: optional TypeRef object
 
-    [except]
+    [raises]
     - ValidationError: Raised when an issue is encountered while validating the data
     """
     validator = Validator(schema, type_ref=type_ref)
@@ -62,14 +62,14 @@ class Spec:
     def __init__(self, datatype, checker=None):
         """
         Init
-        [param]
+        [params]
         - datatype: a string representing a valid datatype.
         Check the VALID_DATATYPES variable to discover valid types.
         - checker: an optional function that will be called with passed
         as argument, the specific data it should check. This function
         should return a boolean to validate this piece of data
 
-        [except]
+        [raises]
         - ValidationError: raised if the datatype isn't a valid one
         """
         if datatype not in VALID_DATATYPES:

@@ -74,7 +74,7 @@ def __init__(self, *, type_ref=None, receiver=None, obj_builder=None, root_dir=N
 | --- | --- |
 | type\_ref | optional TypeRef object |
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
-| obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 | root\_dir | root directory in which the attachments dir is supposed to be |
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>

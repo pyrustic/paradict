@@ -5,10 +5,6 @@ Here are modules that make up [Paradict](/README.md):
 <br>
 No docstring.
 
-[paradict.box.\_\_init\_\_](/docs/api/modules/paradict/box/__init__/README.md)
-<br>
-Boxes to hold grids, hexadecimal integers, et cetera
-
 [paradict.const.\_\_init\_\_](/docs/api/modules/paradict/const/__init__/README.md)
 <br>
 No docstring.
@@ -84,5 +80,9 @@ TypeRef for type specs and customization
 [paradict.validator.\_\_init\_\_](/docs/api/modules/paradict/validator/__init__/README.md)
 <br>
 Data validation module
+
+[paradict.xtypes.\_\_init\_\_](/docs/api/modules/paradict/xtypes/__init__/README.md)
+<br>
+Boxes to hold grids, hexadecimal integers, et cetera
 
 <p align="right"><a href="#paradict-api-reference">Back to top</a></p>

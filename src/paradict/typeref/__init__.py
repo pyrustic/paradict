@@ -2,7 +2,7 @@
 import datetime
 from decimal import Decimal
 from collections import OrderedDict
-from paradict import box, errors
+from paradict import xtypes, errors
 from paradict.const import Datatype
 
 __all__ = ["TypeRef"]
@@ -53,7 +53,7 @@ class TypeRef:
         self._dict_type = dict_type if dict_type else dict
         self._list_type = list_type if list_type else list
         self._set_type = set_type if set_type else set
-        self._obj_type = obj_type if obj_type else box.Obj
+        self._obj_type = obj_type if obj_type else xtypes.Obj
 
         # datatypes for deserialization
         self._bin_type = bin_type if bin_type else bytes
@@ -62,7 +62,7 @@ class TypeRef:
         self._date_type = date_type if date_type else datetime.date
         self._datetime_type = datetime_type if datetime_type else datetime.datetime
         self._float_type = float_type if float_type else float
-        self._grid_type = grid_type if grid_type else box.Grid
+        self._grid_type = grid_type if grid_type else xtypes.Grid
         self._int_type = int_type if int_type else int
         self._str_type = str_type if str_type else str
         self._time_type = time_type if time_type else datetime.time
@@ -71,7 +71,7 @@ class TypeRef:
         self._dict_types = dict_types if dict_types else [dict, OrderedDict]
         self._list_types = list_types if list_types else [list, tuple]
         self._set_types = set_types if set_types else [set]
-        self._obj_types = obj_types if obj_types else [box.Obj]
+        self._obj_types = obj_types if obj_types else [xtypes.Obj]
 
         # serializable data types
         self._bin_types = bin_types if bin_types else [bytes, bytearray]
@@ -80,8 +80,8 @@ class TypeRef:
         self._date_types = date_types if date_types else [datetime.date]
         self._datetime_types = datetime_types if datetime_types else [datetime.datetime]
         self._float_types = float_types if float_types else [float, Decimal]
-        self._grid_types = grid_types if grid_types else [box.Grid]
-        self._int_types = int_types if int_types else [int, box.HexInt, box.BinInt, box.OctInt]
+        self._grid_types = grid_types if grid_types else [xtypes.Grid]
+        self._int_types = int_types if int_types else [int, xtypes.HexInt, xtypes.BinInt, xtypes.OctInt]
         self._str_types = str_types if str_types else [str]
         self._time_types = time_types if time_types else [datetime.time]
 

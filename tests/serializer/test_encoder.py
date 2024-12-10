@@ -8,7 +8,7 @@ from textwrap import dedent
 
 import paradict.io_text
 from paradict import serializer
-from paradict import box, const, errors
+from paradict import xtypes, const, errors
 
 
 class TestEmptyData(unittest.TestCase):
@@ -60,7 +60,7 @@ class TestDict(unittest.TestCase):
         self.assertEqual(expected, r)
 
     def test_dict_with_valid_keys(self):
-        # are valid keys: integer (int, box.HexInt, ...),
+        # are valid keys: integer (int, xtypes.HexInt, ...),
         # float, complex and string
         d = {0: None,
              "1": None,
@@ -273,14 +273,14 @@ class TestSet(unittest.TestCase):
 class TestObj(unittest.TestCase):
 
     def test_empty_obj(self):
-        d = {0: box.Obj()}
+        d = {0: xtypes.Obj()}
         r = encode_data(d)
         expected = "0: (obj)"
         self.assertEqual(expected, r)
 
     def test_obj_with_valid_keys(self):
-        # are valid keys: integer (int, box.HexInt, ...),
-        # float, complex and string (str, box.Raw)
+        # are valid keys: integer (int, xtypes.HexInt, ...),
+        # float, complex and string (str, xtypes.Raw)
         x = {0: None,
              "1": None,
              "": None,
@@ -289,7 +289,7 @@ class TestObj(unittest.TestCase):
              complex(1, 2): None,
              "\n": None,
              "\\n": None}
-        d = {0: box.Obj(x)}
+        d = {0: xtypes.Obj(x)}
         r = encode_data(d)
         expected = """\
         0: (obj)
@@ -312,7 +312,7 @@ class TestObj(unittest.TestCase):
              5: 42,
              6: 4.2,
              7: datetime.date(2020, 12, 31)}
-        d = {0: box.Obj(x)}
+        d = {0: xtypes.Obj(x)}
         r = encode_data(d)
         expected = """\
         0: (obj)
@@ -334,7 +334,7 @@ class TestObj(unittest.TestCase):
         x2 = {True: None}
         x3 = {datetime.datetime(2020, 12, 31): None}
         for i, x in enumerate((x1, x2, x3)):
-            d = {0: box.Obj(x)}
+            d = {0: xtypes.Obj(x)}
             with self.subTest("Test {}".format(i + 1)):
                 with self.assertRaises(errors.Error):
                     encode_data(d, mode=const.CONFIG_MODE)
@@ -348,15 +348,15 @@ class TestObj(unittest.TestCase):
              complex(1, 2): 42,
              "\n": 4.2,
              "\\n": datetime.date(2020, 12, 31),
-             "nested": box.Obj({0: "hello world",
+             "nested": xtypes.Obj({0: "hello world",
                         "1": "multiline\nstring",
                         "": True,
                         "key": False,
-                        3.14: complex(1, 2),
-                        complex(1, 2): 42,
+                                   3.14: complex(1, 2),
+                                   complex(1, 2): 42,
                         "\n": 4.2,
                         "\\n": datetime.date(2020, 12, 31)})}
-        d = {0: box.Obj(x)}
+        d = {0: xtypes.Obj(x)}
         r = encode_data(d)
         expected = """\
                 0: (obj)
@@ -389,10 +389,10 @@ class TestObj(unittest.TestCase):
 class TestGrid(unittest.TestCase):
 
     def test_valid_grid(self):
-        x = [(0, 1, 2.3, 4+5j, box.HexInt("0xffff_ffff")),
-             (0, 1, 2.3, 4+5j, box.BinInt("0b0000_1111")),
-             (0, 1, 2.3, 4+5j, box.OctInt("0o0_000_777"))]
-        d = {0: box.Grid(x)}
+        x = [(0, 1, 2.3, 4 + 5j, xtypes.HexInt("0xffff_ffff")),
+             (0, 1, 2.3, 4 + 5j, xtypes.BinInt("0b0000_1111")),
+             (0, 1, 2.3, 4 + 5j, xtypes.OctInt("0o0_000_777"))]
+        d = {0: xtypes.Grid(x)}
         r = encode_data(d)
         expected = """\
         0: (grid)
@@ -402,18 +402,18 @@ class TestGrid(unittest.TestCase):
         self.assertEqual(dedent(expected), r)
 
     def test_inconsistent_grid(self):
-        x = [(0, 1, 2.3, 4 + 5j, box.HexInt("0xff"), box.HexInt("0xff")),
-             (0, 1, 2.3, 4 + 5j, box.HexInt("0xff")),
-             (0, 1, 2.3, 4 + 5j, box.HexInt("0xff"))]
-        d = {0: box.Grid(x)}
+        x = [(0, 1, 2.3, 4 + 5j, xtypes.HexInt("0xff"), xtypes.HexInt("0xff")),
+             (0, 1, 2.3, 4 + 5j, xtypes.HexInt("0xff")),
+             (0, 1, 2.3, 4 + 5j, xtypes.HexInt("0xff"))]
+        d = {0: xtypes.Grid(x)}
         with self.assertRaises(errors.Error):
             encode_data(d)
 
     def test_invalid_grid(self):
-        x = [("a", "b", "c", "d", box.HexInt("0xff")),
-             (0, 1, 2.3, 4 + 5j, box.HexInt("0xff")),
-             (0, 1, 2.3, 4 + 5j, box.HexInt("0xff"))]
-        d = {0: box.Grid(x)}
+        x = [("a", "b", "c", "d", xtypes.HexInt("0xff")),
+             (0, 1, 2.3, 4 + 5j, xtypes.HexInt("0xff")),
+             (0, 1, 2.3, 4 + 5j, xtypes.HexInt("0xff"))]
+        d = {0: xtypes.Grid(x)}
         with self.assertRaises(errors.Error):
             encode_data(d)
 
@@ -605,42 +605,42 @@ class TestInteger(unittest.TestCase):
 
     def test_positive_hex_int(self):
         x = 2**32-1
-        d = {0: box.HexInt(x)}
+        d = {0: xtypes.HexInt(x)}
         r = encode_data(d)
         expected = "0: 0xFFFF_FFFF"
         self.assertEqual(expected, r)
 
     def test_negative_hex_int(self):
         x = -(2**32-1)
-        d = {0: box.HexInt(x)}
+        d = {0: xtypes.HexInt(x)}
         r = encode_data(d)
         expected = "0: -0xFFFF_FFFF"
         self.assertEqual(expected, r)
 
     def test_positive_oct_int(self):
         x = 2**32-1
-        d = {0: box.OctInt(x)}
+        d = {0: xtypes.OctInt(x)}
         r = encode_data(d)
         expected = "0: 0o37_777_777_777"
         self.assertEqual(expected, r)
 
     def test_negative_oct_int(self):
         x = -(2**32-1)
-        d = {0: box.OctInt(x)}
+        d = {0: xtypes.OctInt(x)}
         r = encode_data(d)
         expected = "0: -0o37_777_777_777"
         self.assertEqual(expected, r)
 
     def test_positive_bin_int(self):
         x = 2**8-1
-        d = {0: box.BinInt(x)}
+        d = {0: xtypes.BinInt(x)}
         r = encode_data(d)
         expected = "0: 0b1111_1111"
         self.assertEqual(expected, r)
 
     def test_negative_bin_int(self):
         x = -(2**8-1)
-        d = {0: box.BinInt(x)}
+        d = {0: xtypes.BinInt(x)}
         r = encode_data(d)
         expected = "0: -0b1111_1111"
         self.assertEqual(expected, r)
@@ -649,19 +649,19 @@ class TestInteger(unittest.TestCase):
 class TestIntWithLeadingZeros(unittest.TestCase):
 
     def test_hex(self):
-        d = {0: box.HexInt("-0x0000_FFFF")}
+        d = {0: xtypes.HexInt("-0x0000_FFFF")}
         r = encode_data(d)
         expected = "0: -0x0000_FFFF"
         self.assertEqual(expected, r)
 
     def test_oct(self):
-        d = {0: box.OctInt("-0o000_777")}
+        d = {0: xtypes.OctInt("-0o000_777")}
         r = encode_data(d)
         expected = "0: -0o000_777"
         self.assertEqual(expected, r)
 
     def test_bin(self):
-        d = {0: box.BinInt("-0b0000_1111")}
+        d = {0: xtypes.BinInt("-0b0000_1111")}
         r = encode_data(d)
         expected = "0: -0b0000_1111"
         self.assertEqual(expected, r)
@@ -733,7 +733,7 @@ class TestMultilineNumber(unittest.TestCase):
         self.assertEqual(dedent(expected), r)
 
     def test_hex_int(self):
-        d = {0: box.HexInt("-0x100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")}
+        d = {0: xtypes.HexInt("-0x100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")}
         r = encode_data(d)
         expected = """\
         0: (int)
@@ -742,7 +742,7 @@ class TestMultilineNumber(unittest.TestCase):
         self.assertEqual(dedent(expected), r)
 
     def test_oct_int(self):
-        d = {0: box.OctInt("-0o1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000")}
+        d = {0: xtypes.OctInt("-0o1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000")}
         r = encode_data(d)
         expected = """\
         0: (int)
@@ -751,7 +751,7 @@ class TestMultilineNumber(unittest.TestCase):
         self.assertEqual(dedent(expected), r)
 
     def test_bin_int(self):
-        d = {0: box.BinInt("-0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")}
+        d = {0: xtypes.BinInt("-0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")}
         r = encode_data(d)
         expected = """\
         0: (int)
@@ -893,7 +893,7 @@ class TestAttachments(unittest.TestCase):
         for i in range(1, 6):
             with self.subTest(str(i)):
                 with open(self._filename, "w", encoding="utf-8") as file:
-                    r = paradict.io_text.dump(d, file, bin_to_text=False)
+                    r = paradict.io_text.encode_into(d, file, bin_to_text=False)
                 with open(self._filename, "r", encoding="utf-8") as file:
                     r = file.read()
                 expected = """\
@@ -907,8 +907,8 @@ class TestAttachments(unittest.TestCase):
         for i in range(1, 6):
             with self.subTest(str(i)):
                 with open(self._filename, "w", encoding="utf-8") as file:
-                    paradict.io_text.dump(d, file, bin_to_text=False,
-                                           attachments_dir="my/attachments")
+                    paradict.io_text.encode_into(d, file, bin_to_text=False,
+                                                 attachments_dir="my/attachments")
                 with open(self._filename, "r", encoding="utf-8") as file:
                     r = file.read()
                 expected = """\
@@ -923,8 +923,8 @@ class TestAttachments(unittest.TestCase):
         for i in range(1, 6):
             with self.subTest(str(i)):
                 with open(self._filename, "w", encoding="utf-8") as file:
-                    paradict.io_text.dump(d, file, bin_to_text=False,
-                                           attachments_dir=None)
+                    paradict.io_text.encode_into(d, file, bin_to_text=False,
+                                                 attachments_dir=None)
                 with open(self._filename, "r", encoding="utf-8") as file:
                     r = file.read()
                 attachment_filename = os.path.join(self._dirname, str(i))

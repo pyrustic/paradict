@@ -1,7 +1,7 @@
 import unittest
 import datetime
 from decimal import Decimal
-from paradict import validator, box
+from paradict import validator, xtypes
 from paradict.errors import ValidationError
 from paradict.typeref import TypeRef
 
@@ -28,7 +28,7 @@ class TestDataValidation(unittest.TestCase):
         self.assertTrue(r)
         self.assertIsNone(validator.validate(data, schema))
         #
-        data = box.HexInt(1234567)
+        data = xtypes.HexInt(1234567)
         r = validator.is_valid(data, schema)
         self.assertTrue(r)
         self.assertIsNone(validator.validate(data, schema))
@@ -93,7 +93,7 @@ class TestDataValidation(unittest.TestCase):
         self.assertIsNone(validator.validate(data, schema))
 
     def test_grid(self):
-        data = box.Grid()
+        data = xtypes.Grid()
         schema = "grid"
         r = validator.is_valid(data, schema)
         self.assertTrue(r)
@@ -511,31 +511,31 @@ class TestEmptyList(unittest.TestCase):
 class TestObjValidation(unittest.TestCase):
 
     def test_non_empty_obj(self):
-        data = box.Obj({"name": "alex", "age": 420})
+        data = xtypes.Obj({"name": "alex", "age": 420})
         # test 1
         schema = "obj"
         r = validator.is_valid(data, schema)
         self.assertTrue(r)
         self.assertIsNone(validator.validate(data, schema))
         # test 2
-        schema = box.Obj({"name": "str", "age": "int"})
+        schema = xtypes.Obj({"name": "str", "age": "int"})
         r = validator.is_valid(data, schema)
         self.assertTrue(r)
         self.assertIsNone(validator.validate(data, schema))
         # test 3
-        data = box.Obj({"name": "alex"})
+        data = xtypes.Obj({"name": "alex"})
         r = validator.is_valid(data, schema)
         self.assertTrue(r)
         self.assertIsNone(validator.validate(data, schema))
 
     def test_nested_non_empty_obj(self):
-        data = box.Obj({"name": "alex", "age": 420,
+        data = xtypes.Obj({"name": "alex", "age": 420,
                         "books": {"sci-fi":
                                       ["book1", "book2"],
                                   "thriller":
                                       ["book3", "book4"]}})
         # test 1
-        schema = box.Obj({"name": "str", "age": "int",
+        schema = xtypes.Obj({"name": "str", "age": "int",
                           "books": {"sci-fi":
                                         ["str"],
                                     "thriller":
@@ -548,7 +548,7 @@ class TestObjValidation(unittest.TestCase):
 class TestObjInvalidation(unittest.TestCase):
 
     def test_type_mismatch(self):
-        data = box.Obj()
+        data = xtypes.Obj()
         schema = "list"
         r = validator.is_valid(data, schema)
         self.assertFalse(r)
@@ -556,9 +556,9 @@ class TestObjInvalidation(unittest.TestCase):
             validator.validate(data, schema)
 
     def test_non_empty_obj(self):
-        data = box.Obj({"name": "alex", "age": 420})
+        data = xtypes.Obj({"name": "alex", "age": 420})
         # test 1
-        schema = box.Obj({"name": "int", "age": "int"})
+        schema = xtypes.Obj({"name": "int", "age": "int"})
         r = validator.is_valid(data, schema)
         self.assertFalse(r)
         with self.assertRaises(ValidationError):
@@ -571,11 +571,11 @@ class TestObjInvalidation(unittest.TestCase):
             validator.validate(data, schema)
 
     def test_nested_non_empty_obj(self):
-        data = box.Obj({"name": "alex", "age": 420,
+        data = xtypes.Obj({"name": "alex", "age": 420,
                         "books": {"sci-fi": "book1",
                                   "thriller": "book2"}})
         # test 1
-        schema = box.Obj({"name": "str", "age": "int",
+        schema = xtypes.Obj({"name": "str", "age": "int",
                           "books": {"sci-fi": "str",
                                     "thriller": "int"}})
         r = validator.is_valid(data, schema)

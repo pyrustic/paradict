@@ -21,7 +21,7 @@ def decode(text, type_ref=None, receiver=None, obj_builder=None, root_dir=None):
 | text | string to convert into a Python dict |
 | type\_ref | optional TypeRef object |
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
-| obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 | root\_dir | root directory in which the attachments dir is supposed to be |
 
 ### Value to return
@@ -33,7 +33,7 @@ Return the newly built Python object
 Convert some binary Paradict data into a Python dictionary
 
 ```python
-def unpack(raw, type_ref=None, receiver=None, obj_builder=None, dict_only=False):
+def unpack(raw, type_ref=None, receiver=None, obj_builder=None):
     ...
 ```
 
@@ -42,7 +42,7 @@ def unpack(raw, type_ref=None, receiver=None, obj_builder=None, dict_only=False)
 | raw | raw data previously packed with Paradict |
 | type\_ref | optional TypeRef object |
 | receiver | callback function that will be called at the end of conversion. This callback function accepts the Decoder instance as argument |
-| obj\_builder | function that accepts a paradict.box.Obj container and returns a fresh new Python object |
+| obj\_builder | function that accepts a paradict.xtypes.Obj container and returns a fresh new Python object |
 | dict\_only | boolean to enforce dict as root |
 
 ### Value to return

@@ -1,7 +1,7 @@
 import unittest
 import datetime
 from paradict import serializer, deserializer
-from paradict import box, errors, tags, unpack
+from paradict import xtypes, errors, tags, unpack
 from paradict.deserializer.unpacker import Unpacker
 from paradict.serializer.packer import Packer
 
@@ -52,8 +52,8 @@ class TestDict(unittest.TestCase):
         d = {0: {"age": 999, "name": "John Doe", "pi": 3.14,
                  0: [1, 2, 3], 1: {"a", "b"}, 2000: {"x": 11, "y": dict()},
                  3.14: None, datetime.datetime(2020, 1, 1): True,
-                 False: None, None: 3, "misc": [dict(), box.Obj()],
-                 "matryoshka": dict(box.Obj(dict(box.Obj(box.Obj()))))}}
+                 False: None, None: 3, "misc": [dict(), xtypes.Obj()],
+                 "matryoshka": dict(xtypes.Obj(dict(xtypes.Obj(xtypes.Obj()))))}}
         r = pack_unpack(d)
         self.assertEqual(d, r)
 
@@ -91,34 +91,34 @@ class TestSet(unittest.TestCase):
 class TestObj(unittest.TestCase):
 
     def test_empty_obj(self):
-        d = {0: box.Obj()}
+        d = {0: xtypes.Obj()}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIs(type(r[0]), box.Obj)
+        self.assertIs(type(r[0]), xtypes.Obj)
 
     def test_nested_obj(self):
-        val = {1: box.Obj({2: box.Obj({3: box.Obj({4: 5})})})}
-        d = {0: box.Obj(val)}
+        val = {1: xtypes.Obj({2: xtypes.Obj({3: xtypes.Obj({4: 5})})})}
+        d = {0: xtypes.Obj(val)}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIs(type(r[0]), box.Obj)
+        self.assertIs(type(r[0]), xtypes.Obj)
 
     def test_obj_filled_with_complex_data(self):
         val = {"age": 999, "name": "John Doe", "pi": 3.14,
                0: [1, 2, 3], 1: {"a", "b"}, 2000: {"x": 11},
                3.14: None, datetime.datetime(2020, 1, 1): True,
                False: None, None: 3}
-        d = {0: box.Obj(val)}
+        d = {0: xtypes.Obj(val)}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIs(type(r[0]), box.Obj)
+        self.assertIs(type(r[0]), xtypes.Obj)
 
 
 class TestObjBuilder(unittest.TestCase):
 
     def test_simple_obj(self):
         real, imag = -3.14, 4.2
-        complex_obj = box.Obj()
+        complex_obj = xtypes.Obj()
         complex_obj["real"] = real
         complex_obj["imag"] = imag
         d = {0: complex_obj}
@@ -133,15 +133,15 @@ class TestObjBuilder(unittest.TestCase):
     def test_nested_obj(self):
         real, imag = -3.14, 4.2
         # real obj
-        real_obj = box.Obj()
+        real_obj = xtypes.Obj()
         real_obj["type"] = "number"
         real_obj["x"] = real
         # imag obj
-        imag_obj = box.Obj()
+        imag_obj = xtypes.Obj()
         imag_obj["type"] = "number"
         imag_obj["x"] = imag
         # complex obj
-        complex_obj = box.Obj()
+        complex_obj = xtypes.Obj()
         complex_obj["type"] = "complex"
         complex_obj["real"] = real_obj
         complex_obj["imag"] = imag_obj
@@ -157,7 +157,7 @@ class TestObjBuilder(unittest.TestCase):
 class TestGrid(unittest.TestCase):
 
     def test_empty_grid(self):
-        d = {0: box.Grid()}
+        d = {0: xtypes.Grid()}
         r = pack_unpack(d)
         self.assertEqual(d, r)
 
@@ -165,28 +165,28 @@ class TestGrid(unittest.TestCase):
         x = [(0, 1, 2),
              (3, 4, 5_000_000_000),
              (6, 7, -8)]
-        d = {0: box.Grid(x)}
+        d = {0: xtypes.Grid(x)}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Grid)
+        self.assertIsInstance(r[0], xtypes.Grid)
 
     def test_with_float(self):
         x = [(0.0, 1.1, -2.2_000_000_000)]
-        d = {0: box.Grid(x)}
+        d = {0: xtypes.Grid(x)}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Grid)
+        self.assertIsInstance(r[0], xtypes.Grid)
 
     def test_with_complex(self):
         x = [(1+2j, 3+4.5_000_000_000j)]
-        d = {0: box.Grid(x)}
+        d = {0: xtypes.Grid(x)}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.Grid)
+        self.assertIsInstance(r[0], xtypes.Grid)
 
     def test_with_illegal_data(self):
         x = [("a", "b")]
-        d = {0: box.Grid(x)}
+        d = {0: xtypes.Grid(x)}
         with self.assertRaises(errors.Error):
             pack_unpack(d)
 
@@ -632,136 +632,136 @@ class TestNegativeInt(unittest.TestCase):
 class TestIntAsHexOctBin(unittest.TestCase):
 
     def test_zero_as_hex(self):
-        x = box.HexInt(0)
+        x = xtypes.HexInt(0)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.HexInt)
+        self.assertIsInstance(r[0], xtypes.HexInt)
 
     def test_zero_as_oct(self):
-        x = box.OctInt(0)
+        x = xtypes.OctInt(0)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.OctInt)
+        self.assertIsInstance(r[0], xtypes.OctInt)
 
     def test_zero_as_bin(self):
-        x = box.BinInt(0)
+        x = xtypes.BinInt(0)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.BinInt)
+        self.assertIsInstance(r[0], xtypes.BinInt)
 
     def test_pint_as_hex(self):
-        x = box.HexInt(2**8 - 1)
+        x = xtypes.HexInt(2 ** 8 - 1)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.HexInt)
+        self.assertIsInstance(r[0], xtypes.HexInt)
 
     def test_pint_as_oct(self):
-        x = box.OctInt(2**8 - 1)
+        x = xtypes.OctInt(2 ** 8 - 1)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.OctInt)
+        self.assertIsInstance(r[0], xtypes.OctInt)
 
     def test_pint_as_bin(self):
-        x = box.BinInt(2**8 - 1)
+        x = xtypes.BinInt(2 ** 8 - 1)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.BinInt)
+        self.assertIsInstance(r[0], xtypes.BinInt)
 
     def test_nint_as_hex(self):
         val = 2**8 - 1
-        x = box.HexInt(-val)
+        x = xtypes.HexInt(-val)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.HexInt)
+        self.assertIsInstance(r[0], xtypes.HexInt)
 
     def test_nint_as_oct(self):
         x = 2**8 - 1
-        x = box.OctInt(-x)
+        x = xtypes.OctInt(-x)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.OctInt)
+        self.assertIsInstance(r[0], xtypes.OctInt)
 
     def test_nint_as_bin(self):
         val = 2**8 - 1
-        x = box.BinInt(-val)
+        x = xtypes.BinInt(-val)
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.BinInt)
+        self.assertIsInstance(r[0], xtypes.BinInt)
 
 
 class TestIntAsStringHexOctBin(unittest.TestCase):
 
     def test_zero_as_hex(self):
-        x = box.HexInt("0x0000_0000")
+        x = xtypes.HexInt("0x0000_0000")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.HexInt)
+        self.assertIsInstance(r[0], xtypes.HexInt)
 
     def test_zero_as_oct(self):
-        x = box.OctInt("0o000_000")
+        x = xtypes.OctInt("0o000_000")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.OctInt)
+        self.assertIsInstance(r[0], xtypes.OctInt)
 
     def test_zero_as_bin(self):
-        x = box.BinInt("0b0000_0000")
+        x = xtypes.BinInt("0b0000_0000")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.BinInt)
+        self.assertIsInstance(r[0], xtypes.BinInt)
 
     def test_pint_as_hex(self):
-        x = box.HexInt("0x0000_00ff")
+        x = xtypes.HexInt("0x0000_00ff")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.HexInt)
+        self.assertIsInstance(r[0], xtypes.HexInt)
 
     def test_pint_as_oct(self):
-        x = box.OctInt("0o000_377")
+        x = xtypes.OctInt("0o000_377")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.OctInt)
+        self.assertIsInstance(r[0], xtypes.OctInt)
 
     def test_pint_as_bin(self):
-        x = box.BinInt("0b0000_1111_1111")
+        x = xtypes.BinInt("0b0000_1111_1111")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.BinInt)
+        self.assertIsInstance(r[0], xtypes.BinInt)
 
     def test_nint_as_hex(self):
-        x = box.HexInt("-0x0000_00ff")
+        x = xtypes.HexInt("-0x0000_00ff")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.HexInt)
+        self.assertIsInstance(r[0], xtypes.HexInt)
 
     def test_nint_as_oct(self):
-        x = box.OctInt("-0o000_377")
+        x = xtypes.OctInt("-0o000_377")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.OctInt)
+        self.assertIsInstance(r[0], xtypes.OctInt)
 
     def test_nint_as_bin(self):
-        x = box.BinInt("-0b0000_1111_1111")
+        x = xtypes.BinInt("-0b0000_1111_1111")
         d = {0: x}
         r = pack_unpack(d)
         self.assertEqual(d, r)
-        self.assertIsInstance(r[0], box.BinInt)
+        self.assertIsInstance(r[0], xtypes.BinInt)
 
 
 class TestFloatNumber(unittest.TestCase):
@@ -840,14 +840,6 @@ class TestComplexNumber(unittest.TestCase):
         self.assertIsInstance(r[0], complex)
 
 
-class TestDictOnly(unittest.TestCase):
-    def test(self):
-        d = datetime.datetime(2020, 1, 1)
-        # paradict.errors.Error: The root data structure should be a dict
-        with self.assertRaises(errors.Error):
-            pack_unpack(d, dict_only=True)
-
-
 class TestNotDictOnly(unittest.TestCase):
 
     def test_datetime(self):
@@ -912,9 +904,9 @@ class TestAutoIndex(unittest.TestCase):
         self.assertEqual(0, len(packer.index_dict))
 
 
-def pack_unpack(data, dict_only=False):
-    data = serializer.pack(data, dict_only=dict_only)
-    return deserializer.unpack(data, dict_only=dict_only)
+def pack_unpack(data):
+    data = serializer.pack(data)
+    return deserializer.unpack(data)
 
 
 def my_obj_builder(obj):
